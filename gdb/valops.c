@@ -136,7 +136,7 @@ find_function_in_inferior (const char *name, struct objfile **objf_p)
 {
   struct symbol *sym;
 
-  sym = lookup_symbol (name, 0, VAR_DOMAIN, 0);
+  sym = lookup_symbol (name, 0, VAR_DOMAIN, 0, NULL);
   if (sym != NULL)
     {
       if (SYMBOL_CLASS (sym) != LOC_BLOCK)
@@ -1484,7 +1484,7 @@ value_repeat (struct value *arg1, int count)
 }
 
 struct value *
-value_of_variable (struct symbol *var, struct block *b)
+value_of_variable (struct symbol *var, const struct block *b)
 {
   struct value *val;
   struct frame_info *frame;
@@ -1515,7 +1515,7 @@ value_of_variable (struct symbol *var, struct block *b)
 }
 
 struct value *
-address_of_variable (struct symbol *var, struct block *b)
+address_of_variable (struct symbol *var, const struct block *b)
 {
   struct type *type = SYMBOL_TYPE (var);
   struct value *val;
@@ -3373,7 +3373,7 @@ value_struct_elt_for_reference (struct type *domain, int offset,
 	    {
 	      struct symbol *s = 
 		lookup_symbol (TYPE_FN_FIELD_PHYSNAME (f, j),
-			       0, VAR_DOMAIN, 0);
+			       0, VAR_DOMAIN, 0, NULL);
 
 	      if (s == NULL)
 		return NULL;
@@ -3404,7 +3404,7 @@ value_struct_elt_for_reference (struct type *domain, int offset,
 	    {
 	      struct symbol *s = 
 		lookup_symbol (TYPE_FN_FIELD_PHYSNAME (f, j),
-			       0, VAR_DOMAIN, 0);
+			       0, VAR_DOMAIN, 0, NULL);
 
 	      if (s == NULL)
 		return NULL;

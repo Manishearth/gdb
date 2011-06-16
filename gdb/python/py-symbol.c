@@ -281,7 +281,7 @@ gdbpy_lookup_symbol (PyObject *self, PyObject *args, PyObject *kw)
       GDB_PY_HANDLE_EXCEPTION (except);
     }
 
-  symbol = lookup_symbol (name, block, domain, &is_a_field_of_this);
+  symbol = lookup_symbol (name, block, domain, &is_a_field_of_this, NULL);
 
   ret_tuple = PyTuple_New (2);
   if (!ret_tuple)

@@ -73,7 +73,7 @@ union exp_element
     char string;
     struct type *type;
     struct internalvar *internalvar;
-    struct block *block;
+    const struct block *block;
     struct objfile *objfile;
   };
 
@@ -109,7 +109,7 @@ extern int in_parse_field;
 /* The innermost context required by the stack and register variables
    we've encountered so far.  To use this, set it to NULL, then call
    parse_<whatever>, then look at it.  */
-extern struct block *innermost_block;
+extern const struct block *innermost_block;
 
 /* From eval.c */
 

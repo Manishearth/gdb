@@ -74,7 +74,7 @@ int expout_size;
 int expout_ptr;
 struct block *expression_context_block;
 CORE_ADDR expression_context_pc;
-struct block *innermost_block;
+const struct block *innermost_block;
 int arglist_len;
 union type_stack_elt *type_stack;
 int type_stack_depth, type_stack_size;
@@ -232,7 +232,7 @@ write_exp_elt_sym (struct symbol *expelt)
 }
 
 void
-write_exp_elt_block (struct block *b)
+write_exp_elt_block (const struct block *b)
 {
   union exp_element tmp;
 
@@ -594,6 +594,7 @@ write_dollar_variable (struct stoken str)
   struct symbol *sym = NULL;
   struct minimal_symbol *msym = NULL;
   struct internalvar *isym = NULL;
+  struct block *block_found;
 
   /* Handle the tokens $digits; also $ (short for $0) and $$ (short for $$1)
      and $$digits (equivalent to $<-digits> if you could type that).  */
@@ -647,11 +648,11 @@ write_dollar_variable (struct stoken str)
      have names beginning with $ or $$.  Check for those, first.  */
 
   sym = lookup_symbol (copy_name (str), (struct block *) NULL,
-		       VAR_DOMAIN, (int *) NULL);
+		       VAR_DOMAIN, (int *) NULL, &block_found);
   if (sym)
     {
       write_exp_elt_opcode (OP_VAR_VALUE);
-      write_exp_elt_block (block_found);	/* set by lookup_symbol */
+      write_exp_elt_block (block_found);
       write_exp_elt_sym (sym);
       write_exp_elt_opcode (OP_VAR_VALUE);
       return;

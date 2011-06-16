@@ -877,13 +877,15 @@ extern struct symbol *lookup_symbol_in_language (const char *,
 						 const struct block *,
 						 const domain_enum,
 						 enum language,
-						 int *);
+						 int *,
+						 const struct block **);
 
 /* lookup a symbol by name (optional block, optional symtab)
    in the current language.  */
 
 extern struct symbol *lookup_symbol (const char *, const struct block *,
-				     const domain_enum, int *);
+				     const domain_enum, int *,
+				     const struct block **);
 
 /* A default version of lookup_symbol_nonlocal for use by languages
    that can't think of anything better to do.  */
@@ -915,7 +917,8 @@ extern struct symbol *lookup_symbol_global (const char *name,
 
 extern struct symbol *lookup_symbol_aux_block (const char *name,
 					       const struct block *block,
-					       const domain_enum domain);
+					       const domain_enum domain,
+					       const struct block **);
 
 /* Lookup a symbol only in the file static scope of all the objfiles.  */
 
@@ -1276,7 +1279,8 @@ extern enum language language_of_main;
 /* Check global symbols in objfile.  */
 struct symbol *lookup_global_symbol_from_objfile (const struct objfile *,
 						  const char *name,
-						  const domain_enum domain);
+						  const domain_enum domain,
+						  const struct block **);
 
 extern struct symtabs_and_lines expand_line_sal (struct symtab_and_line sal);
 

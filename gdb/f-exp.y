@@ -488,6 +488,7 @@ exp	:	STRING_LITERAL
 
 variable:	name_not_typename
 			{ struct symbol *sym = $1.sym;
+			  const struct block *block_found = $1.block_found;
 
 			  if (sym)
 			    {
@@ -1177,11 +1178,13 @@ yylex (void)
     struct symbol *sym;
     int is_a_field_of_this = 0;
     int hextype;
+    const struct block *block_found = NULL;
     
     sym = lookup_symbol (tmp, expression_context_block,
 			 VAR_DOMAIN,
 			 parse_language->la_language == language_cplus
-			 ? &is_a_field_of_this : NULL);
+			 ? &is_a_field_of_this : NULL,
+			 &block_found);
     if (sym && SYMBOL_CLASS (sym) == LOC_TYPEDEF)
       {
 	yylval.tsym.type = SYMBOL_TYPE (sym);
@@ -1206,6 +1209,7 @@ yylex (void)
 	  {
 	    yylval.ssym.sym = sym;
 	    yylval.ssym.is_a_field_of_this = is_a_field_of_this;
+	    yylval.ssym.block_found = block_found;
 	    return NAME_OR_INT;
 	  }
       }
@@ -1213,6 +1217,7 @@ yylex (void)
     /* Any other kind of symbol */
     yylval.ssym.sym = sym;
     yylval.ssym.is_a_field_of_this = is_a_field_of_this;
+    yylval.ssym.block_found = block_found;
     return NAME;
   }
 }

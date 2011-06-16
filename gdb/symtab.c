@@ -140,12 +140,6 @@ multiple_symbols_select_mode (void)
   return multiple_symbols_mode;
 }
 
-/* Block in which the most recently searched-for symbol was found.
-   Might be better to make this a parameter to lookup_symbol and
-   value_of_this.  */
-
-const struct block *block_found;
-
 /* Check for a symtab of a specific name; first in symtabs, then in
    psymtabs.  *If* there is no '/' in the name, a match after a '/'
    in the symtab filename will also work.  */
@@ -1020,7 +1014,8 @@ fixup_symbol_section (struct symbol *sym, struct objfile *objfile)
 struct symbol *
 lookup_symbol_in_language (const char *name, const struct block *block,
 			   const domain_enum domain, enum language lang,
-			   int *is_a_field_of_this)
+			   int *is_a_field_of_this,
+			   const struct block **block_found)
 {
   char *demangled_name = NULL;
   const char *modified_name = NULL;
@@ -1072,7 +1067,7 @@ lookup_symbol_in_language (const char *name, const struct block *block,
     }
 
   returnval = lookup_symbol_aux (modified_name, block, domain, lang,
-				 is_a_field_of_this);
+				 is_a_field_of_this, block_found);
   do_cleanups (cleanup);
 
   return returnval;
@@ -1083,11 +1078,12 @@ lookup_symbol_in_language (const char *name, const struct block *block,
 
 struct symbol *
 lookup_symbol (const char *name, const struct block *block,
-	       domain_enum domain, int *is_a_field_of_this)
+	       domain_enum domain, int *is_a_field_of_this,
+	       const struct block **block_found)
 {
   return lookup_symbol_in_language (name, block, domain,
 				    current_language->la_language,
-				    is_a_field_of_this);
+				    is_a_field_of_this, block_found);
 }
 
 /* Behave like lookup_symbol except that NAME is the natural name
@@ -1270,14 +1266,16 @@ lookup_objfile_from_block (const struct block *block)
 
 struct symbol *
 lookup_symbol_aux_block (const char *name, const struct block *block,
-			 const domain_enum domain)
+			 const domain_enum domain,
+			 const struct block **block_found)
 {
   struct symbol *sym;
 
   sym = lookup_block_symbol (block, name, domain);
   if (sym)
     {
-      block_found = block;
+      if (block_found)
+	*block_found = block;
       return fixup_symbol_section (sym, NULL);
     }
 
@@ -1290,7 +1288,8 @@ lookup_symbol_aux_block (const char *name, const struct block *block,
 struct symbol *
 lookup_global_symbol_from_objfile (const struct objfile *main_objfile,
 				   const char *name,
-				   const domain_enum domain)
+				   const domain_enum domain,
+				   const struct block **block_found)
 {
   const struct objfile *objfile;
   struct symbol *sym;
@@ -1310,7 +1309,8 @@ lookup_global_symbol_from_objfile (const struct objfile *main_objfile,
           sym = lookup_block_symbol (block, name, domain);
           if (sym)
             {
-              block_found = block;
+	      if (block_found)
+		*block_found = block;
               return fixup_symbol_section (sym, (struct objfile *)objfile);
             }
         }
@@ -1331,7 +1331,8 @@ lookup_global_symbol_from_objfile (const struct objfile *main_objfile,
 
 static struct symbol *
 lookup_symbol_aux_symtabs (int block_index, const char *name,
-			   const domain_enum domain)
+			   const domain_enum domain,
+			   const struct block **block_found)
 {
   struct symbol *sym;
   struct objfile *objfile;
@@ -1354,7 +1355,8 @@ lookup_symbol_aux_symtabs (int block_index, const char *name,
 	  sym = lookup_block_symbol (block, name, domain);
 	  if (sym)
 	    {
-	      block_found = block;
+	      if (block_found)
+		*block_found = block;
 	      return fixup_symbol_section (sym, objfile);
 	    }
 	}

@@ -551,7 +551,7 @@ block	:	fblock
 fblock	:	BLOCKNAME
 			{ struct symbol *sym
 			    = lookup_symbol (copy_name ($1), expression_context_block,
-					     VAR_DOMAIN, 0);
+					     VAR_DOMAIN, 0, NULL);
 			  $$ = sym;}
 	;
 			     
@@ -560,7 +560,7 @@ fblock	:	BLOCKNAME
 fblock	:	block COLONCOLON BLOCKNAME
 			{ struct symbol *tem
 			    = lookup_symbol (copy_name ($3), $1,
-					     VAR_DOMAIN, 0);
+					     VAR_DOMAIN, 0, NULL);
 			  if (!tem || SYMBOL_CLASS (tem) != LOC_BLOCK)
 			    error (_("No function \"%s\" in specified context."),
 				   copy_name ($3));
@@ -583,14 +583,15 @@ variable:	INTERNAL_VAR
 /* GDB scope operator */
 variable:	block COLONCOLON NAME
 			{ struct symbol *sym;
+			  const struct block *block_found = NULL;
+
 			  sym = lookup_symbol (copy_name ($3), $1,
-					       VAR_DOMAIN, 0);
+					       VAR_DOMAIN, 0, &block_found);
 			  if (sym == 0)
 			    error (_("No symbol \"%s\" in specified context."),
 				   copy_name ($3));
 
 			  write_exp_elt_opcode (OP_VAR_VALUE);
-			  /* block_found is set by lookup_symbol.  */
 			  write_exp_elt_block (block_found);
 			  write_exp_elt_sym (sym);
 			  write_exp_elt_opcode (OP_VAR_VALUE); }
@@ -600,11 +601,13 @@ variable:	block COLONCOLON NAME
 variable:	NAME
 			{ struct symbol *sym;
 			  int is_a_field_of_this;
+			  const struct block *block_found = NULL;
 
  			  sym = lookup_symbol (copy_name ($1),
 					       expression_context_block,
 					       VAR_DOMAIN,
-					       &is_a_field_of_this);
+					       &is_a_field_of_this,
+					       &block_found);
 			  if (sym)
 			    {
 			      if (symbol_read_needs_frame (sym))
@@ -1008,7 +1011,7 @@ yylex (void)
 
     if (lookup_symtab (tmp))
       return BLOCKNAME;
-    sym = lookup_symbol (tmp, expression_context_block, VAR_DOMAIN, 0);
+    sym = lookup_symbol (tmp, expression_context_block, VAR_DOMAIN, 0, NULL);
     if (sym && SYMBOL_CLASS (sym) == LOC_BLOCK)
       return BLOCKNAME;
     if (lookup_typename (parse_language, parse_gdbarch,

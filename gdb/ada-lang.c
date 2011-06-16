@@ -4159,10 +4159,12 @@ standard_lookup (const char *name, const struct block *block,
                  domain_enum domain)
 {
   struct symbol *sym;
+  struct block *block_found;
 
   if (lookup_cached_symbol (name, domain, &sym, NULL))
     return sym;
-  sym = lookup_symbol_in_language (name, block, domain, language_c, 0);
+  sym = lookup_symbol_in_language (name, block, domain, language_c, 0,
+				   &block_found);
   cache_symbol (name, domain, sym, block_found);
   return sym;
 }

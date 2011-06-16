@@ -323,7 +323,7 @@ list_args_or_locals (enum what_to_list what, int values, struct frame_info *fi)
 	      if (SYMBOL_IS_ARGUMENT (sym))
 		sym2 = lookup_symbol (SYMBOL_NATURAL_NAME (sym),
 				      block, VAR_DOMAIN,
-				      (int *) NULL);
+				      (int *) NULL, NULL);
 	      else
 		sym2 = sym;
 	      switch (values)

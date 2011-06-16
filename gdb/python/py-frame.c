@@ -437,7 +437,7 @@ frapy_read_var (PyObject *self, PyObject *args)
 
 	  if (!block)
 	    block = get_frame_block (frame, NULL);
-	  var = lookup_symbol (var_name, block, VAR_DOMAIN, NULL);
+	  var = lookup_symbol (var_name, block, VAR_DOMAIN, NULL, NULL);
 	}
       GDB_PY_HANDLE_EXCEPTION (except);
 

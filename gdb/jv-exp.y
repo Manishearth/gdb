@@ -1224,8 +1224,10 @@ push_variable (struct stoken name)
   char *tmp = copy_name (name);
   int is_a_field_of_this = 0;
   struct symbol *sym;
+  const struct block *block_found = NULL;
+
   sym = lookup_symbol (tmp, expression_context_block, VAR_DOMAIN,
-		       &is_a_field_of_this);
+		       &is_a_field_of_this, &block_found);
   if (sym && SYMBOL_CLASS (sym) != LOC_TYPEDEF)
     {
       if (symbol_read_needs_frame (sym))
