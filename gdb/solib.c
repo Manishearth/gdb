@@ -650,8 +650,8 @@ solib_read_symbols (struct so_list *so, int flags)
 			   so->so_name);
       else
 	{
-	  if (print_symbol_loading_p (from_tty, 0, 1))
-	    printf_unfiltered (_("Loaded symbols for %s\n"), so->so_name);
+	  /* if (print_symbol_loading_p (from_tty, 0, 1)) */
+	  /*   printf_unfiltered (_("Loaded symbols for %s\n"), so->so_name); */
 	  so->symbols_loaded = 1;
 	}
       return 1;
