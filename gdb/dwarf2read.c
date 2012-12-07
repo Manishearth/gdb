@@ -70,6 +70,7 @@
 #include "source.h"
 #include "filestuff.h"
 #include "build-id.h"
+#include "progress.h"
 
 #include <fcntl.h>
 #include <string.h>
@@ -3713,16 +3714,17 @@ dw2_expand_symtabs_for_function (struct objfile *objfile,
 static void
 dw2_expand_all_symtabs (struct objfile *objfile)
 {
-  int i;
+  int i, count;
 
   dw2_setup (objfile);
 
-  for (i = 0; i < (dwarf2_per_objfile->n_comp_units
-		   + dwarf2_per_objfile->n_type_units); ++i)
+  count = dwarf2_per_objfile->n_comp_units + dwarf2_per_objfile->n_type_units;
+  for (i = 0; i < count; ++i)
     {
       struct dwarf2_per_cu_data *per_cu = dw2_get_cutu (i);
 
       dw2_instantiate_symtab (per_cu);
+      progress_notify (i / (double) count);
     }
 }
 
@@ -6395,6 +6397,7 @@ dwarf2_build_psymtabs_hard (struct objfile *objfile)
       struct dwarf2_per_cu_data *per_cu = dw2_get_cutu (i);
 
       process_psymtab_comp_unit (per_cu, 0, language_minimal);
+      progress_notify (i / (double) dwarf2_per_objfile->n_comp_units);
     }
 
   /* This has to wait until we read the CUs, we need the list of DWOs.  */

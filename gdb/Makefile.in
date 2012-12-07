@@ -824,7 +824,7 @@ SFILES = ada-exp.y ada-lang.c ada-typeprint.c ada-valprint.c ada-tasks.c \
 	objfiles.c osabi.c observer.c osdata.c \
 	opencl-lang.c \
 	p-exp.y p-lang.c p-typeprint.c p-valprint.c parse.c printcmd.c \
-	proc-service.list progspace.c \
+	proc-service.list progspace.c progress.c \
 	prologue-value.c psymtab.c \
 	regcache.c reggroups.c remote.c remote-fileio.c remote-notif.c reverse.c \
 	sentinel-frame.c \
@@ -1034,7 +1034,7 @@ COMMON_OBS = $(DEPFILES) $(CONFIG_OBS) $(YYOBJ) \
 	gdb_vecs.o jit.o progspace.o skip.o probe.o \
 	common-utils.o buffer.o ptid.o gdb-dlfcn.o common-agent.o \
 	format.o registry.o btrace.o record-btrace.o waitstatus.o \
-	print-utils.o rsp-low.o
+	print-utils.o rsp-low.o progress.o
 
 TSOBS = inflow.o
 

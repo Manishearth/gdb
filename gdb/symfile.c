@@ -57,6 +57,8 @@
 #include "stack.h"
 #include "gdb_bfd.h"
 #include "cli/cli-utils.h"
+#include "target.h"
+#include "progress.h"
 
 #include <sys/types.h>
 #include <fcntl.h>
@@ -1183,13 +1185,9 @@ symbol_file_add_with_addrs (bfd *abfd, const char *name, int add_flags,
     {
       if (deprecated_pre_add_symbol_hook)
 	deprecated_pre_add_symbol_hook (name);
-      else
-	{
-	  printf_unfiltered (_("Reading symbols from %s..."), name);
-	  wrap_here ("");
-	  gdb_flush (gdb_stdout);
-	}
     }
+
+  progress_initialize (name, should_print);
   syms_from_objfile (objfile, addrs, add_flags);
 
   /* We now have at least a partial symbol table.  Check to see if the
@@ -1199,31 +1197,33 @@ symbol_file_add_with_addrs (bfd *abfd, const char *name, int add_flags,
 
   if ((flags & OBJF_READNOW))
     {
-      if (should_print)
-	{
-	  printf_unfiltered (_("expanding to full symbols..."));
-	  wrap_here ("");
-	  gdb_flush (gdb_stdout);
-	}
+      /* FIXME */
+      /* if (should_print) */
+      /* 	{ */
+      /* 	  printf_unfiltered (_("expanding to full symbols...")); */
+      /* 	  wrap_here (""); */
+      /* 	  gdb_flush (gdb_stdout); */
+      /* 	} */
 
       if (objfile->sf)
 	objfile->sf->qf->expand_all_symtabs (objfile);
     }
 
-  if (should_print && !objfile_has_symbols (objfile))
-    {
-      wrap_here ("");
-      printf_unfiltered (_("(no debugging symbols found)..."));
-      wrap_here ("");
-    }
+  /* FIXME */
+  /* if (should_print && !objfile_has_symbols (objfile)) */
+  /*   { */
+  /*     wrap_here (""); */
+  /*     printf_unfiltered (_("(no debugging symbols found)...")); */
+  /*     wrap_here (""); */
+  /*   } */
 
   if (should_print)
     {
       if (deprecated_post_add_symbol_hook)
 	deprecated_post_add_symbol_hook ();
-      else
-	printf_unfiltered (_("done.\n"));
     }
+  /* FIXME: cleanup */
+  progress_done ();
 
   /* We print some messages regardless of whether 'from_tty ||
      info_verbose' is true, so make sure they go out at the right
