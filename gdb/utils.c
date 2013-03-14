@@ -1486,7 +1486,10 @@ int
 parse_escape (struct gdbarch *gdbarch, const char **string_ptr)
 {
   int target_char = -2;	/* Initialize to avoid GCC warnings.  */
-  int c = *(*string_ptr)++;
+  int c;
+
+  *string_ptr = (char *) input;
+  c = *(*string_ptr)++;
 
   switch (c)
     {
