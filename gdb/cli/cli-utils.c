@@ -288,23 +288,10 @@ extract_arg_const (const char **arg)
 char *
 extract_arg (char **arg)
 {
-  const char *arg_const = *arg;
-  char *result;
+  const char *tem = *arg;
+  char *result = extract_arg_const (&tem);
 
-  result = extract_arg_const (&arg_const);
-  *arg += arg_const - *arg;
-  return result;
-}
-
-/* See documentation in cli-utils.h.  */
-
-char *
-extract_arg_const (const char **arg)
-{
-  char *tem = (char *) *arg;
-  char *result = extract_arg (&tem);
-
-  *arg = tem;
+  *arg = (char *) tem;
   return result;
 }
 
