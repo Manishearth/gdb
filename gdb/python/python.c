@@ -324,7 +324,7 @@ eval_python_command (const char *command)
 /* Implementation of the gdb "python-interactive" command.  */
 
 static void
-python_interactive_command (char *arg, int from_tty)
+python_interactive_command (const char *arg, int from_tty)
 {
   struct cleanup *cleanup;
   int err;
@@ -332,7 +332,7 @@ python_interactive_command (char *arg, int from_tty)
   cleanup = make_cleanup_restore_integer (&interpreter_async);
   interpreter_async = 0;
 
-  arg = skip_spaces (arg);
+  arg = skip_spaces_const (arg);
 
   ensure_python_env (get_current_arch (), current_language);
 
@@ -468,7 +468,7 @@ gdbpy_eval_from_control_command (const struct extension_language_defn *extlang,
 /* Implementation of the gdb "python" command.  */
 
 static void
-python_command (char *arg, int from_tty)
+python_command (const char *arg, int from_tty)
 {
   struct cleanup *cleanup;
 
@@ -477,7 +477,7 @@ python_command (char *arg, int from_tty)
   make_cleanup_restore_integer (&interpreter_async);
   interpreter_async = 0;
 
-  arg = skip_spaces (arg);
+  arg = skip_spaces_const (arg);
   if (arg && *arg)
     {
       if (PyRun_SimpleString (arg))
@@ -1477,7 +1477,7 @@ gdbpy_free_type_printers (const struct extension_language_defn *extlang,
    command. */
 
 static void
-python_interactive_command (char *arg, int from_tty)
+python_interactive_command (const char *arg, int from_tty)
 {
   arg = skip_spaces (arg);
   if (arg && *arg)
@@ -1493,7 +1493,7 @@ python_interactive_command (char *arg, int from_tty)
 }
 
 static void
-python_command (char *arg, int from_tty)
+python_command (const char *arg, int from_tty)
 {
   python_interactive_command (arg, from_tty);
 }
@@ -1510,7 +1510,7 @@ static struct cmd_list_element *user_show_python_list;
 /* Function for use by 'set python' prefix command.  */
 
 static void
-user_set_python (char *args, int from_tty)
+user_set_python (const char *args, int from_tty)
 {
   help_list (user_set_python_list, "set python ", all_commands,
 	     gdb_stdout);
@@ -1519,7 +1519,7 @@ user_set_python (char *args, int from_tty)
 /* Function for use by 'show python' prefix command.  */
 
 static void
-user_show_python (char *args, int from_tty)
+user_show_python (const char *args, int from_tty)
 {
   cmd_show_list (user_show_python_list, from_tty, "");
 }
