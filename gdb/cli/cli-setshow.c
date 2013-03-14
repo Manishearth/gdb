@@ -173,6 +173,8 @@ do_set_command (const char *arg, int from_tty, struct cmd_list_element *c)
 	  {
 	    if (ch == '\\')
 	      {
+		char *tem;
+
 		/* \ at end of argument is used after spaces
 		   so they won't be lost.  */
 		/* This is obsolete now that we no longer strip
@@ -182,7 +184,8 @@ do_set_command (const char *arg, int from_tty, struct cmd_list_element *c)
 		   right before a newline.  */
 		if (*p == 0)
 		  break;
-		ch = parse_escape (get_current_arch (), p, &p);
+		ch = parse_escape (get_current_arch (), p, &tem);
+		p = tem;
 		if (ch == 0)
 		  break;	/* C loses */
 		else if (ch > 0)
@@ -670,7 +673,7 @@ do_show_command (const char *arg, int from_tty, struct cmd_list_element *c)
 /* Show all the settings in a list of show commands.  */
 
 void
-cmd_show_list (struct cmd_list_element *list, int from_tty, char *prefix)
+cmd_show_list (struct cmd_list_element *list, int from_tty, const char *prefix)
 {
   struct cleanup *showlist_chain;
   struct ui_out *uiout = current_uiout;
