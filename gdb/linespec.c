@@ -2630,7 +2630,8 @@ decode_objc (struct linespec_state *self, linespec_p ls, const char **argptr)
   values.nelts = 0;
   values.sals = NULL;
 
-  new_argptr = find_imps (*argptr, &symbol_names); 
+  /* FIXME: remove the cast.  */
+  new_argptr = (char *) find_imps (*argptr, &symbol_names);
   if (VEC_empty (const_char_ptr, symbol_names))
     {
       do_cleanups (cleanup);
