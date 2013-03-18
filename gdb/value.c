@@ -3465,7 +3465,7 @@ value_from_decfloat (struct type *type, const gdb_byte *dec)
    for details.  */
 
 struct value *
-value_from_history_ref (char *h, char **endp)
+value_from_history_ref (const char *h, const char **endp)
 {
   int index, len;
 
@@ -3496,7 +3496,12 @@ value_from_history_ref (char *h, char **endp)
 	  *endp += len;
 	}
       else
-	index = -strtol (&h[2], endp, 10);
+	{
+	  char *tem;
+
+	  index = -strtol (&h[2], &tem, 10);
+	  *endp = tem;
+	}
     }
   else
     {
@@ -3507,7 +3512,12 @@ value_from_history_ref (char *h, char **endp)
 	  *endp += len;
 	}
       else
-	index = strtol (&h[1], endp, 10);
+	{
+	  char *tem;
+
+	  index = strtol (&h[1], &tem, 10);
+	  *endp = tem;
+	}
     }
 
   return access_value_history (index);
