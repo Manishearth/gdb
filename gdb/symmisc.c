@@ -406,7 +406,7 @@ dump_symtab (struct objfile *objfile, struct symtab *symtab,
 }
 
 static void
-maintenance_print_symbols (char *args, int from_tty)
+maintenance_print_symbols (const char *args, int from_tty)
 {
   char **argv;
   struct ui_file *outfile;
@@ -633,7 +633,7 @@ print_symbol (void *args)
 }
 
 static void
-maintenance_print_msymbols (char *args, int from_tty)
+maintenance_print_msymbols (const char *args, int from_tty)
 {
   char **argv;
   struct ui_file *outfile;
@@ -690,7 +690,7 @@ maintenance_print_msymbols (char *args, int from_tty)
 }
 
 static void
-maintenance_print_objfiles (char *regexp, int from_tty)
+maintenance_print_objfiles (const char *regexp, int from_tty)
 {
   struct program_space *pspace;
   struct objfile *objfile;
@@ -713,7 +713,7 @@ maintenance_print_objfiles (char *regexp, int from_tty)
 /* List all the symbol tables whose names match REGEXP (optional).  */
 
 static void
-maintenance_info_symtabs (char *regexp, int from_tty)
+maintenance_info_symtabs (const char *regexp, int from_tty)
 {
   struct program_space *pspace;
   struct objfile *objfile;
