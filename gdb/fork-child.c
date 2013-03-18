@@ -532,7 +532,7 @@ startup_inferior (int ntraps)
 /* Implement the "unset exec-wrapper" command.  */
 
 static void
-unset_exec_wrapper_command (char *args, int from_tty)
+unset_exec_wrapper_command (const char *args, int from_tty)
 {
   xfree (exec_wrapper);
   exec_wrapper = NULL;
