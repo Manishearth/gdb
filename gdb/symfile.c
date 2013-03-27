@@ -85,27 +85,15 @@ int readnow_symbol_files;	/* Read full symbols immediately.  */
 
 /* Functions this file defines.  */
 
-static void load_command (char *, int);
+static void load_command (const char *, int);
 
 static void symbol_file_add_main_1 (const char *args, int from_tty, int flags);
-
-static void add_symbol_file_command (char *, int);
 
 static const struct sym_fns *find_sym_fns (bfd *);
 
 static void decrement_reading_symtab (void *);
 
 static void overlay_invalidate_all (void);
-
-static void overlay_auto_command (char *, int);
-
-static void overlay_manual_command (char *, int);
-
-static void overlay_off_command (char *, int);
-
-static void overlay_load_command (char *, int);
-
-static void overlay_command (char *, int);
 
 static void simple_free_overlay_table (void);
 
@@ -117,8 +105,6 @@ static int simple_read_overlay_table (void);
 static int simple_overlay_update_1 (struct obj_section *);
 
 static void add_filename_language (char *ext, enum language lang);
-
-static void info_ext_lang_command (char *args, int from_tty);
 
 static void init_filename_language_table (void);
 
@@ -1642,7 +1628,7 @@ find_separate_debug_file_by_debuglink (struct objfile *objfile)
    conventions (because it is confusing and inconvenient).  */
 
 void
-symbol_file_command (char *args, int from_tty)
+symbol_file_command (const char *args, int from_tty)
 {
   dont_repeat ();
 
@@ -1862,7 +1848,7 @@ find_sym_fns (bfd *abfd)
 /* This function runs the load command of our current target.  */
 
 static void
-load_command (char *arg, int from_tty)
+load_command (const char *arg, int from_tty)
 {
   struct cleanup *cleanup = make_cleanup (null_cleanup, NULL);
 
@@ -1875,7 +1861,7 @@ load_command (char *arg, int from_tty)
 
   if (arg == NULL)
     {
-      char *parg;
+      const char *parg;
       int count = 0;
 
       parg = arg = get_exec_file (1);
@@ -1892,7 +1878,7 @@ load_command (char *arg, int from_tty)
 	  /* We need to quote this string so buildargv can pull it apart.  */
 	  char *temp = xmalloc (strlen (arg) + count + 1 );
 	  char *ptemp = temp;
-	  char *prev;
+	  const char *prev;
 
 	  make_cleanup (xfree, temp);
 
@@ -2258,7 +2244,7 @@ print_transfer_performance (struct ui_file *stream,
    value to use.  We are now discontinuing this type of ad hoc syntax.  */
 
 static void
-add_symbol_file_command (char *args, int from_tty)
+add_symbol_file_command (const char *args, int from_tty)
 {
   struct gdbarch *gdbarch = get_current_arch ();
   char *filename = NULL;
@@ -2785,7 +2771,8 @@ show_ext_args (struct ui_file *file, int from_tty,
 }
 
 static void
-set_ext_lang_command (char *args, int from_tty, struct cmd_list_element *e)
+set_ext_lang_command (const char *args, int from_tty,
+		      struct cmd_list_element *e)
 {
   int i;
   char *cp = ext_args;
@@ -2843,7 +2830,7 @@ set_ext_lang_command (char *args, int from_tty, struct cmd_list_element *e)
 }
 
 static void
-info_ext_lang_command (char *args, int from_tty)
+info_ext_lang_command (const char *args, int from_tty)
 {
   int i;
 
@@ -3316,7 +3303,7 @@ find_pc_mapped_section (CORE_ADDR pc)
    Print a list of mapped sections and their PC ranges.  */
 
 static void
-list_overlays_command (char *args, int from_tty)
+list_overlays_command (const char *args, int from_tty)
 {
   int nmapped = 0;
   struct objfile *objfile;
@@ -3356,7 +3343,7 @@ list_overlays_command (char *args, int from_tty)
    Mark the named section as mapped (ie. residing at its VMA address).  */
 
 static void
-map_overlay_command (char *args, int from_tty)
+map_overlay_command (const char *args, int from_tty)
 {
   struct objfile *objfile, *objfile2;
   struct obj_section *sec, *sec2;
@@ -3401,7 +3388,7 @@ map_overlay_command (char *args, int from_tty)
    (ie. resident in its LMA address range, rather than the VMA range).  */
 
 static void
-unmap_overlay_command (char *args, int from_tty)
+unmap_overlay_command (const char *args, int from_tty)
 {
   struct objfile *objfile;
   struct obj_section *sec;
@@ -3431,7 +3418,7 @@ unmap_overlay_command (char *args, int from_tty)
    Possibly this should be done via a set/show command.  */
 
 static void
-overlay_auto_command (char *args, int from_tty)
+overlay_auto_command (const char *args, int from_tty)
 {
   overlay_debugging = ovly_auto;
   enable_overlay_breakpoints ();
@@ -3444,7 +3431,7 @@ overlay_auto_command (char *args, int from_tty)
    Possibly this should be done via a set/show command.  */
 
 static void
-overlay_manual_command (char *args, int from_tty)
+overlay_manual_command (const char *args, int from_tty)
 {
   overlay_debugging = ovly_on;
   disable_overlay_breakpoints ();
@@ -3457,7 +3444,7 @@ overlay_manual_command (char *args, int from_tty)
    Possibly this should be done via a set/show command.  */
 
 static void
-overlay_off_command (char *args, int from_tty)
+overlay_off_command (const char *args, int from_tty)
 {
   overlay_debugging = ovly_off;
   disable_overlay_breakpoints ();
@@ -3466,7 +3453,7 @@ overlay_off_command (char *args, int from_tty)
 }
 
 static void
-overlay_load_command (char *args, int from_tty)
+overlay_load_command (const char *args, int from_tty)
 {
   struct gdbarch *gdbarch = get_current_arch ();
 
@@ -3483,7 +3470,7 @@ overlay_load_command (char *args, int from_tty)
 static struct cmd_list_element *overlaylist;
 
 static void
-overlay_command (char *args, int from_tty)
+overlay_command (const char *args, int from_tty)
 {
   printf_unfiltered
     ("\"overlay\" must be followed by the name of an overlay command.\n");
