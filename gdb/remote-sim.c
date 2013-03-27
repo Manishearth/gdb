@@ -76,7 +76,7 @@ static void gdbsim_kill (struct target_ops *);
 static void gdbsim_load (struct target_ops *self, const char *prog,
 			 int fromtty);
 
-static void gdbsim_open (char *args, int from_tty);
+static void gdbsim_open (const char *args, int from_tty);
 
 static void gdbsim_close (struct target_ops *self);
 
