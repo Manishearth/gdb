@@ -65,9 +65,9 @@
 
 /* Prototypes for local functions */
 
-static void signals_info (char *, int);
+static void signals_info (const char *, int);
 
-static void handle_command (char *, int);
+static void handle_command (const char *, int);
 
 static void sig_print_info (enum gdb_signal);
 
@@ -81,12 +81,12 @@ static int restore_selected_frame (void *);
 
 static int follow_fork (void);
 
-static void set_schedlock_func (char *args, int from_tty,
+static void set_schedlock_func (const char *args, int from_tty,
 				struct cmd_list_element *c);
 
 static int currently_stepping (struct thread_info *tp);
 
-static void xdb_handle_command (char *args, int from_tty);
+static void xdb_handle_command (const char *args, int from_tty);
 
 void _initialize_infrun (void);
 
@@ -163,7 +163,7 @@ show_disable_randomization (struct ui_file *file, int from_tty,
 }
 
 static void
-set_disable_randomization (char *args, int from_tty,
+set_disable_randomization (const char *args, int from_tty,
 			   struct cmd_list_element *c)
 {
   if (!target_supports_disable_randomization ())
@@ -207,7 +207,7 @@ int observer_mode = 0;
 static int observer_mode_1 = 0;
 
 static void
-set_observer_mode (char *args, int from_tty,
+set_observer_mode (const char *args, int from_tty,
 		   struct cmd_list_element *c)
 {
   if (target_has_execution)
@@ -1682,7 +1682,7 @@ show_scheduler_mode (struct ui_file *file, int from_tty,
 }
 
 static void
-set_schedlock_func (char *args, int from_tty, struct cmd_list_element *c)
+set_schedlock_func (const char *args, int from_tty, struct cmd_list_element *c)
 {
   if (!target_can_lock_scheduler)
     {
@@ -6409,7 +6409,7 @@ sig_print_info (enum gdb_signal oursig)
 /* Specify how various signals in the inferior should be handled.  */
 
 static void
-handle_command (char *args, int from_tty)
+handle_command (const char *args, int from_tty)
 {
   char **argv;
   int digits, wordlen;
@@ -6620,7 +6620,7 @@ handle_completer (struct cmd_list_element *ignore,
 }
 
 static void
-xdb_handle_command (char *args, int from_tty)
+xdb_handle_command (const char *args, int from_tty)
 {
   char **argv;
   struct cleanup *old_chain;
@@ -6700,7 +6700,7 @@ Use \"info signals\" for a list of symbolic signals."));
    targets, all signals should be in the signal tables).  */
 
 static void
-signals_info (char *signum_exp, int from_tty)
+signals_info (const char *signum_exp, int from_tty)
 {
   enum gdb_signal oursig;
 
@@ -7177,7 +7177,7 @@ static const char *const exec_direction_names[] = {
 };
 
 static void
-set_exec_direction_func (char *args, int from_tty,
+set_exec_direction_func (const char *args, int from_tty,
 			 struct cmd_list_element *cmd)
 {
   if (target_can_execute_reverse)
@@ -7212,6 +7212,35 @@ show_exec_direction_func (struct ui_file *out, int from_tty,
   }
 }
 
+<<<<<<< HEAD
+=======
+/* User interface for non-stop mode.  */
+
+int non_stop = 0;
+
+static void
+set_non_stop (const char *args, int from_tty,
+	      struct cmd_list_element *c)
+{
+  if (target_has_execution)
+    {
+      non_stop_1 = non_stop;
+      error (_("Cannot change this setting while the inferior is running."));
+    }
+
+  non_stop = non_stop_1;
+}
+
+static void
+show_non_stop (struct ui_file *file, int from_tty,
+	       struct cmd_list_element *c, const char *value)
+{
+  fprintf_filtered (file,
+		    _("Controlling the inferior in non-stop mode is %s.\n"),
+		    value);
+}
+
+>>>>>>> random stuff
 static void
 show_schedule_multiple (struct ui_file *file, int from_tty,
 			struct cmd_list_element *c, const char *value)

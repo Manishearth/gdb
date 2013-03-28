@@ -771,13 +771,6 @@ value_available_contents_eq (const struct value *val1, int offset1,
 					   length * TARGET_CHAR_BIT);
 }
 
-/* Prototypes for local functions.  */
-
-static void show_values (char *, int);
-
-static void show_convenience (char *, int);
-
-
 /* The value-history records all the values printed
    by print commands during this session.  Each chunk
    records 60 consecutive values.  The first chunk on
@@ -1736,7 +1729,7 @@ access_value_history (int num)
 }
 
 static void
-show_values (char *num_exp, int from_tty)
+show_values (const char *num_exp, int from_tty)
 {
   int i;
   struct value *val;
@@ -1863,7 +1856,7 @@ static struct internalvar *internalvars;
 /* If the variable does not already exist create it and give it the
    value given.  If no value is given then the default is zero.  */
 static void
-init_if_undefined_command (char* args, int from_tty)
+init_if_undefined_command (const char *args, int from_tty)
 {
   struct internalvar* intvar;
 
@@ -2321,7 +2314,7 @@ call_internal_function (struct gdbarch *gdbarch,
    the implementation of the sub-command that is created when
    registering an internal function.  */
 static void
-function_command (char *command, int from_tty)
+function_command (const char *command, int from_tty)
 {
   /* Do nothing.  */
 }
@@ -2423,7 +2416,7 @@ preserve_values (struct objfile *objfile)
 }
 
 static void
-show_convenience (char *ignore, int from_tty)
+show_convenience (const char *ignore, int from_tty)
 {
   struct gdbarch *gdbarch = get_current_arch ();
   struct internalvar *var;

@@ -37,10 +37,10 @@ extern void read_command_file (FILE *);
 extern void init_history (void);
 extern void command_loop (void);
 extern int quit_confirm (void);
-extern void quit_force (char *, int);
-extern void quit_command (char *, int);
+extern void quit_force (const char *, int);
+extern void quit_command (const char *, int);
 extern void quit_cover (void);
-extern void execute_command (char *, int);
+extern void execute_command (const char *, int);
 
 extern void check_frame_language_change (void);
 
@@ -71,13 +71,13 @@ extern int history_expansion_p;
 extern int server_command;
 extern char *lim_at_start;
 
-extern void show_commands (char *args, int from_tty);
+extern void show_commands (const char *args, int from_tty);
 
-extern void set_history (char *, int);
+extern void set_history (const char *, int);
 
-extern void show_history (char *, int);
+extern void show_history (const char *, int);
 
-extern void set_verbose (char *, int, struct cmd_list_element *);
+extern void set_verbose (const char *, int, struct cmd_list_element *);
 
 extern void do_restore_instream_cleanup (void *stream);
 

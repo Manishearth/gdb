@@ -1148,7 +1148,7 @@ extern int breakpoint_address_match (struct address_space *aspace1,
 				     struct address_space *aspace2,
 				     CORE_ADDR addr2);
 
-extern void until_break_command (char *, int, int);
+extern void until_break_command (const char *, int, int);
 
 /* Initialize a struct bp_location.  */
 
@@ -1196,10 +1196,10 @@ const char *bpdisp_text (enum bpdisp disp);
 
 extern void break_command (char *, int);
 
-extern void watch_command_wrapper (char *, int, int);
-extern void awatch_command_wrapper (char *, int, int);
-extern void rwatch_command_wrapper (char *, int, int);
-extern void tbreak_command (char *, int);
+extern void watch_command_wrapper (const char *, int, int);
+extern void awatch_command_wrapper (const char *, int, int);
+extern void rwatch_command_wrapper (const char *, int, int);
+extern void tbreak_command (const char *, int);
 
 extern struct breakpoint_ops base_breakpoint_ops;
 extern struct breakpoint_ops bkpt_breakpoint_ops;

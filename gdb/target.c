@@ -47,7 +47,7 @@
 #include "agent.h"
 #include "auxv.h"
 
-static void target_info (char *, int);
+static void target_info (const char *, int);
 
 static void default_terminal_info (struct target_ops *, const char *, int);
 
@@ -87,7 +87,7 @@ static int return_zero (struct target_ops *);
 
 static int return_zero_has_execution (struct target_ops *, ptid_t);
 
-static void target_command (char *, int);
+static void target_command (const char *, int);
 
 static struct target_ops *find_default_run_target (char *);
 
@@ -240,7 +240,7 @@ static void setup_target_debug (void);
 /* The user just typed 'target' without the name of a target.  */
 
 static void
-target_command (char *arg, int from_tty)
+target_command (const char *arg, int from_tty)
 {
   fputs_filtered ("Argument required (target name).  Try `help target'\n",
 		  gdb_stdout);
@@ -1949,7 +1949,7 @@ target_remove_breakpoint (struct gdbarch *gdbarch,
 }
 
 static void
-target_info (char *args, int from_tty)
+target_info (const char *args, int from_tty)
 {
   struct target_ops *t;
   int has_all_mem = 0;
@@ -4106,7 +4106,7 @@ default_rcmd (struct target_ops *self, const char *command,
 }
 
 static void
-do_monitor_command (char *cmd,
+do_monitor_command (const char *cmd,
 		 int from_tty)
 {
   target_rcmd (cmd, gdb_stdtarg);
@@ -4115,7 +4115,7 @@ do_monitor_command (char *cmd,
 /* Print the name of each layers of our target stack.  */
 
 static void
-maintenance_print_target_stack (char *cmd, int from_tty)
+maintenance_print_target_stack (const char *cmd, int from_tty)
 {
   struct target_ops *t;
 
@@ -4136,7 +4136,7 @@ int target_async_permitted = 1;
 static int target_async_permitted_1 = 1;
 
 static void
-maint_set_target_async_command (char *args, int from_tty,
+maint_set_target_async_command (const char *args, int from_tty,
 				struct cmd_list_element *c)
 {
   if (have_live_inferiors ())
@@ -4184,7 +4184,7 @@ update_target_permissions (void)
    way.  */
 
 static void
-set_target_permissions (char *args, int from_tty,
+set_target_permissions (const char *args, int from_tty,
 			struct cmd_list_element *c)
 {
   if (target_has_execution)
@@ -4205,7 +4205,7 @@ set_target_permissions (char *args, int from_tty,
 /* Set memory write permission independently of observer mode.  */
 
 static void
-set_write_memory_permission (char *args, int from_tty,
+set_write_memory_permission (const char *args, int from_tty,
 			struct cmd_list_element *c)
 {
   /* Make the real values match the user-changed values.  */

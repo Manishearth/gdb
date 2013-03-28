@@ -57,11 +57,11 @@ void _initialize_thread (void);
 struct thread_info *thread_list = NULL;
 static int highest_thread_num;
 
-static void thread_command (char *tidstr, int from_tty);
-static void thread_apply_all_command (char *, int);
+static void thread_command (const char *tidstr, int from_tty);
+static void thread_apply_all_command (const char *, int);
 static int thread_alive (struct thread_info *);
-static void info_threads_command (char *, int);
-static void thread_apply_command (char *, int);
+static void info_threads_command (const char *, int);
+static void thread_apply_command (const char *, int);
 static void restore_current_thread (ptid_t);
 static void prune_threads (void);
 
@@ -770,7 +770,7 @@ pc_in_thread_step_range (CORE_ADDR pc, struct thread_info *thread)
    is printed if it belongs to the specified process.  Otherwise,
    an error is raised.  */
 void
-print_thread_info (struct ui_out *uiout, char *requested_threads, int pid)
+print_thread_info (struct ui_out *uiout, const char *requested_threads, int pid)
 {
   struct thread_info *tp;
   ptid_t current_ptid;
@@ -969,7 +969,7 @@ No selected thread.  See `help thread'.\n");
          effects info-threads command would be nicer.  */
 
 static void
-info_threads_command (char *arg, int from_tty)
+info_threads_command (const char *arg, int from_tty)
 {
   print_thread_info (current_uiout, arg, -1);
 }
@@ -1198,7 +1198,7 @@ make_cleanup_restore_current_thread (void)
    thread apply all p x/i $pc   Apply x/i $pc cmd to all threads.  */
 
 static void
-thread_apply_all_command (char *cmd, int from_tty)
+thread_apply_all_command (const char *cmd, int from_tty)
 {
   struct cleanup *old_chain;
   char *saved_cmd;
@@ -1258,9 +1258,9 @@ thread_apply_all_command (char *cmd, int from_tty)
 }
 
 static void
-thread_apply_command (char *tidlist, int from_tty)
+thread_apply_command (const char *tidlist, int from_tty)
 {
-  char *cmd;
+  const char *cmd;
   struct cleanup *old_chain;
   char *saved_cmd;
   struct get_number_or_range_state state;
@@ -1314,7 +1314,7 @@ thread_apply_command (char *tidlist, int from_tty)
    if prefix of arg is `apply'.  */
 
 static void
-thread_command (char *tidstr, int from_tty)
+thread_command (const char *tidstr, int from_tty)
 {
   if (!tidstr)
     {
@@ -1343,14 +1343,14 @@ thread_command (char *tidstr, int from_tty)
 /* Implementation of `thread name'.  */
 
 static void
-thread_name_command (char *arg, int from_tty)
+thread_name_command (const char *arg, int from_tty)
 {
   struct thread_info *info;
 
   if (ptid_equal (inferior_ptid, null_ptid))
     error (_("No thread selected"));
 
-  arg = skip_spaces (arg);
+  arg = skip_spaces_const (arg);
 
   info = inferior_thread ();
   xfree (info->name);
@@ -1360,7 +1360,7 @@ thread_name_command (char *arg, int from_tty)
 /* Find thread ids with a name, target pid, or extra info matching ARG.  */
 
 static void
-thread_find_command (char *arg, int from_tty)
+thread_find_command (const char *arg, int from_tty)
 {
   struct thread_info *tp;
   char *tmp;

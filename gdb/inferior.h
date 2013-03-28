@@ -139,15 +139,15 @@ extern char *construct_inferior_arguments (int, char **);
 
 extern void post_create_inferior (struct target_ops *, int);
 
-extern void attach_command (char *, int);
+extern void attach_command (const char *, int);
 
 extern char *get_inferior_args (void);
 
-extern void set_inferior_args (char *);
+extern void set_inferior_args (const char *);
 
 extern void set_inferior_args_vector (int, char **);
 
-extern void registers_info (char *, int);
+extern void registers_info (const char *, int);
 
 extern void continue_1 (int all_threads);
 
@@ -155,7 +155,7 @@ extern void interrupt_target_1 (int all_threads);
 
 extern void delete_longjmp_breakpoint_cleanup (void *arg);
 
-extern void detach_command (char *, int);
+extern void detach_command (const char *, int);
 
 extern void notice_new_inferior (ptid_t, int, int);
 

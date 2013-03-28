@@ -93,7 +93,7 @@ static void signal_command (const char *, int);
 
 static void jump_command (const char *, int);
 
-static void step_1 (int, int, char *);
+static void step_1 (int, int, const char *);
 static void step_once (int skip_subroutines, int single_inst,
 		       int count, int thread);
 
@@ -217,7 +217,7 @@ get_inferior_args (void)
    NEWARGS is not transferred.  */
 
 void
-set_inferior_args (char *newargs)
+set_inferior_args (const char *newargs)
 {
   xfree (current_inferior ()->args);
   current_inferior ()->args = newargs ? xstrdup (newargs) : NULL;
@@ -235,7 +235,7 @@ set_inferior_args_vector (int argc, char **argv)
 /* Notice when `set args' is run.  */
 
 static void
-set_args_command (char *args, int from_tty, struct cmd_list_element *c)
+set_args_command (const char *args, int from_tty, struct cmd_list_element *c)
 {
   /* CLI has assigned the user-provided value to inferior_args_scratch.
      Now route it to current inferior.  */
@@ -523,7 +523,7 @@ prepare_execution_command (struct target_ops *target, int background)
    running the program.  */
 
 static void
-run_command_1 (char *args, int from_tty, int tbreak_at_main)
+run_command_1 (const char *args, int from_tty, int tbreak_at_main)
 {
   char *exec_file;
   struct cleanup *old_chain;
@@ -635,13 +635,13 @@ run_command_1 (char *args, int from_tty, int tbreak_at_main)
 }
 
 static void
-run_command (char *args, int from_tty)
+run_command (const char *args, int from_tty)
 {
   run_command_1 (args, from_tty, 0);
 }
 
 static void
-run_no_args_command (char *args, int from_tty)
+run_no_args_command (const char *args, int from_tty)
 {
   set_inferior_args ("");
 }
@@ -651,7 +651,7 @@ run_no_args_command (char *args, int from_tty)
    program.  */
 
 static void
-start_command (char *args, int from_tty)
+start_command (const char *args, int from_tty)
 {
   /* Some languages such as Ada need to search inside the program
      minimal symbols for the location where to put the temporary
@@ -753,7 +753,7 @@ continue_1 (int all_threads)
 /* continue [-a] [proceed-count] [&]  */
 
 static void
-continue_command (char *args, int from_tty)
+continue_command (const char *args, int from_tty)
 {
   int async_exec = 0;
   int all_threads = 0;
@@ -845,7 +845,7 @@ set_step_frame (void)
 /* Step until outside of current statement.  */
 
 static void
-step_command (char *count_string, int from_tty)
+step_command (const char *count_string, int from_tty)
 {
   step_1 (0, 0, count_string);
 }
@@ -853,7 +853,7 @@ step_command (char *count_string, int from_tty)
 /* Likewise, but skip over subroutine calls as if single instructions.  */
 
 static void
-next_command (char *count_string, int from_tty)
+next_command (const char *count_string, int from_tty)
 {
   step_1 (1, 0, count_string);
 }
@@ -861,13 +861,13 @@ next_command (char *count_string, int from_tty)
 /* Likewise, but step only one instruction.  */
 
 static void
-stepi_command (char *count_string, int from_tty)
+stepi_command (const char *count_string, int from_tty)
 {
   step_1 (0, 1, count_string);
 }
 
 static void
-nexti_command (char *count_string, int from_tty)
+nexti_command (const char *count_string, int from_tty)
 {
   step_1 (1, 1, count_string);
 }
@@ -880,7 +880,7 @@ delete_longjmp_breakpoint_cleanup (void *arg)
 }
 
 static void
-step_1 (int skip_subroutines, int single_inst, char *count_string)
+step_1 (int skip_subroutines, int single_inst, const char *count_string)
 {
   int count = 1;
   struct cleanup *cleanups = make_cleanup (null_cleanup, NULL);
@@ -1111,7 +1111,7 @@ step_once (int skip_subroutines, int single_inst, int count, int thread)
 /* Continue program at specified address.  */
 
 static void
-jump_command (char *arg, int from_tty)
+jump_command (const char *arg, int from_tty)
 {
   struct gdbarch *gdbarch = get_current_arch ();
   CORE_ADDR addr;
@@ -1194,7 +1194,7 @@ jump_command (char *arg, int from_tty)
 /* Go to line or address in current procedure.  */
 
 static void
-go_command (char *line_no, int from_tty)
+go_command (const char *line_no, int from_tty)
 {
   if (line_no == (char *) NULL || !*line_no)
     printf_filtered (_("Usage: go <location>\n"));
@@ -1209,7 +1209,7 @@ go_command (char *line_no, int from_tty)
 /* Continue program giving it specified signal.  */
 
 static void
-signal_command (char *signum_exp, int from_tty)
+signal_command (const char *signum_exp, int from_tty)
 {
   enum gdb_signal oursig;
   int async_exec = 0;
@@ -1350,7 +1350,7 @@ until_next_command (int from_tty)
 }
 
 static void
-until_command (char *arg, int from_tty)
+until_command (const char *arg, int from_tty)
 {
   int async_exec = 0;
 
@@ -1372,7 +1372,7 @@ until_command (char *arg, int from_tty)
 }
 
 static void
-advance_command (char *arg, int from_tty)
+advance_command (const char *arg, int from_tty)
 {
   int async_exec = 0;
 
@@ -1662,7 +1662,7 @@ finish_forward (struct symbol *function, struct frame_info *frame)
    frame will return to, then continue.  */
 
 static void
-finish_command (char *arg, int from_tty)
+finish_command (const char *arg, int from_tty)
 {
   struct frame_info *frame;
   struct symbol *function;
@@ -1750,7 +1750,7 @@ finish_command (char *arg, int from_tty)
 
 
 static void
-program_info (char *args, int from_tty)
+program_info (const char *args, int from_tty)
 {
   bpstat bs;
   int num, stat;
@@ -1817,7 +1817,7 @@ program_info (char *args, int from_tty)
 }
 
 static void
-environment_info (char *var, int from_tty)
+environment_info (const char *var, int from_tty)
 {
   if (var)
     {
@@ -1850,9 +1850,10 @@ environment_info (char *var, int from_tty)
 }
 
 static void
-set_environment_command (char *arg, int from_tty)
+set_environment_command (const char *arg, int from_tty)
 {
-  char *p, *val, *var;
+  const char *p, *val;
+  char *var;
   int nullset = 0;
 
   if (arg == 0)
@@ -1913,7 +1914,7 @@ set_environment_command (char *arg, int from_tty)
 }
 
 static void
-unset_environment_command (char *var, int from_tty)
+unset_environment_command (const char *var, int from_tty)
 {
   if (var == 0)
     {
@@ -1934,7 +1935,7 @@ unset_environment_command (char *var, int from_tty)
 static const char path_var_name[] = "PATH";
 
 static void
-path_info (char *args, int from_tty)
+path_info (const char *args, int from_tty)
 {
   puts_filtered ("Executable and object file path: ");
   puts_filtered (get_in_environ (current_inferior ()->environment,
@@ -1945,7 +1946,7 @@ path_info (char *args, int from_tty)
 /* Add zero or more directories to the front of the execution path.  */
 
 static void
-path_command (char *dirname, int from_tty)
+path_command (const char *dirname, int from_tty)
 {
   char *exec_path;
   char *env;
@@ -2091,7 +2092,7 @@ default_print_registers_info (struct gdbarch *gdbarch,
 }
 
 void
-registers_info (char *addr_exp, int fpregs)
+registers_info (const char *addr_exp, int fpregs)
 {
   struct frame_info *frame;
   struct gdbarch *gdbarch;
@@ -2110,11 +2111,11 @@ registers_info (char *addr_exp, int fpregs)
 
   while (*addr_exp != '\0')
     {
-      char *start;
+      const char *start;
       const char *end;
 
       /* Skip leading white space.  */
-      addr_exp = skip_spaces (addr_exp);
+      addr_exp = skip_spaces_const (addr_exp);
 
       /* Discard any leading ``$''.  Check that there is something
          resembling a register following it.  */
@@ -2199,13 +2200,13 @@ registers_info (char *addr_exp, int fpregs)
 }
 
 static void
-all_registers_info (char *addr_exp, int from_tty)
+all_registers_info (const char *addr_exp, int from_tty)
 {
   registers_info (addr_exp, 1);
 }
 
 static void
-nofp_registers_info (char *addr_exp, int from_tty)
+nofp_registers_info (const char *addr_exp, int from_tty)
 {
   registers_info (addr_exp, 0);
 }
@@ -2240,7 +2241,7 @@ print_vector_info (struct ui_file *file,
 }
 
 static void
-vector_info (char *args, int from_tty)
+vector_info (const char *args, int from_tty)
 {
   if (!target_has_registers)
     error (_("The program has no registers now."));
@@ -2251,7 +2252,7 @@ vector_info (char *args, int from_tty)
 /* Kill the inferior process.  Make us have no inferior.  */
 
 static void
-kill_command (char *arg, int from_tty)
+kill_command (const char *arg, int from_tty)
 {
   /* FIXME:  This should not really be inferior_ptid (or target_has_execution).
      It should be a distinct flag that indicates that a target is active, cuz
@@ -2457,7 +2458,7 @@ attach_command_continuation_free_args (void *args)
 }
 
 void
-attach_command (char *args, int from_tty)
+attach_command (const char *args, int from_tty)
 {
   int async_exec = 0;
   struct target_ops *attach_target;
@@ -2630,7 +2631,7 @@ notice_new_inferior (ptid_t ptid, int leave_running, int from_tty)
  */
 
 void
-detach_command (char *args, int from_tty)
+detach_command (const char *args, int from_tty)
 {
   dont_repeat ();		/* Not for the faint of heart.  */
 
@@ -2666,7 +2667,7 @@ detach_command (char *args, int from_tty)
    stopped processes on some native platforms (e.g. GNU/Linux).  */
 
 static void
-disconnect_command (char *args, int from_tty)
+disconnect_command (const char *args, int from_tty)
 {
   dont_repeat ();		/* Not for the faint of heart.  */
   query_if_trace_running (from_tty);
@@ -2706,7 +2707,7 @@ interrupt_target_1 (int all_threads)
    if the `-a' switch is used.  */
 
 static void
-interrupt_command (char *args, int from_tty)
+interrupt_command (const char *args, int from_tty)
 {
   if (target_can_async_p ())
     {
@@ -2756,7 +2757,7 @@ print_float_info (struct ui_file *file,
 }
 
 static void
-float_info (char *args, int from_tty)
+float_info (const char *args, int from_tty)
 {
   if (!target_has_registers)
     error (_("The program has no registers now."));
@@ -2765,7 +2766,7 @@ float_info (char *args, int from_tty)
 }
 
 static void
-unset_command (char *args, int from_tty)
+unset_command (const char *args, int from_tty)
 {
   printf_filtered (_("\"unset\" must be followed by the "
 		     "name of an unset subcommand.\n"));
@@ -2775,7 +2776,7 @@ unset_command (char *args, int from_tty)
 /* Implement `info proc' family of commands.  */
 
 static void
-info_proc_cmd_1 (char *args, enum info_proc_what what, int from_tty)
+info_proc_cmd_1 (const char *args, enum info_proc_what what, int from_tty)
 {
   struct gdbarch *gdbarch = get_current_arch ();
 
@@ -2791,7 +2792,7 @@ info_proc_cmd_1 (char *args, enum info_proc_what what, int from_tty)
 /* Implement `info proc' when given without any futher parameters.  */
 
 static void
-info_proc_cmd (char *args, int from_tty)
+info_proc_cmd (const char *args, int from_tty)
 {
   info_proc_cmd_1 (args, IP_MINIMAL, from_tty);
 }
@@ -2799,7 +2800,7 @@ info_proc_cmd (char *args, int from_tty)
 /* Implement `info proc mappings'.  */
 
 static void
-info_proc_cmd_mappings (char *args, int from_tty)
+info_proc_cmd_mappings (const char *args, int from_tty)
 {
   info_proc_cmd_1 (args, IP_MAPPINGS, from_tty);
 }
@@ -2807,7 +2808,7 @@ info_proc_cmd_mappings (char *args, int from_tty)
 /* Implement `info proc stat'.  */
 
 static void
-info_proc_cmd_stat (char *args, int from_tty)
+info_proc_cmd_stat (const char *args, int from_tty)
 {
   info_proc_cmd_1 (args, IP_STAT, from_tty);
 }
@@ -2815,7 +2816,7 @@ info_proc_cmd_stat (char *args, int from_tty)
 /* Implement `info proc status'.  */
 
 static void
-info_proc_cmd_status (char *args, int from_tty)
+info_proc_cmd_status (const char *args, int from_tty)
 {
   info_proc_cmd_1 (args, IP_STATUS, from_tty);
 }
@@ -2823,7 +2824,7 @@ info_proc_cmd_status (char *args, int from_tty)
 /* Implement `info proc cwd'.  */
 
 static void
-info_proc_cmd_cwd (char *args, int from_tty)
+info_proc_cmd_cwd (const char *args, int from_tty)
 {
   info_proc_cmd_1 (args, IP_CWD, from_tty);
 }
@@ -2831,7 +2832,7 @@ info_proc_cmd_cwd (char *args, int from_tty)
 /* Implement `info proc cmdline'.  */
 
 static void
-info_proc_cmd_cmdline (char *args, int from_tty)
+info_proc_cmd_cmdline (const char *args, int from_tty)
 {
   info_proc_cmd_1 (args, IP_CMDLINE, from_tty);
 }
@@ -2839,7 +2840,7 @@ info_proc_cmd_cmdline (char *args, int from_tty)
 /* Implement `info proc exe'.  */
 
 static void
-info_proc_cmd_exe (char *args, int from_tty)
+info_proc_cmd_exe (const char *args, int from_tty)
 {
   info_proc_cmd_1 (args, IP_EXE, from_tty);
 }
@@ -2847,7 +2848,7 @@ info_proc_cmd_exe (char *args, int from_tty)
 /* Implement `info proc all'.  */
 
 static void
-info_proc_cmd_all (char *args, int from_tty)
+info_proc_cmd_all (const char *args, int from_tty)
 {
   info_proc_cmd_1 (args, IP_ALL, from_tty);
 }

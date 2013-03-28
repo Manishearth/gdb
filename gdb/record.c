@@ -294,7 +294,8 @@ info_record_command (const char *args, int from_tty)
 static void
 cmd_record_save (const char *args, int from_tty)
 {
-  char *recfilename, recfilename_buffer[40];
+  const char *recfilename;
+  char recfilename_buffer[40];
 
   require_record_target ();
 
@@ -365,7 +366,7 @@ cmd_record_goto_end (char *arg, int from_tty)
 /* Read an instruction number from an argument string.  */
 
 static ULONGEST
-get_insn_number (char **arg)
+get_insn_number (const char **arg)
 {
   ULONGEST number;
   const char *begin, *end, *pos;
@@ -378,7 +379,7 @@ get_insn_number (char **arg)
 
   number = strtoulst (pos, &end, 10);
 
-  *arg += (end - begin);
+  *arg = end;
 
   return number;
 }
@@ -386,23 +387,26 @@ get_insn_number (char **arg)
 /* Read a context size from an argument string.  */
 
 static int
-get_context_size (char **arg)
+get_context_size (const char **arg)
 {
-  char *pos;
-  int number;
+  const char *pos;
+  char *result;
+  long number;
 
-  pos = skip_spaces (*arg);
+  pos = skip_spaces_const (*arg);
 
   if (!isdigit (*pos))
     error (_("Expected positive number, got: %s."), pos);
 
-  return strtol (pos, arg, 10);
+  number = strtol (pos, &result, 10);
+  *arg = result;
+  return number;
 }
 
 /* Complain about junk at the end of an argument string.  */
 
 static void
-no_chunk (char *arg)
+no_chunk (const char *arg)
 {
   if (*arg != 0)
     error (_("Junk after argument: %s."), arg);
@@ -411,10 +415,10 @@ no_chunk (char *arg)
 /* Read instruction-history modifiers from an argument string.  */
 
 static int
-get_insn_history_modifiers (char **arg)
+get_insn_history_modifiers (const char **arg)
 {
   int modifiers;
-  char *args;
+  const char *args;
 
   modifiers = 0;
   args = *arg;
@@ -457,7 +461,7 @@ get_insn_history_modifiers (char **arg)
 	    }
 	}
 
-      args = skip_spaces (args);
+      args = skip_spaces_const (args);
     }
 
   /* Update the argument string.  */
@@ -510,7 +514,7 @@ cmd_record_insn_history (const char *arg, int from_tty)
 
       if (*arg == ',')
 	{
-	  arg = skip_spaces (++arg);
+	  arg = skip_spaces_const (++arg);
 
 	  if (*arg == '+')
 	    {
@@ -553,10 +557,10 @@ cmd_record_insn_history (const char *arg, int from_tty)
 /* Read function-call-history modifiers from an argument string.  */
 
 static int
-get_call_history_modifiers (char **arg)
+get_call_history_modifiers (const char **arg)
 {
   int modifiers;
-  char *args;
+  const char *args;
 
   modifiers = 0;
   args = *arg;
@@ -595,7 +599,7 @@ get_call_history_modifiers (char **arg)
 	    }
 	}
 
-      args = skip_spaces (args);
+      args = skip_spaces_const (args);
     }
 
   /* Update the argument string.  */
@@ -629,7 +633,7 @@ cmd_record_call_history (const char *arg, int from_tty)
 
       if (*arg == ',')
 	{
-	  arg = skip_spaces (++arg);
+	  arg = skip_spaces_const (++arg);
 
 	  if (*arg == '+')
 	    {

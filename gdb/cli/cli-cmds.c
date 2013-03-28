@@ -614,7 +614,7 @@ static void
 source_command (const char *args, int from_tty)
 {
   struct cleanup *old_cleanups;
-  char *file = args;
+  const char *file = args;
   int *old_source_verbose = xmalloc (sizeof(int));
   int search_path = 0;
 
@@ -634,7 +634,7 @@ source_command (const char *args, int from_tty)
 	{
 	  /* Make sure leading white space does not break the
 	     comparisons.  */
-	  args = skip_spaces (args);
+	  args = skip_spaces_const (args);
 
 	  if (args[0] != '-')
 	    break;
@@ -657,7 +657,7 @@ source_command (const char *args, int from_tty)
 	    break;
 	}
 
-      file = skip_spaces (args);
+      file = skip_spaces_const (args);
     }
 
   source_script_with_search (file, from_tty, search_path);
@@ -762,7 +762,7 @@ edit_command (const char *arg, int from_tty)
   struct symtabs_and_lines sals;
   struct symtab_and_line sal;
   struct symbol *sym;
-  char *arg1;
+  const char *arg1;
   char *editor;
   char *p;
   const char *fn;

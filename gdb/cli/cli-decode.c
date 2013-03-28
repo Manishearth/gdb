@@ -929,7 +929,7 @@ apropos_cmd (struct ui_file *stream,
    help_list.  */
 
 void
-help_cmd (char *arg, struct ui_file *stream)
+help_cmd (const char *arg, struct ui_file *stream)
 {
   struct cmd_list_element *c;
   const char *command = arg;

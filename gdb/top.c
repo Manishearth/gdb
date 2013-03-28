@@ -378,7 +378,7 @@ check_frame_language_change (void)
    Pass FROM_TTY as second argument to the defining function.  */
 
 void
-execute_command (char *p, int from_tty)
+execute_command (const char *p, int from_tty)
 {
   struct cleanup *cleanup_if_error, *cleanup;
   struct cmd_list_element *c;
@@ -1267,7 +1267,7 @@ set_prompt (const char *s)
 
 struct qt_args
 {
-  char *args;
+  const char *args;
   int from_tty;
 };
 
@@ -1359,7 +1359,7 @@ quit_confirm (void)
 /* Quit without asking for confirmation.  */
 
 void
-quit_force (char *args, int from_tty)
+quit_force (const char *args, int from_tty)
 {
   int exit_code = 0;
   struct qt_args qt;
@@ -1458,7 +1458,7 @@ dont_repeat_command (const char *ignored, int from_tty)
 /* Number of commands to print in each call to show_commands.  */
 #define Hist_print 10
 void
-show_commands (char *args, int from_tty)
+show_commands (const char *args, int from_tty)
 {
   /* Index for history commands.  Relative to history_base.  */
   int offset;
@@ -1550,7 +1550,7 @@ set_history_size_command (const char *args, int from_tty,
 }
 
 void
-set_history (char *args, int from_tty)
+set_history (const char *args, int from_tty)
 {
   printf_unfiltered (_("\"set history\" must be followed "
 		       "by the name of a history subcommand.\n"));
@@ -1558,7 +1558,7 @@ set_history (char *args, int from_tty)
 }
 
 void
-show_history (char *args, int from_tty)
+show_history (const char *args, int from_tty)
 {
   cmd_show_list (showhistlist, from_tty, "");
 }
@@ -1567,7 +1567,7 @@ int info_verbose = 0;		/* Default verbose msgs off.  */
 
 /* Called by do_setshow_command.  An elaborate joke.  */
 void
-set_verbose (char *args, int from_tty, struct cmd_list_element *c)
+set_verbose (const char *args, int from_tty, struct cmd_list_element *c)
 {
   const char *cmdname = "verbose";
   struct cmd_list_element *showcmd;

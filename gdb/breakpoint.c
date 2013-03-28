@@ -1034,7 +1034,7 @@ static void
 condition_command (const char *arg, int from_tty)
 {
   struct breakpoint *b;
-  char *p;
+  const char *p;
   int bnum;
 
   if (arg == 0)

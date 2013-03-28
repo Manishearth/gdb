@@ -102,7 +102,7 @@ multi_line_command_p (enum command_control_type type)
    control commands (if/while).  */
 
 static struct command_line *
-build_command_line (enum command_control_type type, char *args)
+build_command_line (enum command_control_type type, const char *args)
 {
   struct command_line *cmd;
 
@@ -128,7 +128,7 @@ build_command_line (enum command_control_type type, char *args)
    such as "if" and "while".  */
 
 struct command_line *
-get_command_line (enum command_control_type type, char *arg)
+get_command_line (enum command_control_type type, const char *arg)
 {
   struct command_line *cmd;
   struct cleanup *old_chain = NULL;
@@ -1420,7 +1420,7 @@ static struct cmd_list_element **
 validate_comname (const char **comname)
 {
   struct cmd_list_element **list = &cmdlist;
-  char *p, *last_word;
+  const char *p, *last_word;
 
   if (*comname == 0)
     error_no_arg (_("name of command to define"));
