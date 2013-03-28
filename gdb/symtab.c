@@ -65,15 +65,15 @@
 
 /* Prototypes for local functions */
 
-static void rbreak_command (char *, int);
+static void rbreak_command (const char *, int);
 
-static void types_info (char *, int);
+static void types_info (const char *, int);
 
-static void functions_info (char *, int);
+static void functions_info (const char *, int);
 
-static void variables_info (char *, int);
+static void variables_info (const char *, int);
 
-static void sources_info (char *, int);
+static void sources_info (const char *, int);
 
 static int find_line_common (struct linetable *, int, int *, int);
 
@@ -3298,7 +3298,7 @@ output_partial_symbol_filename (const char *filename, const char *fullname,
 }
 
 static void
-sources_info (char *ignore, int from_tty)
+sources_info (const char *ignore, int from_tty)
 {
   struct symtab *s;
   struct objfile *objfile;
@@ -3858,7 +3858,7 @@ print_msymbol_info (struct bound_minimal_symbol msymbol)
    matches.  */
 
 static void
-symtab_symbol_info (char *regexp, enum search_domain kind, int from_tty)
+symtab_symbol_info (const char *regexp, enum search_domain kind, int from_tty)
 {
   static const char * const classnames[] =
     {"variable", "function", "type"};
@@ -3908,20 +3908,20 @@ symtab_symbol_info (char *regexp, enum search_domain kind, int from_tty)
 }
 
 static void
-variables_info (char *regexp, int from_tty)
+variables_info (const char *regexp, int from_tty)
 {
   symtab_symbol_info (regexp, VARIABLES_DOMAIN, from_tty);
 }
 
 static void
-functions_info (char *regexp, int from_tty)
+functions_info (const char *regexp, int from_tty)
 {
   symtab_symbol_info (regexp, FUNCTIONS_DOMAIN, from_tty);
 }
 
 
 static void
-types_info (char *regexp, int from_tty)
+types_info (const char *regexp, int from_tty)
 {
   symtab_symbol_info (regexp, TYPES_DOMAIN, from_tty);
 }
@@ -3935,7 +3935,7 @@ do_end_rbreak_breakpoints (void *ignore)
 }
 
 static void
-rbreak_command (char *regexp, int from_tty)
+rbreak_command (const char *regexp, int from_tty)
 {
   struct symbol_search *ss;
   struct symbol_search *p;
