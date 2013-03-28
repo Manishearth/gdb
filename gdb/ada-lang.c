@@ -13514,7 +13514,7 @@ static struct cmd_list_element *show_ada_list;
 /* Implement the "set ada" prefix command.  */
 
 static void
-set_ada_command (char *arg, int from_tty)
+set_ada_command (const char *arg, int from_tty)
 {
   printf_unfiltered (_(\
 "\"set ada\" must be followed by the name of a setting.\n"));
@@ -13524,7 +13524,7 @@ set_ada_command (char *arg, int from_tty)
 /* Implement the "show ada" prefix command.  */
 
 static void
-show_ada_command (char *args, int from_tty)
+show_ada_command (const char *args, int from_tty)
 {
   cmd_show_list (show_ada_list, from_tty, "");
 }
