@@ -384,7 +384,7 @@ create_signal_catchpoint (int tempflag, VEC (gdb_signal_type) *filter,
    filter list, or NULL if no filtering is required.  */
 
 static VEC (gdb_signal_type) *
-catch_signal_split_args (char *arg, int *catch_all)
+catch_signal_split_args (const char *arg, int *catch_all)
 {
   VEC (gdb_signal_type) *result = NULL;
   struct cleanup *cleanup = make_cleanup (VEC_cleanup (gdb_signal_type),
@@ -398,7 +398,7 @@ catch_signal_split_args (char *arg, int *catch_all)
       char *one_arg, *endptr;
       struct cleanup *inner_cleanup;
 
-      one_arg = extract_arg (&arg);
+      one_arg = extract_arg_const (&arg);
       if (one_arg == NULL)
 	break;
       inner_cleanup = make_cleanup (xfree, one_arg);
@@ -406,7 +406,7 @@ catch_signal_split_args (char *arg, int *catch_all)
       /* Check for the special flag "all".  */
       if (strcmp (one_arg, "all") == 0)
 	{
-	  arg = skip_spaces (arg);
+	  arg = skip_spaces_const (arg);
 	  if (*arg != '\0' || !first)
 	    error (_("'all' cannot be caught with other signals"));
 	  *catch_all = 1;
@@ -440,7 +440,7 @@ catch_signal_split_args (char *arg, int *catch_all)
 /* Implement the "catch signal" command.  */
 
 static void
-catch_signal_command (char *arg, int from_tty,
+catch_signal_command (const char *arg, int from_tty,
 		      struct cmd_list_element *command)
 {
   int tempflag, catch_all = 0;
@@ -448,7 +448,7 @@ catch_signal_command (char *arg, int from_tty,
 
   tempflag = get_cmd_context (command) == CATCH_TEMPORARY;
 
-  arg = skip_spaces (arg);
+  arg = skip_spaces_const (arg);
 
   /* The allowed syntax is:
      catch signal
