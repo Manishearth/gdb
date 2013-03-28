@@ -1499,7 +1499,7 @@ extern struct tracepoint *get_tracepoint_by_number_on_target (int num);
 
 /* Find a tracepoint by parsing a number in the supplied string.  */
 extern struct tracepoint *
-     get_tracepoint_by_number (char **arg, 
+     get_tracepoint_by_number (const char **arg,
 			       struct get_number_or_range_state *state);
 
 /* Return a vector of all tracepoints currently defined.  The vector

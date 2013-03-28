@@ -3599,7 +3599,7 @@ mips_pid_to_str (struct target_ops *ops, ptid_t ptid)
 /* Pass the command argument as a packet to PMON verbatim.  */
 
 static void
-pmon_command (char *args, int from_tty)
+pmon_command (const char *args, int from_tty)
 {
   char buf[DATA_MAXLEN + 1];
   int rlen;

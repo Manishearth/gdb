@@ -161,19 +161,13 @@ static int hexnumnstr (char *, ULONGEST, int);
 
 static CORE_ADDR remote_address_masked (CORE_ADDR);
 
-static void print_packet (char *);
-
-static void compare_sections_command (char *, int);
-
-static void packet_command (char *, int);
-
 static int stub_unpack_int (char *buff, int fieldlength);
 
 static ptid_t remote_current_thread (ptid_t oldptid);
 
 static void remote_find_new_threads (void);
 
-static int putpkt_binary (char *buf, int cnt);
+static int putpkt_binary (const char *buf, int cnt);
 
 static void check_binary_download (CORE_ADDR addr);
 
@@ -821,7 +815,7 @@ static int interrupt_on_connect = 0;
 static int remote_break;
 
 static void
-set_remotebreak (char *args, int from_tty, struct cmd_list_element *c)
+set_remotebreak (const char *args, int from_tty, struct cmd_list_element *c)
 {
   if (remote_break)
     interrupt_sequence_mode = interrupt_sequence_break;
@@ -938,7 +932,7 @@ get_memory_packet_size (struct memory_packet_config *config)
    something really big then do a sanity check.  */
 
 static void
-set_memory_packet_size (char *args, struct memory_packet_config *config)
+set_memory_packet_size (const char *args, struct memory_packet_config *config)
 {
   int fixed_p = config->fixed_p;
   long size = config->size;
@@ -998,13 +992,13 @@ static struct memory_packet_config memory_write_packet_config =
 };
 
 static void
-set_memory_write_packet_size (char *args, int from_tty)
+set_memory_write_packet_size (const char *args, int from_tty)
 {
   set_memory_packet_size (args, &memory_write_packet_config);
 }
 
 static void
-show_memory_write_packet_size (char *args, int from_tty)
+show_memory_write_packet_size (const char *args, int from_tty)
 {
   show_memory_packet_size (&memory_write_packet_config);
 }
@@ -1021,13 +1015,13 @@ static struct memory_packet_config memory_read_packet_config =
 };
 
 static void
-set_memory_read_packet_size (char *args, int from_tty)
+set_memory_read_packet_size (const char *args, int from_tty)
 {
   set_memory_packet_size (args, &memory_read_packet_config);
 }
 
 static void
-show_memory_read_packet_size (char *args, int from_tty)
+show_memory_read_packet_size (const char *args, int from_tty)
 {
   show_memory_packet_size (&memory_read_packet_config);
 }
@@ -1337,10 +1331,6 @@ enum {
 
 static struct packet_config remote_protocol_packets[PACKET_MAX];
 
-/* Returns whether a given packet or feature is supported.  This takes
-   into account the state of the corresponding "set remote foo-packet"
-   command, which may be used to bypass auto-detection.  */
-
 static enum packet_support
 packet_config_support (struct packet_config *config)
 {
@@ -1407,7 +1397,7 @@ enum Z_packet_type
 static enum auto_boolean remote_Z_packet_detect;
 
 static void
-set_remote_protocol_Z_packet_cmd (char *args, int from_tty,
+set_remote_protocol_Z_packet_cmd (const char *args, int from_tty,
 				  struct cmd_list_element *c)
 {
   int i;
@@ -7089,7 +7079,7 @@ escape_buffer (const char *buf, int n)
    string notation.  */
 
 static void
-print_packet (char *buf)
+print_packet (const char *buf)
 {
   puts_filtered ("\"");
   fputstr_filtered (buf, '"', gdb_stdout);
@@ -7097,7 +7087,7 @@ print_packet (char *buf)
 }
 
 int
-putpkt (char *buf)
+putpkt (const char *buf)
 {
   return putpkt_binary (buf, strlen (buf));
 }
@@ -7109,7 +7099,7 @@ putpkt (char *buf)
    to print the sent packet as a string.  */
 
 static int
-putpkt_binary (char *buf, int cnt)
+putpkt_binary (const char *buf, int cnt)
 {
   struct remote_state *rs = get_remote_state ();
   int i;
@@ -8484,7 +8474,7 @@ remote_verify_memory (struct target_ops *ops,
    Useful for verifying the image on the target against the exec file.  */
 
 static void
-compare_sections_command (char *args, int from_tty)
+compare_sections_command (const char *args, int from_tty)
 {
   asection *s;
   struct cleanup *old_chain;
@@ -9073,7 +9063,7 @@ remote_memory_map (struct target_ops *ops)
 }
 
 static void
-packet_command (char *args, int from_tty)
+packet_command (const char *args, int from_tty)
 {
   struct remote_state *rs = get_remote_state ();
 
@@ -10187,7 +10177,7 @@ remote_file_delete (const char *remote_file, int from_tty)
 }
 
 static void
-remote_put_command (char *args, int from_tty)
+remote_put_command (const char *args, int from_tty)
 {
   struct cleanup *back_to;
   char **argv;
@@ -10206,7 +10196,7 @@ remote_put_command (char *args, int from_tty)
 }
 
 static void
-remote_get_command (char *args, int from_tty)
+remote_get_command (const char *args, int from_tty)
 {
   struct cleanup *back_to;
   char **argv;
@@ -10225,7 +10215,7 @@ remote_get_command (char *args, int from_tty)
 }
 
 static void
-remote_delete_command (char *args, int from_tty)
+remote_delete_command (const char *args, int from_tty)
 {
   struct cleanup *back_to;
   char **argv;
@@ -10244,7 +10234,7 @@ remote_delete_command (char *args, int from_tty)
 }
 
 static void
-remote_command (char *args, int from_tty)
+remote_command (const char *args, int from_tty)
 {
   help_list (remote_cmdlist, "remote ", all_commands, gdb_stdout);
 }
@@ -11596,13 +11586,13 @@ remote_async (struct target_ops *ops,
 }
 
 static void
-set_remote_cmd (char *args, int from_tty)
+set_remote_cmd (const char *args, int from_tty)
 {
   help_list (remote_set_cmdlist, "set remote ", all_commands, gdb_stdout);
 }
 
 static void
-show_remote_cmd (char *args, int from_tty)
+show_remote_cmd (const char *args, int from_tty)
 {
   /* We can't just use cmd_show_list here, because we want to skip
      the redundant "show remote Z-packet" and the legacy aliases.  */

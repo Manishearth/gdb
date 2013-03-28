@@ -50,7 +50,7 @@ put_bits (bfd_uint64_t data, gdb_byte *buf, int bits, bfd_boolean big_p)
    Parse the arguments of the "find" command.  */
 
 static void
-parse_find_args (char *args, ULONGEST *max_countp,
+parse_find_args (const char *args, ULONGEST *max_countp,
 		 gdb_byte **pattern_bufp, ULONGEST *pattern_lenp,
 		 CORE_ADDR *start_addrp, ULONGEST *search_space_lenp,
 		 bfd_boolean big_p)
@@ -242,7 +242,7 @@ parse_find_args (char *args, ULONGEST *max_countp,
 }
 
 static void
-find_command (char *args, int from_tty)
+find_command (const char *args, int from_tty)
 {
   struct gdbarch *gdbarch = get_current_arch ();
   bfd_boolean big_p = gdbarch_byte_order (gdbarch) == BFD_ENDIAN_BIG;

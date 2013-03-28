@@ -202,7 +202,7 @@ show_record_debug (struct ui_file *file, int from_tty,
 /* Alias for "target record".  */
 
 static void
-cmd_record_start (char *args, int from_tty)
+cmd_record_start (const char *args, int from_tty)
 {
   execute_command ("target record-full", from_tty);
 }
@@ -211,7 +211,7 @@ cmd_record_start (char *args, int from_tty)
    of replay until the end.  */
 
 static void
-cmd_record_delete (char *args, int from_tty)
+cmd_record_delete (const char *args, int from_tty)
 {
   require_record_target ();
 
@@ -237,7 +237,7 @@ cmd_record_delete (char *args, int from_tty)
 /* Implement the "stoprecord" or "record stop" command.  */
 
 static void
-cmd_record_stop (char *args, int from_tty)
+cmd_record_stop (const char *args, int from_tty)
 {
   struct target_ops *t;
 
@@ -255,7 +255,7 @@ cmd_record_stop (char *args, int from_tty)
 /* The "set record" command.  */
 
 static void
-set_record_command (char *args, int from_tty)
+set_record_command (const char *args, int from_tty)
 {
   printf_unfiltered (_("\"set record\" must be followed "
 		       "by an apporpriate subcommand.\n"));
@@ -265,7 +265,7 @@ set_record_command (char *args, int from_tty)
 /* The "show record" command.  */
 
 static void
-show_record_command (char *args, int from_tty)
+show_record_command (const char *args, int from_tty)
 {
   cmd_show_list (show_record_cmdlist, from_tty, "");
 }
@@ -273,7 +273,7 @@ show_record_command (char *args, int from_tty)
 /* The "info record" command.  */
 
 static void
-info_record_command (char *args, int from_tty)
+info_record_command (const char *args, int from_tty)
 {
   struct target_ops *t;
 
@@ -292,7 +292,7 @@ info_record_command (char *args, int from_tty)
 /* The "record save" command.  */
 
 static void
-cmd_record_save (char *args, int from_tty)
+cmd_record_save (const char *args, int from_tty)
 {
   char *recfilename, recfilename_buffer[40];
 
@@ -488,7 +488,7 @@ command_size_to_target_size (unsigned int size)
 /* The "record instruction-history" command.  */
 
 static void
-cmd_record_insn_history (char *arg, int from_tty)
+cmd_record_insn_history (const char *arg, int from_tty)
 {
   int flags, size;
 
@@ -607,7 +607,7 @@ get_call_history_modifiers (char **arg)
 /* The "record function-call-history" command.  */
 
 static void
-cmd_record_call_history (char *arg, int from_tty)
+cmd_record_call_history (const char *arg, int from_tty)
 {
   int flags, size;
 
@@ -695,7 +695,7 @@ validate_history_size (unsigned int *command_var, unsigned int *setting)
    [0..UINT_MAX].  See command_size_to_target_size.  */
 
 static void
-set_record_insn_history_size (char *args, int from_tty,
+set_record_insn_history_size (const char *args, int from_tty,
 			      struct cmd_list_element *c)
 {
   validate_history_size (&record_insn_history_size_setshow_var,
@@ -707,7 +707,7 @@ set_record_insn_history_size (char *args, int from_tty,
    [0..UINT_MAX].  See command_size_to_target_size.  */
 
 static void
-set_record_call_history_size (char *args, int from_tty,
+set_record_call_history_size (const char *args, int from_tty,
 			      struct cmd_list_element *c)
 {
   validate_history_size (&record_call_history_size_setshow_var,

@@ -481,8 +481,6 @@ mips2_fp_compat (struct frame_info *frame)
 
 static CORE_ADDR heuristic_proc_start (struct gdbarch *, CORE_ADDR);
 
-static void reinit_frame_cache_sfunc (char *, int, struct cmd_list_element *);
-
 /* The list of available "set mips " and "show mips " commands.  */
 
 static struct cmd_list_element *setmipscmdlist = NULL;
@@ -802,7 +800,7 @@ static int heuristic_fence_post = 0;
 static int mips64_transfers_32bit_regs_p = 0;
 
 static void
-set_mips64_transfers_32bit_regs (char *args, int from_tty,
+set_mips64_transfers_32bit_regs (const char *args, int from_tty,
 				 struct cmd_list_element *c)
 {
   struct gdbarch_info info;
@@ -6633,13 +6631,13 @@ mips_in_function_epilogue_p (struct gdbarch *gdbarch, CORE_ADDR pc)
    used for all MIPS-specific commands.  */
 
 static void
-show_mips_command (char *args, int from_tty)
+show_mips_command (const char *args, int from_tty)
 {
   help_list (showmipscmdlist, "show mips ", all_commands, gdb_stdout);
 }
 
 static void
-set_mips_command (char *args, int from_tty)
+set_mips_command (const char *args, int from_tty)
 {
   printf_unfiltered
     ("\"set mips\" must be followed by an appropriate subcommand.\n");
@@ -6649,7 +6647,7 @@ set_mips_command (char *args, int from_tty)
 /* Commands to show/set the MIPS FPU type.  */
 
 static void
-show_mipsfpu_command (char *args, int from_tty)
+show_mipsfpu_command (const char *args, int from_tty)
 {
   char *fpu;
 
@@ -6686,7 +6684,7 @@ show_mipsfpu_command (char *args, int from_tty)
 
 
 static void
-set_mipsfpu_command (char *args, int from_tty)
+set_mipsfpu_command (const char *args, int from_tty)
 {
   printf_unfiltered ("\"set mipsfpu\" must be followed by \"double\", "
 		     "\"single\",\"none\" or \"auto\".\n");
@@ -6694,7 +6692,7 @@ set_mipsfpu_command (char *args, int from_tty)
 }
 
 static void
-set_mipsfpu_single_command (char *args, int from_tty)
+set_mipsfpu_single_command (const char *args, int from_tty)
 {
   struct gdbarch_info info;
   gdbarch_info_init (&info);
@@ -6708,7 +6706,7 @@ set_mipsfpu_single_command (char *args, int from_tty)
 }
 
 static void
-set_mipsfpu_double_command (char *args, int from_tty)
+set_mipsfpu_double_command (const char *args, int from_tty)
 {
   struct gdbarch_info info;
   gdbarch_info_init (&info);
@@ -6722,7 +6720,7 @@ set_mipsfpu_double_command (char *args, int from_tty)
 }
 
 static void
-set_mipsfpu_none_command (char *args, int from_tty)
+set_mipsfpu_none_command (const char *args, int from_tty)
 {
   struct gdbarch_info info;
   gdbarch_info_init (&info);
@@ -6736,7 +6734,7 @@ set_mipsfpu_none_command (char *args, int from_tty)
 }
 
 static void
-set_mipsfpu_auto_command (char *args, int from_tty)
+set_mipsfpu_auto_command (const char *args, int from_tty)
 {
   mips_fpu_type_auto = 1;
 }
@@ -6764,7 +6762,7 @@ deprecated_mips_set_processor_regs_hack (void)
    callable as an sfunc.  */
 
 static void
-reinit_frame_cache_sfunc (char *args, int from_tty,
+reinit_frame_cache_sfunc (const char *args, int from_tty,
 			  struct cmd_list_element *c)
 {
   reinit_frame_cache ();
@@ -8660,7 +8658,8 @@ mips_gdbarch_init (struct gdbarch_info info, struct gdbarch_list *arches)
 }
 
 static void
-mips_abi_update (char *ignore_args, int from_tty, struct cmd_list_element *c)
+mips_abi_update (const char *ignore_args, int from_tty,
+		 struct cmd_list_element *c)
 {
   struct gdbarch_info info;
 

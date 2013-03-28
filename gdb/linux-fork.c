@@ -484,7 +484,7 @@ out:
 /* Fork list <-> user interface.  */
 
 static void
-delete_checkpoint_command (char *args, int from_tty)
+delete_checkpoint_command (const char *args, int from_tty)
 {
   ptid_t ptid, pptid;
   struct fork_info *fi;
@@ -525,7 +525,7 @@ Please switch to another checkpoint before deleting the current one"));
 }
 
 static void
-detach_checkpoint_command (char *args, int from_tty)
+detach_checkpoint_command (const char *args, int from_tty)
 {
   ptid_t ptid;
 
@@ -552,7 +552,7 @@ Please switch to another checkpoint before detaching the current one"));
 /* Print information about currently known checkpoints.  */
 
 static void
-info_checkpoints_command (char *arg, int from_tty)
+info_checkpoints_command (const char *arg, int from_tty)
 {
   struct gdbarch *gdbarch = get_current_arch ();
   struct symtab_and_line sal;
@@ -649,7 +649,7 @@ inf_has_multiple_threads (void)
 }
 
 static void
-checkpoint_command (char *args, int from_tty)
+checkpoint_command (const char *args, int from_tty)
 {
   struct objfile *fork_objf;
   struct gdbarch *gdbarch;
@@ -739,7 +739,7 @@ linux_fork_context (struct fork_info *newfp, int from_tty)
 
 /* Switch inferior process (checkpoint) context, by checkpoint id.  */
 static void
-restart_command (char *args, int from_tty)
+restart_command (const char *args, int from_tty)
 {
   struct fork_info *fp;
 

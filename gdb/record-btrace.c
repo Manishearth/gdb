@@ -2013,7 +2013,7 @@ init_record_btrace_ops (void)
 /* Alias for "target record".  */
 
 static void
-cmd_record_btrace_start (char *args, int from_tty)
+cmd_record_btrace_start (const char *args, int from_tty)
 {
   if (args != NULL && *args != 0)
     error (_("Invalid argument."));
@@ -2024,7 +2024,7 @@ cmd_record_btrace_start (char *args, int from_tty)
 /* The "set record btrace" command.  */
 
 static void
-cmd_set_record_btrace (char *args, int from_tty)
+cmd_set_record_btrace (const char *args, int from_tty)
 {
   cmd_show_list (set_record_btrace_cmdlist, from_tty, "");
 }
@@ -2032,7 +2032,7 @@ cmd_set_record_btrace (char *args, int from_tty)
 /* The "show record btrace" command.  */
 
 static void
-cmd_show_record_btrace (char *args, int from_tty)
+cmd_show_record_btrace (const char *args, int from_tty)
 {
   cmd_show_list (show_record_btrace_cmdlist, from_tty, "");
 }

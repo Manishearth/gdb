@@ -216,16 +216,10 @@ extern void help_cmd_list (struct cmd_list_element *, enum command_class,
 
 /* Functions that implement commands about CLI commands.  */
 
-extern void help_cmd (char *, struct ui_file *);
+extern void help_cmd (const char *, struct ui_file *);
 
 extern void apropos_cmd (struct ui_file *, struct cmd_list_element *,
                          struct re_pattern_buffer *, char *);
-
-/* Used to mark commands that don't do anything.  If we just leave the
-   function field NULL, the command is interpreted as a help topic, or
-   as a class of commands.  */
-
-extern void not_just_help_class_command (char *arg, int from_tty);
 
 /* Exported to cli/cli-setshow.c */
 

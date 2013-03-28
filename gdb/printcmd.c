@@ -1004,14 +1004,14 @@ print_command_1 (const char *exp, int voidprint)
 }
 
 static void
-print_command (char *exp, int from_tty)
+print_command (const char *exp, int from_tty)
 {
   print_command_1 (exp, 1);
 }
 
 /* Same as print, except it doesn't print void results.  */
 static void
-call_command (char *exp, int from_tty)
+call_command (const char *exp, int from_tty)
 {
   print_command_1 (exp, 0);
 }
@@ -1019,7 +1019,7 @@ call_command (char *exp, int from_tty)
 /* Implementation of the "output" command.  */
 
 static void
-output_command (char *exp, int from_tty)
+output_command (const char *exp, int from_tty)
 {
   output_command_const (exp, from_tty);
 }
@@ -1067,7 +1067,7 @@ output_command_const (const char *exp, int from_tty)
 }
 
 static void
-set_command (char *exp, int from_tty)
+set_command (const char *exp, int from_tty)
 {
   struct expression *expr = parse_expression (exp);
   struct cleanup *old_chain =
@@ -1094,7 +1094,7 @@ set_command (char *exp, int from_tty)
 }
 
 static void
-sym_info (char *arg, int from_tty)
+sym_info (const char *arg, int from_tty)
 {
   struct minimal_symbol *msymbol;
   struct objfile *objfile;
@@ -1187,7 +1187,7 @@ sym_info (char *arg, int from_tty)
 }
 
 static void
-address_info (char *exp, int from_tty)
+address_info (const char *exp, int from_tty)
 {
   struct gdbarch *gdbarch;
   int regno;
@@ -1405,7 +1405,7 @@ address_info (char *exp, int from_tty)
 
 
 static void
-x_command (char *exp, int from_tty)
+x_command (const char *exp, int from_tty)
 {
   struct expression *expr;
   struct format_data fmt;
@@ -1492,7 +1492,7 @@ x_command (char *exp, int from_tty)
    Specify the expression.  */
 
 static void
-display_command (char *arg, int from_tty)
+display_command (const char *arg, int from_tty)
 {
   struct format_data fmt;
   struct expression *expr;
@@ -1603,7 +1603,7 @@ delete_display (struct display *display)
    ARGS.  DATA is passed unmodified to FUNCTION.  */
 
 static void
-map_display_numbers (char *args,
+map_display_numbers (const char *args,
 		     void (*function) (struct display *,
 				       void *),
 		     void *data)
@@ -1649,7 +1649,7 @@ do_delete_display (struct display *d, void *data)
 /* "undisplay" command.  */
 
 static void
-undisplay_command (char *args, int from_tty)
+undisplay_command (const char *args, int from_tty)
 {
   if (args == NULL)
     {
@@ -1853,7 +1853,7 @@ disable_current_display (void)
 }
 
 static void
-display_info (char *ignore, int from_tty)
+display_info (const char *ignore, int from_tty)
 {
   struct display *d;
 
@@ -1892,7 +1892,7 @@ do_enable_disable_display (struct display *d, void *data)
    commands.  ENABLE decides what to do.  */
 
 static void
-enable_disable_display_command (char *args, int from_tty, int enable)
+enable_disable_display_command (const char *args, int from_tty, int enable)
 {
   if (args == NULL)
     {
@@ -1909,7 +1909,7 @@ enable_disable_display_command (char *args, int from_tty, int enable)
 /* The "enable display" command.  */
 
 static void
-enable_display_command (char *args, int from_tty)
+enable_display_command (const char *args, int from_tty)
 {
   enable_disable_display_command (args, from_tty, 1);
 }
@@ -1917,7 +1917,7 @@ enable_display_command (char *args, int from_tty)
 /* The "disable display" command.  */
 
 static void
-disable_display_command (char *args, int from_tty)
+disable_display_command (const char *args, int from_tty)
 {
   enable_disable_display_command (args, from_tty, 0);
 }
@@ -2449,7 +2449,7 @@ ui_printf (const char *arg, struct ui_file *stream)
 /* Implement the "printf" command.  */
 
 static void
-printf_command (char *arg, int from_tty)
+printf_command (const char *arg, int from_tty)
 {
   ui_printf (arg, gdb_stdout);
   gdb_flush (gdb_stdout);
@@ -2458,7 +2458,7 @@ printf_command (char *arg, int from_tty)
 /* Implement the "eval" command.  */
 
 static void
-eval_command (char *arg, int from_tty)
+eval_command (const char *arg, int from_tty)
 {
   struct ui_file *ui_out = mem_fileopen ();
   struct cleanup *cleanups = make_cleanup_ui_file_delete (ui_out);

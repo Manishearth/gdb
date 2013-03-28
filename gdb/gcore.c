@@ -142,11 +142,11 @@ do_bfd_delete_cleanup (void *arg)
    Generate a core file from the inferior process.  */
 
 static void
-gcore_command (char *args, int from_tty)
+gcore_command (const char *args, int from_tty)
 {
   struct cleanup *filename_chain;
   struct cleanup *bfd_chain;
-  char *corefilename;
+  const char *corefilename;
   bfd *obfd;
 
   /* No use generating a corefile without a target process.  */

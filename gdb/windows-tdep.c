@@ -367,7 +367,7 @@ display_one_tib (ptid_t ptid)
    be the windows ThreadID (not the internal GDB thread ID).  */
 
 static void
-display_tib (char * args, int from_tty)
+display_tib (const char * args, int from_tty)
 {
   if (args)
     {
@@ -465,7 +465,7 @@ show_maint_show_all_tib (struct ui_file *file, int from_tty,
 }
 
 static void
-info_w32_command (char *args, int from_tty)
+info_w32_command (const char *args, int from_tty)
 {
   help_list (info_w32_cmdlist, "info w32 ", class_info, gdb_stdout);
 }

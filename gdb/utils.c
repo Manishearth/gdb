@@ -889,12 +889,12 @@ demangler_warning (const char *file, int line, const char *string, ...)
 /* Dummy functions to keep add_prefix_cmd happy.  */
 
 static void
-set_internal_problem_cmd (char *args, int from_tty)
+set_internal_problem_cmd (const char *args, int from_tty)
 {
 }
 
 static void
-show_internal_problem_cmd (char *args, int from_tty)
+show_internal_problem_cmd (const char *args, int from_tty)
 {
 }
 
@@ -1839,14 +1839,14 @@ set_width (void)
 }
 
 static void
-set_width_command (char *args, int from_tty, struct cmd_list_element *c)
+set_width_command (const char *args, int from_tty, struct cmd_list_element *c)
 {
   set_screen_size ();
   set_width ();
 }
 
 static void
-set_height_command (char *args, int from_tty, struct cmd_list_element *c)
+set_height_command (const char *args, int from_tty, struct cmd_list_element *c)
 {
   set_screen_size ();
 }
@@ -2723,13 +2723,13 @@ subset_compare (char *string_to_compare, char *template_string)
 }
 
 static void
-pagination_on_command (char *arg, int from_tty)
+pagination_on_command (const char *arg, int from_tty)
 {
   pagination_enabled = 1;
 }
 
 static void
-pagination_off_command (char *arg, int from_tty)
+pagination_off_command (const char *arg, int from_tty)
 {
   pagination_enabled = 0;
 }

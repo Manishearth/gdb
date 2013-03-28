@@ -221,8 +221,6 @@ static const char *disassembly_style;
 
 /* This is used to keep the bfd arch_info in sync with the disassembly
    style.  */
-static void set_disassembly_style_sfunc(char *, int,
-					 struct cmd_list_element *);
 static void set_disassembly_style (void);
 
 static void convert_from_extended (const struct floatformat *, const void *,
@@ -9363,7 +9361,7 @@ arm_skip_stub (struct frame_info *frame, CORE_ADDR pc)
 }
 
 static void
-set_arm_command (char *args, int from_tty)
+set_arm_command (const char *args, int from_tty)
 {
   printf_unfiltered (_("\
 \"set arm\" must be followed by an apporpriate subcommand.\n"));
@@ -9371,7 +9369,7 @@ set_arm_command (char *args, int from_tty)
 }
 
 static void
-show_arm_command (char *args, int from_tty)
+show_arm_command (const char *args, int from_tty)
 {
   cmd_show_list (showarmcmdlist, from_tty, "");
 }
@@ -9393,7 +9391,7 @@ arm_update_current_architecture (void)
 }
 
 static void
-set_fp_model_sfunc (char *args, int from_tty,
+set_fp_model_sfunc (const char *args, int from_tty,
 		    struct cmd_list_element *c)
 {
   enum arm_float_model fp_model;
@@ -9430,7 +9428,7 @@ The current ARM floating point model is \"%s\".\n"),
 }
 
 static void
-arm_set_abi (char *args, int from_tty,
+arm_set_abi (const char *args, int from_tty,
 	     struct cmd_list_element *c)
 {
   enum arm_abi_kind arm_abi;
@@ -9493,7 +9491,7 @@ arm_show_force_mode (struct ui_file *file, int from_tty,
    arm disassembly" command, and does that.  */
 
 static void
-set_disassembly_style_sfunc (char *args, int from_tty,
+set_disassembly_style_sfunc (const char *args, int from_tty,
 			      struct cmd_list_element *c)
 {
   set_disassembly_style ();

@@ -369,17 +369,10 @@ add_abbrev_prefix_cmd (const char *name, enum command_class class,
   return c;
 }
 
-/* This is an empty "cfunc".  */
-void
-not_just_help_class_command (char *args, int from_tty)
-{
-}
-
 /* This is an empty "sfunc".  */
-static void empty_sfunc (char *, int, struct cmd_list_element *);
 
 static void
-empty_sfunc (char *args, int from_tty, struct cmd_list_element *c)
+empty_sfunc (const char *args, int from_tty, struct cmd_list_element *c)
 {
 }
 

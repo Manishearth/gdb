@@ -52,9 +52,9 @@ static void unk_lang_error (char *);
 
 static int unk_lang_parser (struct parser_state *);
 
-static void show_check (char *, int);
+static void show_check (const char *, int);
 
-static void set_check (char *, int);
+static void set_check (const char *, int);
 
 static void set_range_case (void);
 
@@ -141,7 +141,8 @@ show_language_command (struct ui_file *file, int from_tty,
 
 /* Set command.  Change the current working language.  */
 static void
-set_language_command (char *ignore, int from_tty, struct cmd_list_element *c)
+set_language_command (const char *ignore, int from_tty,
+		      struct cmd_list_element *c)
 {
   int i;
   enum language flang;
@@ -223,7 +224,7 @@ show_range_command (struct ui_file *file, int from_tty,
 
 /* Set command.  Change the setting for range checking.  */
 static void
-set_range_command (char *ignore, int from_tty, struct cmd_list_element *c)
+set_range_command (const char *ignore, int from_tty, struct cmd_list_element *c)
 {
   if (strcmp (range, "on") == 0)
     {
@@ -297,7 +298,7 @@ show_case_command (struct ui_file *file, int from_tty,
 /* Set command.  Change the setting for case sensitivity.  */
 
 static void
-set_case_command (char *ignore, int from_tty, struct cmd_list_element *c)
+set_case_command (const char *ignore, int from_tty, struct cmd_list_element *c)
 {
    if (strcmp (case_sensitive, "on") == 0)
      {
@@ -501,7 +502,7 @@ language_str (enum language lang)
 }
 
 static void
-set_check (char *ignore, int from_tty)
+set_check (const char *ignore, int from_tty)
 {
   printf_unfiltered (
      "\"set check\" must be followed by the name of a check subcommand.\n");
@@ -509,7 +510,7 @@ set_check (char *ignore, int from_tty)
 }
 
 static void
-show_check (char *ignore, int from_tty)
+show_check (const char *ignore, int from_tty)
 {
   cmd_show_list (showchecklist, from_tty, "");
 }

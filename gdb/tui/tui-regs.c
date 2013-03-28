@@ -58,8 +58,8 @@ static enum tui_status tui_get_register (struct frame_info *frame,
 					 struct tui_data_element *data,
 					 int regnum, int *changedp);
 
-static void tui_scroll_regs_forward_command (char *, int);
-static void tui_scroll_regs_backward_command (char *, int);
+static void tui_scroll_regs_forward_command (const char *, int);
+static void tui_scroll_regs_backward_command (const char *, int);
 
 
 
@@ -564,7 +564,7 @@ tui_display_register (struct tui_data_element *data,
 }
 
 static void
-tui_reg_next_command (char *arg, int from_tty)
+tui_reg_next_command (const char *arg, int from_tty)
 {
   struct gdbarch *gdbarch = get_current_arch ();
 
@@ -583,19 +583,19 @@ tui_reg_next_command (char *arg, int from_tty)
 }
 
 static void
-tui_reg_float_command (char *arg, int from_tty)
+tui_reg_float_command (const char *arg, int from_tty)
 {
   tui_show_registers (float_reggroup);
 }
 
 static void
-tui_reg_general_command (char *arg, int from_tty)
+tui_reg_general_command (const char *arg, int from_tty)
 {
   tui_show_registers (general_reggroup);
 }
 
 static void
-tui_reg_system_command (char *arg, int from_tty)
+tui_reg_system_command (const char *arg, int from_tty)
 {
   tui_show_registers (system_reggroup);
 }
@@ -603,7 +603,7 @@ tui_reg_system_command (char *arg, int from_tty)
 static struct cmd_list_element *tuireglist;
 
 static void
-tui_reg_command (char *args, int from_tty)
+tui_reg_command (const char *args, int from_tty)
 {
   printf_unfiltered (_("\"tui reg\" must be followed by the name of a "
                      "tui reg command.\n"));
@@ -730,14 +730,14 @@ tui_get_register (struct frame_info *frame,
 }
 
 static void
-tui_scroll_regs_forward_command (char *arg, int from_tty)
+tui_scroll_regs_forward_command (const char *arg, int from_tty)
 {
   tui_scroll (FORWARD_SCROLL, TUI_DATA_WIN, 1);
 }
 
 
 static void
-tui_scroll_regs_backward_command (char *arg, int from_tty)
+tui_scroll_regs_backward_command (const char *arg, int from_tty)
 {
   tui_scroll (BACKWARD_SCROLL, TUI_DATA_WIN, 1);
 }

@@ -20,7 +20,7 @@
 #ifndef STACK_H
 #define STACK_H
 
-void select_frame_command (char *level_exp, int from_tty);
+void select_frame_command (const char *level_exp, int from_tty);
 
 void find_frame_funname (struct frame_info *frame, char **funname,
 			 enum language *funlang, struct symbol **funcp);

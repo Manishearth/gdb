@@ -19,7 +19,7 @@
 #define COMMAND_H 1
 
 #ifndef CLI_CONST
-#define CLI_CONST
+#define CLI_CONST const
 #endif
 
 #include "gdb_vecs.h"

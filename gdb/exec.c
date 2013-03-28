@@ -45,13 +45,13 @@
 #include <ctype.h>
 #include <sys/stat.h>
 
-void (*deprecated_file_changed_hook) (char *);
+void (*deprecated_file_changed_hook) (const char *);
 
 /* Prototypes for local functions */
 
-static void file_command (char *, int);
+static void file_command (const char *, int);
 
-static void set_section_command (char *, int);
+static void set_section_command (const char *, int);
 
 static void exec_files_info (struct target_ops *);
 
@@ -280,7 +280,7 @@ exec_file_attach (const char *filename, int from_tty)
    If ARGS is NULL, we just want to close the exec file.  */
 
 static void
-exec_file_command (char *args, int from_tty)
+exec_file_command (const char *args, int from_tty)
 {
   char **argv;
   char *filename;
@@ -321,7 +321,7 @@ exec_file_command (char *args, int from_tty)
    command was added?  */
 
 static void
-file_command (char *arg, int from_tty)
+file_command (const char *arg, int from_tty)
 {
   /* FIXME, if we lose on reading the symbol file, we should revert
      the exec file, but that's rough.  */
@@ -868,10 +868,10 @@ exec_files_info (struct target_ops *t)
 }
 
 static void
-set_section_command (char *args, int from_tty)
+set_section_command (const char *args, int from_tty)
 {
   struct target_section *p;
-  char *secname;
+  const char *secname;
   unsigned seclen;
   unsigned long secaddr;
   char secprint[100];

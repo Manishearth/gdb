@@ -759,13 +759,13 @@ extern void read_frame_arg (struct symbol *sym, struct frame_info *frame,
 extern void read_frame_local (struct symbol *sym, struct frame_info *frame,
 			      struct frame_arg *argp);
 
-extern void args_info (char *, int);
+extern void args_info (const char *, int);
 
-extern void locals_info (char *, int);
+extern void locals_info (const char *, int);
 
 extern void (*deprecated_selected_frame_level_changed_hook) (int);
 
-extern void return_command (char *, int);
+extern void return_command (const char *, int);
 
 /* Set FRAME's unwinder temporarily, so that we can call a sniffer.
    Return a cleanup which should be called if unwinding fails, and

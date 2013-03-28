@@ -1533,7 +1533,7 @@ m32r_pid_to_str (struct target_ops *ops, ptid_t ptid)
 }
 
 static void
-sdireset_command (char *args, int from_tty)
+sdireset_command (const char *args, int from_tty)
 {
   if (remote_debug)
     fprintf_unfiltered (gdb_stdlog, "m32r_sdireset()\n");
@@ -1546,7 +1546,7 @@ sdireset_command (char *args, int from_tty)
 
 
 static void
-sdistatus_command (char *args, int from_tty)
+sdistatus_command (const char *args, int from_tty)
 {
   unsigned char buf[4096];
   int i, c;
@@ -1573,7 +1573,7 @@ sdistatus_command (char *args, int from_tty)
 
 
 static void
-debug_chaos_command (char *args, int from_tty)
+debug_chaos_command (const char *args, int from_tty)
 {
   unsigned char buf[3];
 
@@ -1585,7 +1585,7 @@ debug_chaos_command (char *args, int from_tty)
 
 
 static void
-use_debug_dma_command (char *args, int from_tty)
+use_debug_dma_command (const char *args, int from_tty)
 {
   unsigned char buf[3];
 
@@ -1596,7 +1596,7 @@ use_debug_dma_command (char *args, int from_tty)
 }
 
 static void
-use_mon_code_command (char *args, int from_tty)
+use_mon_code_command (const char *args, int from_tty)
 {
   unsigned char buf[3];
 
@@ -1608,13 +1608,13 @@ use_mon_code_command (char *args, int from_tty)
 
 
 static void
-use_ib_breakpoints_command (char *args, int from_tty)
+use_ib_breakpoints_command (const char *args, int from_tty)
 {
   use_ib_breakpoints = 1;
 }
 
 static void
-use_dbt_breakpoints_command (char *args, int from_tty)
+use_dbt_breakpoints_command (const char *args, int from_tty)
 {
   use_ib_breakpoints = 0;
 }

@@ -69,8 +69,8 @@ struct cmd_list_element *maint_cplus_cmd_list = NULL;
 
 /* The actual commands.  */
 
-static void maint_cplus_command (char *arg, int from_tty);
-static void first_component_command (char *arg, int from_tty);
+static void maint_cplus_command (const char *arg, int from_tty);
+static void first_component_command (const char *arg, int from_tty);
 
 /* A list of typedefs which should not be substituted by replace_typedefs.  */
 static const char * const ignore_typedefs[] =
@@ -1624,7 +1624,7 @@ gdb_demangle (const char *name, int options)
 /* Don't allow just "maintenance cplus".  */
 
 static  void
-maint_cplus_command (char *arg, int from_tty)
+maint_cplus_command (const char *arg, int from_tty)
 {
   printf_unfiltered (_("\"maintenance cplus\" must be followed "
 		       "by the name of a command.\n"));
@@ -1638,7 +1638,7 @@ maint_cplus_command (char *arg, int from_tty)
    cp_find_first_component.  */
 
 static void
-first_component_command (char *arg, int from_tty)
+first_component_command (const char *arg, int from_tty)
 {
   int len;  
   char *prefix; 
@@ -1661,7 +1661,7 @@ extern initialize_file_ftype _initialize_cp_support; /* -Wmissing-prototypes */
 /* Implement "info vtbl".  */
 
 static void
-info_vtbl_command (char *arg, int from_tty)
+info_vtbl_command (const char *arg, int from_tty)
 {
   struct value *value;
 

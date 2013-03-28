@@ -60,33 +60,33 @@
 
 /* Prototypes for local command functions */
 
-static void complete_command (char *, int);
+static void complete_command (const char *, int);
 
-static void echo_command (char *, int);
+static void echo_command (const char *, int);
 
-static void pwd_command (char *, int);
+static void pwd_command (const char *, int);
 
-static void show_version (char *, int);
+static void show_version (const char *, int);
 
-static void help_command (char *, int);
+static void help_command (const char *, int);
 
-static void show_command (char *, int);
+static void show_command (const char *, int);
 
-static void info_command (char *, int);
+static void info_command (const char *, int);
 
-static void show_debug (char *, int);
+static void show_debug (const char *, int);
 
-static void set_debug (char *, int);
+static void set_debug (const char *, int);
 
-static void show_user (char *, int);
+static void show_user (const char *, int);
 
-static void make_command (char *, int);
+static void make_command (const char *, int);
 
-static void shell_escape (char *, int);
+static void shell_escape (const char *, int);
 
-static void edit_command (char *, int);
+static void edit_command (const char *, int);
 
-static void list_command (char *, int);
+static void list_command (const char *, int);
 
 /* Prototypes for local utility functions */
 
@@ -214,7 +214,7 @@ error_no_arg (const char *why)
    args.  */
 
 static void
-info_command (char *arg, int from_tty)
+info_command (const char *arg, int from_tty)
 {
   printf_unfiltered (_("\"info\" must be followed by "
 		       "the name of an info command.\n"));
@@ -224,7 +224,7 @@ info_command (char *arg, int from_tty)
 /* The "show" command with no arguments shows all the settings.  */
 
 static void
-show_command (char *arg, int from_tty)
+show_command (const char *arg, int from_tty)
 {
   cmd_show_list (showlist, from_tty, "");
 }
@@ -233,7 +233,7 @@ show_command (char *arg, int from_tty)
    is ignored.  */
 
 static void
-help_command (char *command, int from_tty)
+help_command (const char *command, int from_tty)
 {
   help_cmd (command, gdb_stdout);
 }
@@ -241,10 +241,10 @@ help_command (char *command, int from_tty)
 /* The "complete" command is used by Emacs to implement completion.  */
 
 static void
-complete_command (char *arg, int from_tty)
+complete_command (const char *arg, int from_tty)
 {
   int argpoint;
-  char *point, *arg_prefix;
+  const char *point, *arg_prefix;
   VEC (char_ptr) *completions;
 
   dont_repeat ();
@@ -305,7 +305,7 @@ is_complete_command (struct cmd_list_element *c)
 }
 
 static void
-show_version (char *args, int from_tty)
+show_version (const char *args, int from_tty)
 {
   print_gdb_version (gdb_stdout);
   printf_filtered ("\n");
@@ -320,7 +320,7 @@ show_configuration (char *args, int from_tty)
 /* Handle the quit command.  */
 
 void
-quit_command (char *args, int from_tty)
+quit_command (const char *args, int from_tty)
 {
   if (!quit_confirm ())
     error (_("Not confirmed."));
@@ -331,7 +331,7 @@ quit_command (char *args, int from_tty)
 }
 
 static void
-pwd_command (char *args, int from_tty)
+pwd_command (const char *args, int from_tty)
 {
   if (args)
     error (_("The \"pwd\" command does not take an argument: %s"), args);
@@ -347,7 +347,7 @@ pwd_command (char *args, int from_tty)
 }
 
 void
-cd_command (char *dir, int from_tty)
+cd_command (const char *dir, int from_tty)
 {
   int len;
   /* Found something other than leading repetitions of "/..".  */
@@ -611,7 +611,7 @@ source_verbose_cleanup (void *old_value)
 }
 
 static void
-source_command (char *args, int from_tty)
+source_command (const char *args, int from_tty)
 {
   struct cleanup *old_cleanups;
   char *file = args;
@@ -667,7 +667,7 @@ source_command (char *args, int from_tty)
 
 
 static void
-echo_command (char *text, int from_tty)
+echo_command (const char *text, int from_tty)
 {
   const char *p = text;
   int c;
@@ -696,7 +696,7 @@ echo_command (char *text, int from_tty)
 }
 
 static void
-shell_escape (char *arg, int from_tty)
+shell_escape (const char *arg, int from_tty)
 {
 #if defined(CANT_FORK) || \
       (!defined(HAVE_WORKING_VFORK) && !defined(HAVE_WORKING_FORK))
@@ -757,7 +757,7 @@ shell_escape (char *arg, int from_tty)
 }
 
 static void
-edit_command (char *arg, int from_tty)
+edit_command (const char *arg, int from_tty)
 {
   struct symtabs_and_lines sals;
   struct symtab_and_line sal;
@@ -855,7 +855,7 @@ edit_command (char *arg, int from_tty)
 }
 
 static void
-list_command (char *arg, int from_tty)
+list_command (const char *arg, int from_tty)
 {
   struct symtabs_and_lines sals, sals_end;
   struct symtab_and_line sal = { 0 };
@@ -1136,7 +1136,7 @@ disassemble_current_function (int flags)
    A /r modifier will include raw instructions in hex with the assembly.  */
 
 static void
-disassemble_command (char *arg, int from_tty)
+disassemble_command (const char *arg, int from_tty)
 {
   struct gdbarch *gdbarch = get_current_arch ();
   CORE_ADDR low, high;
@@ -1219,7 +1219,7 @@ disassemble_command (char *arg, int from_tty)
 }
 
 static void
-make_command (char *arg, int from_tty)
+make_command (const char *arg, int from_tty)
 {
   char *p;
 
@@ -1236,7 +1236,7 @@ make_command (char *arg, int from_tty)
 }
 
 static void
-show_user (char *args, int from_tty)
+show_user (const char *args, int from_tty)
 {
   struct cmd_list_element *c;
   extern struct cmd_list_element *cmdlist;
@@ -1265,7 +1265,7 @@ show_user (char *args, int from_tty)
    regular expression.  */
 
 static void 
-apropos_command (char *searchstr, int from_tty)
+apropos_command (const char *searchstr, int from_tty)
 {
   regex_t pattern;
   int code;
@@ -1341,7 +1341,7 @@ valid_command_p (const char *command)
 /* Make an alias of an existing command.  */
 
 static void
-alias_command (char *args, int from_tty)
+alias_command (const char *args, int from_tty)
 {
   int i, alias_argc, command_argc;
   int abbrev_flag = 0;
@@ -1563,7 +1563,7 @@ filter_sals (struct symtabs_and_lines *sals)
 }
 
 static void
-set_debug (char *arg, int from_tty)
+set_debug (const char *arg, int from_tty)
 {
   printf_unfiltered (_("\"set debug\" must be followed by "
 		       "the name of a debug subcommand.\n"));
@@ -1571,7 +1571,7 @@ set_debug (char *arg, int from_tty)
 }
 
 static void
-show_debug (char *args, int from_tty)
+show_debug (const char *args, int from_tty)
 {
   cmd_show_list (showdebuglist, from_tty, "");
 }

@@ -60,52 +60,52 @@
 
 /* Local functions: */
 
-static void nofp_registers_info (char *, int);
+static void nofp_registers_info (const char *, int);
 
 static void print_return_value (struct value *function,
 				struct type *value_type);
 
 static void until_next_command (int);
 
-static void until_command (char *, int);
+static void until_command (const char *, int);
 
-static void path_info (char *, int);
+static void path_info (const char *, int);
 
-static void path_command (char *, int);
+static void path_command (const char *, int);
 
-static void unset_command (char *, int);
+static void unset_command (const char *, int);
 
-static void float_info (char *, int);
+static void float_info (const char *, int);
 
-static void disconnect_command (char *, int);
+static void disconnect_command (const char *, int);
 
-static void unset_environment_command (char *, int);
+static void unset_environment_command (const char *, int);
 
-static void set_environment_command (char *, int);
+static void set_environment_command (const char *, int);
 
-static void environment_info (char *, int);
+static void environment_info (const char *, int);
 
-static void program_info (char *, int);
+static void program_info (const char *, int);
 
-static void finish_command (char *, int);
+static void finish_command (const char *, int);
 
-static void signal_command (char *, int);
+static void signal_command (const char *, int);
 
-static void jump_command (char *, int);
+static void jump_command (const char *, int);
 
 static void step_1 (int, int, char *);
 static void step_once (int skip_subroutines, int single_inst,
 		       int count, int thread);
 
-static void next_command (char *, int);
+static void next_command (const char *, int);
 
-static void step_command (char *, int);
+static void step_command (const char *, int);
 
-static void run_command (char *, int);
+static void run_command (const char *, int);
 
-static void run_no_args_command (char *args, int from_tty);
+static void run_no_args_command (const char *args, int from_tty);
 
-static void go_command (char *line_no, int from_tty);
+static void go_command (const char *line_no, int from_tty);
 
 static int strip_bg_char (char **);
 
@@ -171,7 +171,7 @@ get_inferior_io_terminal (void)
 }
 
 static void
-set_inferior_tty_command (char *args, int from_tty,
+set_inferior_tty_command (const char *args, int from_tty,
 			  struct cmd_list_element *c)
 {
   /* CLI has assigned the user-provided value to inferior_io_terminal_scratch.

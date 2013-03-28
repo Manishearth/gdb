@@ -12239,13 +12239,13 @@ static struct breakpoint_ops catch_assert_breakpoint_ops;
    Return NULL if ARGPS does not contain any more tokens.  */
 
 static char *
-ada_get_next_arg (char **argsp)
+ada_get_next_arg (const char **argsp)
 {
-  char *args = *argsp;
+  const char *args = *argsp;
   char *end;
   char *result;
 
-  args = skip_spaces (args);
+  args = skip_spaces_const (args);
   if (args[0] == '\0')
     return NULL; /* No more arguments.  */
   
@@ -12275,7 +12275,7 @@ ada_get_next_arg (char **argsp)
    after use).  Otherwise COND_STRING is set to NULL.  */
 
 static void
-catch_ada_exception_command_split (char *args,
+catch_ada_exception_command_split (const char *args,
                                    enum ada_exception_catchpoint_kind *ex,
 				   char **excep_string,
 				   char **cond_string)
@@ -12298,12 +12298,12 @@ catch_ada_exception_command_split (char *args,
 
   /* Check to see if we have a condition.  */
 
-  args = skip_spaces (args);
+  args = skip_spaces_const (args);
   if (strncmp (args, "if", 2) == 0
       && (isspace (args[2]) || args[2] == '\0'))
     {
       args += 2;
-      args = skip_spaces (args);
+      args = skip_spaces_const (args);
 
       if (args[0] == '\0')
         error (_("Condition missing after `if' keyword"));
@@ -12525,7 +12525,7 @@ create_ada_exception_catchpoint (struct gdbarch *gdbarch,
 /* Implement the "catch exception" command.  */
 
 static void
-catch_ada_exception_command (char *arg, int from_tty,
+catch_ada_exception_command (const char *arg, int from_tty,
 			     struct cmd_list_element *command)
 {
   struct gdbarch *gdbarch = get_current_arch ();
@@ -12555,16 +12555,16 @@ catch_ada_exception_command (char *arg, int from_tty,
    (the memory needs to be deallocated after use).  */
 
 static void
-catch_ada_assert_command_split (char *args, char **cond_string)
+catch_ada_assert_command_split (const char *args, char **cond_string)
 {
-  args = skip_spaces (args);
+  args = skip_spaces_const (args);
 
   /* Check whether a condition was provided.  */
   if (strncmp (args, "if", 2) == 0
       && (isspace (args[2]) || args[2] == '\0'))
     {
       args += 2;
-      args = skip_spaces (args);
+      args = skip_spaces_const (args);
       if (args[0] == '\0')
         error (_("condition missing after `if' keyword"));
       *cond_string = xstrdup (args);
@@ -12579,7 +12579,7 @@ catch_ada_assert_command_split (char *args, char **cond_string)
 /* Implement the "catch assert" command.  */
 
 static void
-catch_assert_command (char *arg, int from_tty,
+catch_assert_command (const char *arg, int from_tty,
 		      struct cmd_list_element *command)
 {
   struct gdbarch *gdbarch = get_current_arch ();

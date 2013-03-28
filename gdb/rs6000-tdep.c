@@ -4224,7 +4224,7 @@ rs6000_dump_tdep (struct gdbarch *gdbarch, struct ui_file *file)
 /* PowerPC-specific commands.  */
 
 static void
-set_powerpc_command (char *args, int from_tty)
+set_powerpc_command (const char *args, int from_tty)
 {
   printf_unfiltered (_("\
 \"set powerpc\" must be followed by an appropriate subcommand.\n"));
@@ -4232,13 +4232,13 @@ set_powerpc_command (char *args, int from_tty)
 }
 
 static void
-show_powerpc_command (char *args, int from_tty)
+show_powerpc_command (const char *args, int from_tty)
 {
   cmd_show_list (showpowerpccmdlist, from_tty, "");
 }
 
 static void
-powerpc_set_soft_float (char *args, int from_tty,
+powerpc_set_soft_float (const char *args, int from_tty,
 			struct cmd_list_element *c)
 {
   struct gdbarch_info info;
@@ -4250,7 +4250,7 @@ powerpc_set_soft_float (char *args, int from_tty,
 }
 
 static void
-powerpc_set_vector_abi (char *args, int from_tty,
+powerpc_set_vector_abi (const char *args, int from_tty,
 			struct cmd_list_element *c)
 {
   struct gdbarch_info info;

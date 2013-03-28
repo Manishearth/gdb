@@ -1119,7 +1119,7 @@ regcache_write_pc (struct regcache *regcache, CORE_ADDR pc)
 
 
 static void
-reg_flush_command (char *command, int from_tty)
+reg_flush_command (const char *command, int from_tty)
 {
   /* Force-flush the register cache.  */
   registers_changed ();
@@ -1359,7 +1359,7 @@ regcache_dump (struct regcache *regcache, struct ui_file *file,
 }
 
 static void
-regcache_print (char *args, enum regcache_dump_what what_to_dump)
+regcache_print (const char *args, enum regcache_dump_what what_to_dump)
 {
   if (args == NULL)
     regcache_dump (get_current_regcache (), gdb_stdout, what_to_dump);
@@ -1377,31 +1377,31 @@ regcache_print (char *args, enum regcache_dump_what what_to_dump)
 }
 
 static void
-maintenance_print_registers (char *args, int from_tty)
+maintenance_print_registers (const char *args, int from_tty)
 {
   regcache_print (args, regcache_dump_none);
 }
 
 static void
-maintenance_print_raw_registers (char *args, int from_tty)
+maintenance_print_raw_registers (const char *args, int from_tty)
 {
   regcache_print (args, regcache_dump_raw);
 }
 
 static void
-maintenance_print_cooked_registers (char *args, int from_tty)
+maintenance_print_cooked_registers (const char *args, int from_tty)
 {
   regcache_print (args, regcache_dump_cooked);
 }
 
 static void
-maintenance_print_register_groups (char *args, int from_tty)
+maintenance_print_register_groups (const char *args, int from_tty)
 {
   regcache_print (args, regcache_dump_groups);
 }
 
 static void
-maintenance_print_remote_registers (char *args, int from_tty)
+maintenance_print_remote_registers (const char *args, int from_tty)
 {
   regcache_print (args, regcache_dump_remote);
 }

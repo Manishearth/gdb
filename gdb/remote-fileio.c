@@ -1436,7 +1436,7 @@ remote_fileio_request (char *buf, int ctrlc_pending_p)
 }
 
 static void
-set_system_call_allowed (char *args, int from_tty)
+set_system_call_allowed (const char *args, int from_tty)
 {
   if (args)
     {
@@ -1453,7 +1453,7 @@ set_system_call_allowed (char *args, int from_tty)
 }
 
 static void
-show_system_call_allowed (char *args, int from_tty)
+show_system_call_allowed (const char *args, int from_tty)
 {
   if (args)
     error (_("Garbage after \"show remote "

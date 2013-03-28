@@ -2453,7 +2453,7 @@ bfdcore_write (bfd *obfd, asection *osec, void *buf, int len, int *offset)
    corefile format, with an extra section for our data.  */
 
 static void
-cmd_record_full_restore (char *args, int from_tty)
+cmd_record_full_restore (const char *args, int from_tty)
 {
   core_file_command (args, from_tty);
   record_full_open (args, from_tty);
@@ -2708,13 +2708,13 @@ record_full_goto_insn (struct record_full_entry *entry,
 /* Alias for "target record-full".  */
 
 static void
-cmd_record_full_start (char *args, int from_tty)
+cmd_record_full_start (const char *args, int from_tty)
 {
   execute_command ("target record-full", from_tty);
 }
 
 static void
-set_record_full_insn_max_num (char *args, int from_tty,
+set_record_full_insn_max_num (const char *args, int from_tty,
 			      struct cmd_list_element *c)
 {
   if (record_full_insn_num > record_full_insn_max_num)
@@ -2731,7 +2731,7 @@ set_record_full_insn_max_num (char *args, int from_tty,
 /* The "set record full" command.  */
 
 static void
-set_record_full_command (char *args, int from_tty)
+set_record_full_command (const char *args, int from_tty)
 {
   printf_unfiltered (_("\"set record full\" must be followed "
 		       "by an apporpriate subcommand.\n"));
@@ -2742,7 +2742,7 @@ set_record_full_command (char *args, int from_tty)
 /* The "show record full" command.  */
 
 static void
-show_record_full_command (char *args, int from_tty)
+show_record_full_command (const char *args, int from_tty)
 {
   cmd_show_list (show_record_full_cmdlist, from_tty, "");
 }

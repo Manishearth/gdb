@@ -92,21 +92,21 @@ enum exception_event_kind
 
 /* Prototypes for local functions.  */
 
-static void enable_delete_command (char *, int);
+static void enable_delete_command (const char *, int);
 
-static void enable_once_command (char *, int);
+static void enable_once_command (const char *, int);
 
-static void enable_count_command (char *, int);
+static void enable_count_command (const char *, int);
 
-static void disable_command (char *, int);
+static void disable_command (const char *, int);
 
-static void enable_command (char *, int);
+static void enable_command (const char *, int);
 
 static void map_breakpoint_numbers (char *, void (*) (struct breakpoint *,
 						      void *),
 				    void *);
 
-static void ignore_command (char *, int);
+static void ignore_command (const char *, int);
 
 static int breakpoint_re_set_one (void *);
 
@@ -128,9 +128,9 @@ static void create_breakpoints_sal_default (struct gdbarch *,
 static void decode_linespec_default (struct breakpoint *, char **,
 				     struct symtabs_and_lines *);
 
-static void clear_command (char *, int);
+static void clear_command (const char *, int);
 
-static void catch_command (char *, int);
+static void catch_command (const char *, int);
 
 static int can_use_hardware_watchpoint (struct value *);
 
@@ -174,9 +174,9 @@ static int breakpoint_location_address_match (struct bp_location *bl,
 					      struct address_space *aspace,
 					      CORE_ADDR addr);
 
-static void breakpoints_info (char *, int);
+static void breakpoints_info (const char *, int);
 
-static void watchpoints_info (char *, int);
+static void watchpoints_info (const char *, int);
 
 static int breakpoint_1 (char *, int, 
 			 int (*) (const struct breakpoint *));
@@ -185,9 +185,9 @@ static int breakpoint_cond_eval (void *);
 
 static void cleanup_executing_breakpoints (void *);
 
-static void commands_command (char *, int);
+static void commands_command (const char *, int);
 
-static void condition_command (char *, int);
+static void condition_command (const char *, int);
 
 typedef enum
   {
@@ -203,7 +203,7 @@ static enum print_stop_action print_bp_stop_message (bpstat bs);
 
 static int watchpoint_check (void *);
 
-static void maintenance_info_breakpoints (char *, int);
+static void maintenance_info_breakpoints (const char *, int);
 
 static int hw_breakpoint_used_count (void);
 
@@ -213,20 +213,18 @@ static int hw_watchpoint_used_count_others (struct breakpoint *except,
 					    enum bptype type,
 					    int *other_type_used);
 
-static void hbreak_command (char *, int);
+static void hbreak_command (const char *, int);
 
-static void thbreak_command (char *, int);
+static void thbreak_command (const char *, int);
 
 static void enable_breakpoint_disp (struct breakpoint *, enum bpdisp,
 				    int count);
 
-static void stop_command (char *arg, int from_tty);
+static void stop_command (const char *arg, int from_tty);
 
-static void stopin_command (char *arg, int from_tty);
+static void stopin_command (const char *arg, int from_tty);
 
-static void stopat_command (char *arg, int from_tty);
-
-static void tcatch_command (char *arg, int from_tty);
+static void stopat_command (const char *arg, int from_tty);
 
 static void detach_single_step_breakpoints (void);
 
@@ -249,15 +247,15 @@ static void insert_breakpoint_locations (void);
 
 static int syscall_catchpoint_p (struct breakpoint *b);
 
-static void tracepoints_info (char *, int);
+static void tracepoints_info (const char *, int);
 
-static void delete_trace_command (char *, int);
+static void delete_trace_command (const char *, int);
 
-static void enable_trace_command (char *, int);
+static void enable_trace_command (const char *, int);
 
-static void disable_trace_command (char *, int);
+static void disable_trace_command (const char *, int);
 
-static void trace_pass_command (char *, int);
+static void trace_pass_command (const char *, int);
 
 static void set_tracepoint_count (int num);
 
@@ -787,7 +785,7 @@ mark_breakpoint_location_modified (struct bp_location *loc)
    condition_evaluation_mode.  */
 
 static void
-set_condition_evaluation_mode (char *args, int from_tty,
+set_condition_evaluation_mode (const char *args, int from_tty,
 			       struct cmd_list_element *c)
 {
   const char *old_mode, *new_mode;
@@ -1033,7 +1031,7 @@ condition_completer (struct cmd_list_element *cmd,
 /* condition N EXP -- set break condition of breakpoint N to EXP.  */
 
 static void
-condition_command (char *arg, int from_tty)
+condition_command (const char *arg, int from_tty)
 {
   struct breakpoint *b;
   char *p;
@@ -1341,7 +1339,7 @@ do_map_commands_command (struct breakpoint *b, void *data)
 }
 
 static void
-commands_command_1 (char *arg, int from_tty, 
+commands_command_1 (const char *arg, int from_tty, 
 		    struct command_line *control)
 {
   struct cleanup *cleanups;
@@ -1388,7 +1386,7 @@ commands_command_1 (char *arg, int from_tty,
 }
 
 static void
-commands_command (char *arg, int from_tty)
+commands_command (const char *arg, int from_tty)
 {
   commands_command_1 (arg, from_tty, NULL);
 }
@@ -1399,7 +1397,7 @@ commands_command (char *arg, int from_tty)
    This is used by cli-script.c to DTRT with breakpoint commands
    that are part of if and while bodies.  */
 enum command_control_type
-commands_from_control_command (char *arg, struct command_line *cmd)
+commands_from_control_command (const char *arg, struct command_line *cmd)
 {
   commands_command_1 (arg, 0, cmd);
   return simple_control;
@@ -6752,7 +6750,7 @@ default_collect_info (void)
 }
   
 static void
-breakpoints_info (char *args, int from_tty)
+breakpoints_info (const char *args, int from_tty)
 {
   breakpoint_1 (args, 0, NULL);
 
@@ -6760,7 +6758,7 @@ breakpoints_info (char *args, int from_tty)
 }
 
 static void
-watchpoints_info (char *args, int from_tty)
+watchpoints_info (const char *args, int from_tty)
 {
   int num_printed = breakpoint_1 (args, 0, is_watchpoint);
   struct ui_out *uiout = current_uiout;
@@ -6775,7 +6773,7 @@ watchpoints_info (char *args, int from_tty)
 }
 
 static void
-maintenance_info_breakpoints (char *args, int from_tty)
+maintenance_info_breakpoints (const char *args, int from_tty)
 {
   breakpoint_1 (args, 1, NULL);
 
@@ -8297,7 +8295,7 @@ add_solib_catchpoint (char *arg, int is_load, int is_temp, int enabled)
    "catch unload".  */
 
 static void
-catch_load_or_unload (char *arg, int from_tty, int is_load,
+catch_load_or_unload (const char *arg, int from_tty, int is_load,
 		      struct cmd_list_element *command)
 {
   int tempflag;
@@ -8309,14 +8307,14 @@ catch_load_or_unload (char *arg, int from_tty, int is_load,
 }
 
 static void
-catch_load_command_1 (char *arg, int from_tty,
+catch_load_command_1 (const char *arg, int from_tty,
 		      struct cmd_list_element *command)
 {
   catch_load_or_unload (arg, from_tty, 1, command);
 }
 
 static void
-catch_unload_command_1 (char *arg, int from_tty,
+catch_unload_command_1 (const char *arg, int from_tty,
 			struct cmd_list_element *command)
 {
   catch_load_or_unload (arg, from_tty, 0, command);
@@ -9291,7 +9289,7 @@ update_dprintf_command_list (struct breakpoint *b)
    current style settings.  */
 
 static void
-update_dprintf_commands (char *args, int from_tty,
+update_dprintf_commands (const char *args, int from_tty,
 			 struct cmd_list_element *c)
 {
   struct breakpoint *b;
@@ -10140,31 +10138,31 @@ resolve_sal_pc (struct symtab_and_line *sal)
 }
 
 void
-break_command (char *arg, int from_tty)
+break_command (const char *arg, int from_tty)
 {
   break_command_1 (arg, 0, from_tty);
 }
 
 void
-tbreak_command (char *arg, int from_tty)
+tbreak_command (const char *arg, int from_tty)
 {
   break_command_1 (arg, BP_TEMPFLAG, from_tty);
 }
 
 static void
-hbreak_command (char *arg, int from_tty)
+hbreak_command (const char *arg, int from_tty)
 {
   break_command_1 (arg, BP_HARDWAREFLAG, from_tty);
 }
 
 static void
-thbreak_command (char *arg, int from_tty)
+thbreak_command (const char *arg, int from_tty)
 {
   break_command_1 (arg, (BP_TEMPFLAG | BP_HARDWAREFLAG), from_tty);
 }
 
 static void
-stop_command (char *arg, int from_tty)
+stop_command (const char *arg, int from_tty)
 {
   printf_filtered (_("Specify the type of breakpoint to set.\n\
 Usage: stop in <function | address>\n\
@@ -10172,7 +10170,7 @@ Usage: stop in <function | address>\n\
 }
 
 static void
-stopin_command (char *arg, int from_tty)
+stopin_command (const char *arg, int from_tty)
 {
   int badInput = 0;
 
@@ -10205,7 +10203,7 @@ stopin_command (char *arg, int from_tty)
 }
 
 static void
-stopat_command (char *arg, int from_tty)
+stopat_command (const char *arg, int from_tty)
 {
   int badInput = 0;
 
@@ -10242,7 +10240,7 @@ stopat_command (char *arg, int from_tty)
    line.  */
 
 static void
-dprintf_command (char *arg, int from_tty)
+dprintf_command (const char *arg, int from_tty)
 {
   create_breakpoint (get_current_arch (),
 		     arg,
@@ -10258,7 +10256,7 @@ dprintf_command (char *arg, int from_tty)
 }
 
 static void
-agent_printf_command (char *arg, int from_tty)
+agent_printf_command (const char *arg, int from_tty)
 {
   error (_("May only run agent-printf on the target"));
 }
@@ -10441,7 +10439,7 @@ find_breakpoint_range_end (struct symtab_and_line sal)
 /* Implement the "break-range" CLI command.  */
 
 static void
-break_range_command (char *arg, int from_tty)
+break_range_command (const char *arg, int from_tty)
 {
   char *arg_start, *addr_string_start, *addr_string_end;
   struct linespec_result canonical_start, canonical_end;
@@ -11575,7 +11573,7 @@ can_use_hardware_watchpoint (struct value *v)
 }
 
 void
-watch_command_wrapper (char *arg, int from_tty, int internal)
+watch_command_wrapper (const char *arg, int from_tty, int internal)
 {
   watch_command_1 (arg, hw_write, from_tty, 0, internal);
 }
@@ -11584,7 +11582,7 @@ watch_command_wrapper (char *arg, int from_tty, int internal)
    calls watch_command_1.  */
 
 static void
-watch_maybe_just_location (char *arg, int accessflag, int from_tty)
+watch_maybe_just_location (const char *arg, int accessflag, int from_tty)
 {
   int just_location = 0;
 
@@ -11600,31 +11598,31 @@ watch_maybe_just_location (char *arg, int accessflag, int from_tty)
 }
 
 static void
-watch_command (char *arg, int from_tty)
+watch_command (const char *arg, int from_tty)
 {
   watch_maybe_just_location (arg, hw_write, from_tty);
 }
 
 void
-rwatch_command_wrapper (char *arg, int from_tty, int internal)
+rwatch_command_wrapper (const char *arg, int from_tty, int internal)
 {
   watch_command_1 (arg, hw_read, from_tty, 0, internal);
 }
 
 static void
-rwatch_command (char *arg, int from_tty)
+rwatch_command (const char *arg, int from_tty)
 {
   watch_maybe_just_location (arg, hw_read, from_tty);
 }
 
 void
-awatch_command_wrapper (char *arg, int from_tty, int internal)
+awatch_command_wrapper (const char *arg, int from_tty, int internal)
 {
   watch_command_1 (arg, hw_access, from_tty, 0, internal);
 }
 
 static void
-awatch_command (char *arg, int from_tty)
+awatch_command (const char *arg, int from_tty)
 {
   watch_maybe_just_location (arg, hw_access, from_tty);
 }
@@ -11656,7 +11654,7 @@ until_break_command_continuation (void *arg, int err)
 }
 
 void
-until_break_command (char *arg, int from_tty, int anywhere)
+until_break_command (const char *arg, int from_tty, int anywhere)
 {
   struct symtabs_and_lines sals;
   struct symtab_and_line sal;
@@ -11810,7 +11808,7 @@ typedef enum
 catch_fork_kind;
 
 static void
-catch_fork_command_1 (char *arg, int from_tty, 
+catch_fork_command_1 (const char *arg, int from_tty, 
 		      struct cmd_list_element *command)
 {
   struct gdbarch *gdbarch = get_current_arch ();
@@ -11857,7 +11855,7 @@ catch_fork_command_1 (char *arg, int from_tty,
 }
 
 static void
-catch_exec_command_1 (char *arg, int from_tty, 
+catch_exec_command_1 (const char *arg, int from_tty, 
 		      struct cmd_list_element *command)
 {
   struct exec_catchpoint *c;
@@ -11976,7 +11974,7 @@ catch_syscall_split_args (char *arg)
 /* Implement the "catch syscall" command.  */
 
 static void
-catch_syscall_command_1 (char *arg, int from_tty, 
+catch_syscall_command_1 (const char *arg, int from_tty, 
 			 struct cmd_list_element *command)
 {
   int tempflag;
@@ -12015,14 +12013,14 @@ this architecture yet."));
 }
 
 static void
-catch_command (char *arg, int from_tty)
+catch_command (const char *arg, int from_tty)
 {
   error (_("Catch requires an event name."));
 }
 
 
 static void
-tcatch_command (char *arg, int from_tty)
+tcatch_command (const char *arg, int from_tty)
 {
   error (_("Catch requires an event name."));
 }
@@ -12052,7 +12050,7 @@ compare_breakpoints (const void *a, const void *b)
 /* Delete breakpoints by address or line.  */
 
 static void
-clear_command (char *arg, int from_tty)
+clear_command (const char *arg, int from_tty)
 {
   struct breakpoint *b, *prev;
   VEC(breakpoint_p) *found = 0;
@@ -14071,7 +14069,7 @@ do_map_delete_breakpoint (struct breakpoint *b, void *ignore)
 }
 
 void
-delete_command (char *arg, int from_tty)
+delete_command (const char *arg, int from_tty)
 {
   struct breakpoint *b, *b_tmp;
 
@@ -14749,7 +14747,7 @@ set_ignore_count (int bptnum, int count, int from_tty)
 /* Command to set ignore-count of breakpoint N to COUNT.  */
 
 static void
-ignore_command (char *args, int from_tty)
+ignore_command (const char *args, int from_tty)
 {
   char *p = args;
   int num;
@@ -14910,7 +14908,7 @@ do_map_disable_breakpoint (struct breakpoint *b, void *ignore)
 }
 
 static void
-disable_command (char *args, int from_tty)
+disable_command (const char *args, int from_tty)
 {
   if (args == 0)
     {
@@ -15044,7 +15042,7 @@ do_map_enable_breakpoint (struct breakpoint *b, void *ignore)
    in stopping the inferior.  */
 
 static void
-enable_command (char *args, int from_tty)
+enable_command (const char *args, int from_tty)
 {
   if (args == 0)
     {
@@ -15111,7 +15109,7 @@ do_map_enable_once_breakpoint (struct breakpoint *bpt, void *ignore)
 }
 
 static void
-enable_once_command (char *args, int from_tty)
+enable_once_command (const char *args, int from_tty)
 {
   map_breakpoint_numbers (args, do_map_enable_once_breakpoint, NULL);
 }
@@ -15125,7 +15123,7 @@ do_map_enable_count_breakpoint (struct breakpoint *bpt, void *countptr)
 }
 
 static void
-enable_count_command (char *args, int from_tty)
+enable_count_command (const char *args, int from_tty)
 {
   int count = get_number (&args);
 
@@ -15141,18 +15139,18 @@ do_map_enable_delete_breakpoint (struct breakpoint *bpt, void *ignore)
 }
 
 static void
-enable_delete_command (char *args, int from_tty)
+enable_delete_command (const char *args, int from_tty)
 {
   map_breakpoint_numbers (args, do_map_enable_delete_breakpoint, NULL);
 }
 
 static void
-set_breakpoint_cmd (char *args, int from_tty)
+set_breakpoint_cmd (const char *args, int from_tty)
 {
 }
 
 static void
-show_breakpoint_cmd (char *args, int from_tty)
+show_breakpoint_cmd (const char *args, int from_tty)
 {
 }
 
@@ -15475,7 +15473,7 @@ set_tracepoint_count (int num)
 }
 
 static void
-trace_command (char *arg, int from_tty)
+trace_command (const char *arg, int from_tty)
 {
   struct breakpoint_ops *ops;
   const char *arg_cp = arg;
@@ -15499,7 +15497,7 @@ trace_command (char *arg, int from_tty)
 }
 
 static void
-ftrace_command (char *arg, int from_tty)
+ftrace_command (const char *arg, int from_tty)
 {
   create_breakpoint (get_current_arch (),
 		     arg,
@@ -15517,7 +15515,7 @@ ftrace_command (char *arg, int from_tty)
 /* strace command implementation.  Creates a static tracepoint.  */
 
 static void
-strace_command (char *arg, int from_tty)
+strace_command (const char *arg, int from_tty)
 {
   struct breakpoint_ops *ops;
 
@@ -15651,7 +15649,7 @@ create_tracepoint_from_upload (struct uploaded_tp *utp)
    omitted.  */
 
 static void
-tracepoints_info (char *args, int from_tty)
+tracepoints_info (const char *args, int from_tty)
 {
   struct ui_out *uiout = current_uiout;
   int num_printed;
@@ -15672,7 +15670,7 @@ tracepoints_info (char *args, int from_tty)
 /* The 'enable trace' command enables tracepoints.
    Not supported by all targets.  */
 static void
-enable_trace_command (char *args, int from_tty)
+enable_trace_command (const char *args, int from_tty)
 {
   enable_command (args, from_tty);
 }
@@ -15680,14 +15678,14 @@ enable_trace_command (char *args, int from_tty)
 /* The 'disable trace' command disables tracepoints.
    Not supported by all targets.  */
 static void
-disable_trace_command (char *args, int from_tty)
+disable_trace_command (const char *args, int from_tty)
 {
   disable_command (args, from_tty);
 }
 
 /* Remove a tracepoint (or all if no argument).  */
 static void
-delete_trace_command (char *arg, int from_tty)
+delete_trace_command (const char *arg, int from_tty)
 {
   struct breakpoint *b, *b_tmp;
 
@@ -15740,7 +15738,7 @@ trace_pass_set_count (struct tracepoint *tp, int count, int from_tty)
    Also accepts special argument "all".  */
 
 static void
-trace_pass_command (char *args, int from_tty)
+trace_pass_command (const char *args, int from_tty)
 {
   struct tracepoint *t1;
   unsigned int count;
@@ -15824,12 +15822,12 @@ get_tracepoint_by_number_on_target (int num)
    (tracepoint_count) is returned.  */
 
 struct tracepoint *
-get_tracepoint_by_number (char **arg,
+get_tracepoint_by_number (const char **arg,
 			  struct get_number_or_range_state *state)
 {
   struct breakpoint *t;
   int tpnum;
-  char *instring = arg == NULL ? NULL : *arg;
+  const char *instring = arg == NULL ? NULL : *arg;
 
   if (state)
     {
@@ -15999,7 +15997,7 @@ save_breakpoints (char *filename, int from_tty,
 /* The `save breakpoints' command.  */
 
 static void
-save_breakpoints_command (char *args, int from_tty)
+save_breakpoints_command (const char *args, int from_tty)
 {
   save_breakpoints (args, from_tty, NULL);
 }
@@ -16007,7 +16005,7 @@ save_breakpoints_command (char *args, int from_tty)
 /* The `save tracepoints' command.  */
 
 static void
-save_tracepoints_command (char *args, int from_tty)
+save_tracepoints_command (const char *args, int from_tty)
 {
   save_breakpoints (args, from_tty, is_tracepoint);
 }
@@ -16093,7 +16091,7 @@ clear_syscall_counts (struct inferior *inf)
 }
 
 static void
-save_command (char *arg, int from_tty)
+save_command (const char *arg, int from_tty)
 {
   printf_unfiltered (_("\"save\" must be followed by "
 		       "the name of a save subcommand.\n"));

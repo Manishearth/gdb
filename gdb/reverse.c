@@ -44,7 +44,7 @@ exec_direction_default (void *notused)
    Used to implement reverse-next etc. commands.  */
 
 static void
-exec_reverse_once (char *cmd, char *args, int from_tty)
+exec_reverse_once (const char *cmd, const char *args, int from_tty)
 {
   char *reverse_command;
   enum exec_direction_kind dir = execution_direction;
@@ -66,37 +66,37 @@ exec_reverse_once (char *cmd, char *args, int from_tty)
 }
 
 static void
-reverse_step (char *args, int from_tty)
+reverse_step (const char *args, int from_tty)
 {
   exec_reverse_once ("step", args, from_tty);
 }
 
 static void
-reverse_stepi (char *args, int from_tty)
+reverse_stepi (const char *args, int from_tty)
 {
   exec_reverse_once ("stepi", args, from_tty);
 }
 
 static void
-reverse_next (char *args, int from_tty)
+reverse_next (const char *args, int from_tty)
 {
   exec_reverse_once ("next", args, from_tty);
 }
 
 static void
-reverse_nexti (char *args, int from_tty)
+reverse_nexti (const char *args, int from_tty)
 {
   exec_reverse_once ("nexti", args, from_tty);
 }
 
 static void
-reverse_continue (char *args, int from_tty)
+reverse_continue (const char *args, int from_tty)
 {
   exec_reverse_once ("continue", args, from_tty);
 }
 
 static void
-reverse_finish (char *args, int from_tty)
+reverse_finish (const char *args, int from_tty)
 {
   exec_reverse_once ("finish", args, from_tty);
 }
@@ -129,7 +129,7 @@ static int bookmark_count;
    Up to us to free it as required.  */
 
 static void
-save_bookmark_command (char *args, int from_tty)
+save_bookmark_command (const char *args, int from_tty)
 {
   /* Get target's idea of a bookmark.  */
   gdb_byte *bookmark_id = target_get_bookmark (args, from_tty);
@@ -215,7 +215,7 @@ delete_all_bookmarks (void)
 }
 
 static void
-delete_bookmark_command (char *args, int from_tty)
+delete_bookmark_command (const char *args, int from_tty)
 {
   int num;
   struct get_number_or_range_state state;
@@ -247,7 +247,7 @@ delete_bookmark_command (char *args, int from_tty)
 /* Implement "goto-bookmark" command.  */
 
 static void
-goto_bookmark_command (char *args, int from_tty)
+goto_bookmark_command (const char *args, int from_tty)
 {
   struct bookmark *b;
   unsigned long num;
@@ -322,7 +322,7 @@ bookmark_1 (int bnum)
 /* Implement "info bookmarks" command.  */
 
 static void
-bookmarks_info (char *args, int from_tty)
+bookmarks_info (const char *args, int from_tty)
 {
   int bnum = -1;
 

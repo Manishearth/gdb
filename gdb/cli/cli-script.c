@@ -635,7 +635,7 @@ execute_control_command_untraced (struct command_line *cmd)
    loop condition is nonzero.  */
 
 static void
-while_command (char *arg, int from_tty)
+while_command (const char *arg, int from_tty)
 {
   struct command_line *command = NULL;
   struct cleanup *old_chain;
@@ -659,7 +659,7 @@ while_command (char *arg, int from_tty)
    on the value of the if conditional.  */
 
 static void
-if_command (char *arg, int from_tty)
+if_command (const char *arg, int from_tty)
 {
   struct command_line *command = NULL;
   struct cleanup *old_chain;
@@ -1417,7 +1417,7 @@ copy_command_lines (struct command_line *cmds)
    prefix.  */
 
 static struct cmd_list_element **
-validate_comname (char **comname)
+validate_comname (const char **comname)
 {
   struct cmd_list_element **list = &cmdlist;
   char *p, *last_word;
@@ -1466,12 +1466,12 @@ validate_comname (char **comname)
 
 /* This is just a placeholder in the command data structures.  */
 static void
-user_defined_command (char *ignore, int from_tty)
+user_defined_command (const char *ignore, int from_tty)
 {
 }
 
 static void
-define_command (char *comname, int from_tty)
+define_command (const char *comname, int from_tty)
 {
 #define MAX_TMPBUF 128   
   enum cmd_hook_type
@@ -1482,7 +1482,7 @@ define_command (char *comname, int from_tty)
     };
   struct command_line *cmds;
   struct cmd_list_element *c, *newc, *hookc = 0, **list;
-  char *tem, *comfull;
+  const char *tem, *comfull;
   const char *tem_c;
   char tmpbuf[MAX_TMPBUF];
   int  hook_type      = CMD_NO_HOOK;
@@ -1589,12 +1589,12 @@ define_command (char *comname, int from_tty)
 }
 
 static void
-document_command (char *comname, int from_tty)
+document_command (const char *comname, int from_tty)
 {
   struct command_line *doclines;
   struct cmd_list_element *c, **list;
   const char *tem;
-  char *comfull;
+  const char *comfull;
   char tmpbuf[128];
 
   comfull = comname;

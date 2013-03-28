@@ -1393,7 +1393,7 @@ parse_frame_specification (char *frame_exp)
    ADDR_EXP.  Absolutely all information in the frame is printed.  */
 
 static void
-frame_info (char *addr_exp, int from_tty)
+frame_info (const char *addr_exp, int from_tty)
 {
   struct frame_info *fi;
   struct symtab_and_line sal;
@@ -1702,7 +1702,7 @@ frame_info (char *addr_exp, int from_tty)
    frames.  */
 
 static void
-backtrace_command_1 (char *count_exp, int show_locals, int no_filters,
+backtrace_command_1 (const char *count_exp, int show_locals, int no_filters,
 		     int from_tty)
 {
   struct frame_info *fi;
@@ -1854,7 +1854,7 @@ backtrace_command_1 (char *count_exp, int show_locals, int no_filters,
 }
 
 static void
-backtrace_command (char *arg, int from_tty)
+backtrace_command (const char *arg, int from_tty)
 {
   struct cleanup *old_chain = make_cleanup (null_cleanup, NULL);
   int fulltrace_arg = -1, arglen = 0, argc = 0, no_filters  = -1;
@@ -1894,17 +1894,20 @@ backtrace_command (char *arg, int from_tty)
 	{
 	  if (arglen > 0)
 	    {
-	      arg = xmalloc (arglen + 1);
-	      make_cleanup (xfree, arg);
-	      arg[0] = 0;
+	      char *tem  = xmalloc (arglen + 1);
+
+	      make_cleanup (xfree, tem);
+	      tem[0] = 0;
 	      for (i = 0; i < argc; i++)
 		{
 		  if (i != fulltrace_arg && i != no_filters)
 		    {
-		      strcat (arg, argv[i]);
-		      strcat (arg, " ");
+		      strcat (tem, argv[i]);
+		      strcat (tem, " ");
 		    }
 		}
+
+	      arg = tem;
 	    }
 	  else
 	    arg = NULL;
@@ -1918,7 +1921,7 @@ backtrace_command (char *arg, int from_tty)
 }
 
 static void
-backtrace_full_command (char *arg, int from_tty)
+backtrace_full_command (const char *arg, int from_tty)
 {
   backtrace_command_1 (arg, 1 /* show_locals */, 0, from_tty);
 }
@@ -2107,7 +2110,7 @@ print_frame_local_vars (struct frame_info *frame, int num_tabs,
 }
 
 void
-locals_info (char *args, int from_tty)
+locals_info (const char *args, int from_tty)
 {
   print_frame_local_vars (get_selected_frame (_("No frame selected.")),
 			  0, gdb_stdout);
@@ -2189,7 +2192,7 @@ print_frame_arg_vars (struct frame_info *frame, struct ui_file *stream)
 }
 
 void
-args_info (char *ignore, int from_tty)
+args_info (const char *ignore, int from_tty)
 {
   print_frame_arg_vars (get_selected_frame (_("No frame selected.")),
 			gdb_stdout);
@@ -2197,7 +2200,7 @@ args_info (char *ignore, int from_tty)
 
 
 static void
-args_plus_locals_info (char *ignore, int from_tty)
+args_plus_locals_info (const char *ignore, int from_tty)
 {
   args_info (ignore, from_tty);
   locals_info (ignore, from_tty);
@@ -2276,7 +2279,7 @@ find_relative_frame (struct frame_info *frame, int *level_offset_ptr)
    expressions.  */
 
 void
-select_frame_command (char *level_exp, int from_tty)
+select_frame_command (const char *level_exp, int from_tty)
 {
   select_frame (parse_frame_specification_1 (level_exp, "No stack.", NULL));
 }
@@ -2286,7 +2289,7 @@ select_frame_command (char *level_exp, int from_tty)
    the selected frame.  */
 
 static void
-frame_command (char *level_exp, int from_tty)
+frame_command (const char *level_exp, int from_tty)
 {
   select_frame_command (level_exp, from_tty);
   print_stack_frame (get_selected_frame (NULL), 1, SRC_AND_LOC, 1);
@@ -2295,7 +2298,7 @@ frame_command (char *level_exp, int from_tty)
 /* The XDB Compatibility command to print the current frame.  */
 
 static void
-current_frame_command (char *level_exp, int from_tty)
+current_frame_command (const char *level_exp, int from_tty)
 {
   print_stack_frame (get_selected_frame (_("No stack.")), 1, SRC_AND_LOC, 1);
 }
@@ -2304,7 +2307,7 @@ current_frame_command (char *level_exp, int from_tty)
    previously selected frame, and print it briefly.  */
 
 static void
-up_silently_base (char *count_exp)
+up_silently_base (const char *count_exp)
 {
   struct frame_info *frame;
   int count = 1;
@@ -2319,13 +2322,13 @@ up_silently_base (char *count_exp)
 }
 
 static void
-up_silently_command (char *count_exp, int from_tty)
+up_silently_command (const char *count_exp, int from_tty)
 {
   up_silently_base (count_exp);
 }
 
 static void
-up_command (char *count_exp, int from_tty)
+up_command (const char *count_exp, int from_tty)
 {
   up_silently_base (count_exp);
   print_stack_frame (get_selected_frame (NULL), 1, SRC_AND_LOC, 1);
@@ -2335,7 +2338,7 @@ up_command (char *count_exp, int from_tty)
    selected frame, and print it briefly.  */
 
 static void
-down_silently_base (char *count_exp)
+down_silently_base (const char *count_exp)
 {
   struct frame_info *frame;
   int count = -1;
@@ -2358,13 +2361,13 @@ down_silently_base (char *count_exp)
 }
 
 static void
-down_silently_command (char *count_exp, int from_tty)
+down_silently_command (const char *count_exp, int from_tty)
 {
   down_silently_base (count_exp);
 }
 
 static void
-down_command (char *count_exp, int from_tty)
+down_command (const char *count_exp, int from_tty)
 {
   down_silently_base (count_exp);
   print_stack_frame (get_selected_frame (NULL), 1, SRC_AND_LOC, 1);
@@ -2372,7 +2375,7 @@ down_command (char *count_exp, int from_tty)
 
 
 void
-return_command (char *retval_exp, int from_tty)
+return_command (const char *retval_exp, int from_tty)
 {
   /* Initialize it just to avoid a GCC false warning.  */
   enum return_value_convention rv_conv = RETURN_VALUE_STRUCT_CONVENTION;
@@ -2506,7 +2509,7 @@ struct function_bounds
 };
 
 static void
-func_command (char *arg, int from_tty)
+func_command (const char *arg, int from_tty)
 {
   struct frame_info *frame;
   int found = 0;
