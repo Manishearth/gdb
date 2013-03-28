@@ -401,7 +401,7 @@ initialize_interps (void)
 }
 
 static void
-interpreter_exec_cmd (char *args, int from_tty)
+interpreter_exec_cmd (const char *args, int from_tty)
 {
   struct interp *old_interp, *interp_to_use;
   char **prules = NULL;
