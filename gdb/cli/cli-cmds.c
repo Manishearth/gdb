@@ -787,7 +787,7 @@ edit_command (const char *arg, int from_tty)
       /* Now should only be one argument -- decode it in SAL.  */
 
       arg1 = arg;
-      sals = decode_line_1 (&arg1, DECODE_LINE_LIST_MODE, 0, 0);
+      sals = decode_line_1_const (&arg1, DECODE_LINE_LIST_MODE, 0, 0);
 
       filter_sals (&sals);
       if (! sals.nelts)
@@ -862,12 +862,12 @@ list_command (const char *arg, int from_tty)
   struct symtab_and_line sal_end = { 0 };
   struct symtab_and_line cursal = { 0 };
   struct symbol *sym;
-  char *arg1;
+  const char *arg1;
   int no_end = 1;
   int dummy_end = 0;
   int dummy_beg = 0;
   int linenum_beg = 0;
-  char *p;
+  const char *p;
 
   /* Pull in the current default source line if necessary.  */
   if (arg == 0 || arg[0] == '+' || arg[0] == '-')
