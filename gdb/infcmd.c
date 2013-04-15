@@ -2339,7 +2339,7 @@ proceed_after_attach (int pid)
    and wait for the trace-trap that results from attaching.  */
 
 static void
-attach_command_post_wait (char *args, int from_tty, int async_exec)
+attach_command_post_wait (const char *args, int from_tty, int async_exec)
 {
   char *exec_file;
   char *full_exec_path = NULL;

@@ -1437,7 +1437,7 @@ extern void add_solib_catchpoint (const char *arg, int is_load, int is_temp,
 
 /* Enable breakpoints and delete when hit.  Called with ARG == NULL
    deletes all breakpoints.  */
-extern void delete_command (char *arg, int from_tty);
+extern void delete_command (const char *arg, int from_tty);
 
 /* Manage a software single step breakpoint (or two).  Insert may be
    called twice before remove is called.  */

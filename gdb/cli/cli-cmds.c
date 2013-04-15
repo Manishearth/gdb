@@ -347,7 +347,7 @@ pwd_command (const char *args, int from_tty)
 }
 
 void
-cd_command (const char *dir, int from_tty)
+cd_command (const char *dir_arg, int from_tty)
 {
   int len;
   /* Found something other than leading repetitions of "/..".  */
@@ -359,8 +359,8 @@ cd_command (const char *dir, int from_tty)
      repeat might be useful but is more likely to be a mistake.  */
   dont_repeat ();
 
-  if (dir == 0)
-    dir = "~";
+  if (dir_arg == 0)
+    dir_arg = "~";
 
   dir = tilde_expand (dir);
   cleanup = make_cleanup (xfree, dir);
@@ -931,7 +931,7 @@ list_command (const char *arg, int from_tty)
     dummy_beg = 1;
   else
     {
-      sals = decode_line_1 (&arg1, DECODE_LINE_LIST_MODE, 0, 0);
+      sals = decode_line_1_const (&arg1, DECODE_LINE_LIST_MODE, 0, 0);
 
       filter_sals (&sals);
       if (!sals.nelts)

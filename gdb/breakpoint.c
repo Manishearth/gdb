@@ -178,9 +178,6 @@ static void breakpoints_info (const char *, int);
 
 static void watchpoints_info (const char *, int);
 
-static int breakpoint_1 (char *, int, 
-			 int (*) (const struct breakpoint *));
-
 static int breakpoint_cond_eval (void *);
 
 static void cleanup_executing_breakpoints (void *);
@@ -11590,7 +11587,7 @@ watch_maybe_just_location (const char *arg, int accessflag, int from_tty)
       && (check_for_argument (&arg, "-location", sizeof ("-location") - 1)
 	  || check_for_argument (&arg, "-l", sizeof ("-l") - 1)))
     {
-      arg = skip_spaces (arg);
+      arg = skip_spaces_const (arg);
       just_location = 1;
     }
 
@@ -11674,12 +11671,12 @@ until_break_command (const char *arg, int from_tty, int anywhere)
      this function.  */
 
   if (last_displayed_sal_is_valid ())
-    sals = decode_line_1 (&arg, DECODE_LINE_FUNFIRSTLINE,
-			  get_last_displayed_symtab (),
-			  get_last_displayed_line ());
+    sals = decode_line_1_const (&arg, DECODE_LINE_FUNFIRSTLINE,
+				get_last_displayed_symtab (),
+				get_last_displayed_line ());
   else
-    sals = decode_line_1 (&arg, DECODE_LINE_FUNFIRSTLINE,
-			  (struct symtab *) NULL, 0);
+    sals = decode_line_1_const (&arg, DECODE_LINE_FUNFIRSTLINE,
+				(struct symtab *) NULL, 0);
 
   if (sals.nelts != 1)
     error (_("Couldn't get information on specified line."));
@@ -11822,7 +11819,7 @@ catch_fork_command_1 (const char *arg, int from_tty,
 
   if (!arg)
     arg = "";
-  arg = skip_spaces (arg);
+  arg = skip_spaces_const (arg);
 
   /* The allowed syntax is:
      catch [v]fork
@@ -11867,7 +11864,7 @@ catch_exec_command_1 (const char *arg, int from_tty,
 
   if (!arg)
     arg = "";
-  arg = skip_spaces (arg);
+  arg = skip_spaces_const (arg);
 
   /* The allowed syntax is:
      catch exec
@@ -11989,7 +11986,7 @@ this architecture yet."));
 
   tempflag = get_cmd_context (command) == CATCH_TEMPORARY;
 
-  arg = skip_spaces (arg);
+  arg = skip_spaces_const (arg);
 
   /* We need to do this first "dummy" translation in order
      to get the syscall XML file loaded or, most important,
@@ -15749,7 +15746,7 @@ trace_pass_command (const char *args, int from_tty)
 
   count = strtoul (args, &args, 10);	/* Count comes first, then TP num.  */
 
-  args = skip_spaces (args);
+  args = skip_spaces_const (args);
   if (*args && strncasecmp (args, "all", 3) == 0)
     {
       struct breakpoint *b;
@@ -15877,7 +15874,7 @@ print_recreate_thread (struct breakpoint *b, struct ui_file *fp)
    non-zero.  */
 
 static void
-save_breakpoints (char *filename, int from_tty,
+save_breakpoints (const char *filename, int from_tty,
 		  int (*filter) (const struct breakpoint *))
 {
   struct breakpoint *tp;
