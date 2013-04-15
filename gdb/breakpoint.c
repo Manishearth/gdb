@@ -102,8 +102,8 @@ static void disable_command (const char *, int);
 
 static void enable_command (const char *, int);
 
-static void map_breakpoint_numbers (char *, void (*) (struct breakpoint *,
-						      void *),
+static void map_breakpoint_numbers (const char *,
+				    void (*) (struct breakpoint *, void *),
 				    void *);
 
 static void ignore_command (const char *, int);
@@ -910,7 +910,7 @@ get_first_locp_gte_addr (CORE_ADDR address)
 }
 
 void
-set_breakpoint_condition (struct breakpoint *b, char *exp,
+set_breakpoint_condition (struct breakpoint *b, const char *exp,
 			  int from_tty)
 {
   xfree (b->cond_string);
@@ -6577,7 +6577,7 @@ user_breakpoint_p (struct breakpoint *b)
    breakpoints listed.  */
 
 static int
-breakpoint_1 (char *args, int allflag, 
+breakpoint_1 (const char *args, int allflag, 
 	      int (*filter) (const struct breakpoint *))
 {
   struct breakpoint *b;
@@ -8253,7 +8253,7 @@ static struct breakpoint_ops catch_solib_breakpoint_ops;
    created in an enabled state.  */
 
 void
-add_solib_catchpoint (char *arg, int is_load, int is_temp, int enabled)
+add_solib_catchpoint (const char *arg, int is_load, int is_temp, int enabled)
 {
   struct solib_catchpoint *c;
   struct gdbarch *gdbarch = get_current_arch ();
@@ -10178,7 +10178,7 @@ stopin_command (const char *arg, int from_tty)
     badInput = 1;
   else if (*arg != '*')
     {
-      char *argptr = arg;
+      const char *argptr = arg;
       int hasColon = 0;
 
       /* Look for a ':'.  If this is a line number specification, then
@@ -10211,7 +10211,7 @@ stopat_command (const char *arg, int from_tty)
     badInput = 1;
   else
     {
-      char *argptr = arg;
+      const char *argptr = arg;
       int hasColon = 0;
 
       /* Look for a ':'.  If there is a '::' then get out, otherwise
@@ -10461,7 +10461,7 @@ break_range_command (const char *arg, int from_tty)
   if (can_use_bp < 0)
     error (_("Hardware breakpoints used exceeds limit."));
 
-  arg = skip_spaces (arg);
+  arg = skip_spaces_const (arg);
   if (arg == NULL || arg[0] == '\0')
     error(_("No address range specified."));
 
@@ -14749,7 +14749,7 @@ set_ignore_count (int bptnum, int count, int from_tty)
 static void
 ignore_command (const char *args, int from_tty)
 {
-  char *p = args;
+  const char *p = args;
   int num;
 
   if (p == 0)
@@ -14772,8 +14772,8 @@ ignore_command (const char *args, int from_tty)
    whose numbers are given in ARGS.  */
 
 static void
-map_breakpoint_numbers (char *args, void (*function) (struct breakpoint *,
-						      void *),
+map_breakpoint_numbers (const char *args,
+			void (*function) (struct breakpoint *, void *),
 			void *data)
 {
   int num;
@@ -14813,10 +14813,10 @@ map_breakpoint_numbers (char *args, void (*function) (struct breakpoint *,
 }
 
 static struct bp_location *
-find_location_by_number (char *number)
+find_location_by_number (const char *number)
 {
-  char *dot = strchr (number, '.');
-  char *p1;
+  const char *dot = strchr (number, '.');
+  const char *p1;
   int bp_num;
   int loc_num;
   struct breakpoint *b;

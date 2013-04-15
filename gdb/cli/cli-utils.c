@@ -110,13 +110,9 @@ get_number_trailer (const char **pp, int trailer)
 /* See documentation in cli-utils.h.  */
 
 int
-get_number (char **pp)
+get_number (const char **pp)
 {
-  const char *ppc = *pp;
-  int result = get_number_trailer (&ppc, '\0');
-
-  *pp = (char *) ppc;
-  return result;
+  return get_number_trailer (pp, '\0');
 }
 
 /* See documentation in cli-utils.h.  */

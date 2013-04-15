@@ -26,7 +26,7 @@
    Currently the string can either be a number,  or "$" followed by the
    name of a convenience variable, or ("$" or "$$") followed by digits.  */
 
-extern int get_number (char **);
+extern int get_number (const char **);
 
 /* An object of this type is passed to get_number_or_range.  It must
    be initialized by calling init_number_or_range.  This type is

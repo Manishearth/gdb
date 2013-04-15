@@ -1194,7 +1194,7 @@ extern struct command_line *breakpoint_commands (struct breakpoint *b);
    NOT be deallocated after use.  */
 const char *bpdisp_text (enum bpdisp disp);
 
-extern void break_command (char *, int);
+extern void break_command (const char *, int);
 
 extern void watch_command_wrapper (const char *, int, int);
 extern void awatch_command_wrapper (const char *, int, int);
@@ -1375,7 +1375,7 @@ extern void enable_breakpoints_after_startup (void);
    after they've already read the commands into a struct
    command_line.  */
 extern enum command_control_type commands_from_control_command
-  (char *arg, struct command_line *cmd);
+  (const char *arg, struct command_line *cmd);
 
 extern void clear_breakpoint_hit_counts (void);
 
