@@ -1432,7 +1432,7 @@ extern int is_catchpoint (struct breakpoint *);
 
 /* Shared helper function (MI and CLI) for creating and installing
    a shared object event catchpoint.  */
-extern void add_solib_catchpoint (char *arg, int is_load, int is_temp,
+extern void add_solib_catchpoint (const char *arg, int is_load, int is_temp,
                                   int enabled);
 
 /* Enable breakpoints and delete when hit.  Called with ARG == NULL
@@ -1480,7 +1480,7 @@ extern int breakpoints_always_inserted_mode (void);
 extern void breakpoint_retire_moribund (void);
 
 /* Set break condition of breakpoint B to EXP.  */
-extern void set_breakpoint_condition (struct breakpoint *b, char *exp,
+extern void set_breakpoint_condition (struct breakpoint *b, const char *exp,
 				      int from_tty);
 
 /* Checks if we are catching syscalls or not.

@@ -312,7 +312,7 @@ show_version (const char *args, int from_tty)
 }
 
 static void
-show_configuration (char *args, int from_tty)
+show_configuration (const char *args, int from_tty)
 {
   print_gdb_configuration (gdb_stdout);
 }
@@ -965,10 +965,10 @@ list_command (const char *arg, int from_tty)
       else
 	{
 	  if (dummy_beg)
-	    sals_end = decode_line_1 (&arg1, DECODE_LINE_LIST_MODE, 0, 0);
+	    sals_end = decode_line_1_const (&arg1, DECODE_LINE_LIST_MODE, 0, 0);
 	  else
-	    sals_end = decode_line_1 (&arg1, DECODE_LINE_LIST_MODE,
-				      sal.symtab, sal.line);
+	    sals_end = decode_line_1_const (&arg1, DECODE_LINE_LIST_MODE,
+					    sal.symtab, sal.line);
 	  filter_sals (&sals_end);
 	  if (sals_end.nelts == 0)
 	    return;

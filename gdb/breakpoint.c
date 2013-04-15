@@ -8261,7 +8261,7 @@ add_solib_catchpoint (const char *arg, int is_load, int is_temp, int enabled)
 
   if (!arg)
     arg = "";
-  arg = skip_spaces (arg);
+  arg = skip_spaces_const (arg);
 
   c = XCNEW (struct solib_catchpoint);
   cleanup = make_cleanup (xfree, c);
@@ -10052,7 +10052,7 @@ create_breakpoint (struct gdbarch *gdbarch,
    and BP_TEMPFLAG.  */
 
 static void
-break_command_1 (char *arg, int flag, int from_tty)
+break_command_1 (const char *arg, int flag, int from_tty)
 {
   int tempflag = flag & BP_TEMPFLAG;
   enum bptype type_wanted = (flag & BP_HARDWAREFLAG
