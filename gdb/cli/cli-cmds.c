@@ -677,12 +677,15 @@ echo_command (const char *text, int from_tty)
       {
 	if (c == '\\')
 	  {
+	    char *out;
+
 	    /* \ at end of argument is used after spaces
 	       so they won't be lost.  */
 	    if (*p == 0)
 	      return;
 
-	    c = parse_escape (get_current_arch (), p, &p);
+	    c = parse_escape (get_current_arch (), p, &out);
+	    p = out;
 	    if (c >= 0)
 	      printf_filtered ("%c", c);
 	  }
