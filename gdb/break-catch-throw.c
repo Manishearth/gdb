@@ -420,7 +420,7 @@ handle_gnu_v3_exceptions (int tempflag, char *except_rx, char *cond_string,
    the end of the string.  */
 
 static char *
-extract_exception_regexp (char **string)
+extract_exception_regexp (const char **string)
 {
   char *start;
   char *last, *last_space;
@@ -452,7 +452,7 @@ extract_exception_regexp (char **string)
    commands.  */
 
 static void
-catch_exception_command_1 (enum exception_event_kind ex_event, char *arg,
+catch_exception_command_1 (enum exception_event_kind ex_event, const char *arg,
 			   int tempflag, int from_tty)
 {
   char *except_rx;
@@ -461,7 +461,7 @@ catch_exception_command_1 (enum exception_event_kind ex_event, char *arg,
 
   if (!arg)
     arg = "";
-  arg = skip_spaces (arg);
+  arg = skip_spaces_const (arg);
 
   except_rx = extract_exception_regexp (&arg);
   cleanup = make_cleanup (xfree, except_rx);
@@ -485,7 +485,8 @@ catch_exception_command_1 (enum exception_event_kind ex_event, char *arg,
 /* Implementation of "catch catch" command.  */
 
 static void
-catch_catch_command (char *arg, int from_tty, struct cmd_list_element *command)
+catch_catch_command (const char *arg, int from_tty,
+		     struct cmd_list_element *command)
 {
   int tempflag = get_cmd_context (command) == CATCH_TEMPORARY;
 
@@ -495,7 +496,8 @@ catch_catch_command (char *arg, int from_tty, struct cmd_list_element *command)
 /* Implementation of "catch throw" command.  */
 
 static void
-catch_throw_command (char *arg, int from_tty, struct cmd_list_element *command)
+catch_throw_command (const char *arg, int from_tty,
+		     struct cmd_list_element *command)
 {
   int tempflag = get_cmd_context (command) == CATCH_TEMPORARY;
 
@@ -505,7 +507,7 @@ catch_throw_command (char *arg, int from_tty, struct cmd_list_element *command)
 /* Implementation of "catch rethrow" command.  */
 
 static void
-catch_rethrow_command (char *arg, int from_tty,
+catch_rethrow_command (const char *arg, int from_tty,
 		       struct cmd_list_element *command)
 {
   int tempflag = get_cmd_context (command) == CATCH_TEMPORARY;
