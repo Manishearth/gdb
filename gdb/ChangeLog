@@ -1,5 +1,15 @@
 2014-08-06  Tom Tromey  <tromey@redhat.com>
 
+	* psympriv.h (SET_PSYMBOL_VALUE_ADDRESS)
+	(PSYMBOL_VALUE_RAW_ADDRESS): New macros.
+	(PSYMBOL_VALUE_ADDRESS): Add 'objfile' parameter.
+	* psymtab.c (find_pc_sect_psymtab_closer, find_pc_sect_psymbol)
+	(fixup_psymbol_section, relocate_psymtabs): Update.
+	(print_partial_symbols): Add 'objfile' parameter.  Update.
+	(dump_psymtab, add_psymbol_to_bcache): Update.
+
+2014-08-06  Tom Tromey  <tromey@redhat.com>
+
 	* dwarf2read.c (write_psymbols): Update.
 	* psympriv.h (struct partial_symbol) <pginfo>: Rename from
 	'ginfo'.

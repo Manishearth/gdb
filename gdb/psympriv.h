@@ -54,7 +54,12 @@ struct partial_symbol
 };
 
 #define PSYMBOL_VALUE(symbol)		(symbol)->pginfo.value.ivalue
-#define PSYMBOL_VALUE_ADDRESS(symbol)	(symbol)->pginfo.value.address
+#define SET_PSYMBOL_VALUE_ADDRESS(symbol, addr) \
+  (((symbol)->pginfo.value.address) = (addr))
+#define PSYMBOL_VALUE_RAW_ADDRESS(symbol) ((symbol)->pginfo.value.address + 0)
+#define PSYMBOL_VALUE_ADDRESS(objfile, symbol)	\
+  ((symbol)->pginfo.value.address \
+   + (0 * (ANOFFSET ((objfile)->section_offsets, ((symbol)->pginfo.section)))))
 #define PSYMBOL_LANGUAGE(symbol)	(symbol)->pginfo.language
 #define PSYMBOL_SECTION(symbol)		(symbol)->pginfo.section
 #define PSYMBOL_OBJ_SECTION(objfile, symbol)			\
