@@ -39,7 +39,7 @@ struct partial_symbol
 
   /* The general symbol info required for all types of symbols.  */
 
-  struct general_symbol_info ginfo;
+  struct general_symbol_info pginfo;
 
   /* Name space code.  */
 
@@ -53,8 +53,31 @@ struct partial_symbol
 
 };
 
+#define PSYMBOL_VALUE(symbol)		(symbol)->pginfo.value.ivalue
+#define PSYMBOL_VALUE_ADDRESS(symbol)	(symbol)->pginfo.value.address
+#define PSYMBOL_LANGUAGE(symbol)	(symbol)->pginfo.language
+#define PSYMBOL_SECTION(symbol)		(symbol)->pginfo.section
+#define PSYMBOL_OBJ_SECTION(objfile, symbol)			\
+  (((symbol)->pginfo.section >= 0)				\
+   ? (&(((objfile)->sections)[(symbol)->pginfo.section]))	\
+   : NULL)
+
+#define PSYMBOL_SET_LANGUAGE(symbol,language,obstack)	\
+  (symbol_set_language (&(symbol)->pginfo, (language), (obstack)))
+#define PSYMBOL_SET_NAMES(symbol,linkage_name,len,copy_name,objfile)	\
+  symbol_set_names (&(symbol)->pginfo, linkage_name, len, copy_name, objfile)
+
+#define PSYMBOL_LINKAGE_NAME(symbol)	(symbol)->pginfo.name
+#define PSYMBOL_DEMANGLED_NAME(symbol) \
+  (symbol_demangled_name (&(symbol)->pginfo))
+#define PSYMBOL_SEARCH_NAME(symbol)					 \
+   (symbol_search_name (&(symbol)->pginfo))
+
 #define PSYMBOL_DOMAIN(psymbol)	(psymbol)->domain
 #define PSYMBOL_CLASS(psymbol)		(psymbol)->aclass
+
+#define PSYMBOL_MATCHES_SEARCH_NAME(symbol, name)			\
+  (strcmp_iw (PSYMBOL_SEARCH_NAME (symbol), (name)) == 0)
 
 /* A convenience enum to give names to some constants used when
    searching psymtabs.  This is internal to psymtab and should not be

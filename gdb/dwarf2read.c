@@ -22444,7 +22444,7 @@ write_psymbols (struct mapped_symtab *symtab,
       struct partial_symbol *psym = *psymp;
       void **slot;
 
-      if (SYMBOL_LANGUAGE (psym) == language_ada)
+      if (PSYMBOL_LANGUAGE (psym) == language_ada)
 	error (_("Ada is not currently supported by the index"));
 
       /* Only add a given psymbol once.  */
@@ -22454,7 +22454,7 @@ write_psymbols (struct mapped_symtab *symtab,
 	  gdb_index_symbol_kind kind = symbol_kind (psym);
 
 	  *slot = psym;
-	  add_index_entry (symtab, SYMBOL_SEARCH_NAME (psym),
+	  add_index_entry (symtab, PSYMBOL_SEARCH_NAME (psym),
 			   is_static, kind, cu_index);
 	}
     }
