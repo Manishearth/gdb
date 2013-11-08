@@ -50,7 +50,6 @@ enum ui_flags
     ui_source_list = 2
   };
 
-
 /* Prototypes for ui-out API.  */
 
 /* A result is a recursive data structure consisting of lists and
@@ -141,6 +140,13 @@ extern int ui_out_test_flags (struct ui_out *uiout, int mask);
 extern int ui_out_query_field (struct ui_out *uiout, int colno,
 			       int *width, int *alignment, char **col_name);
 
+extern struct cleanup *
+    make_cleanup_ui_out_progress_begin_end (struct ui_out *uiout,
+					    const char *object,
+					    int should_print);
+
+extern void ui_out_progress (struct ui_out *uiout, double howmuch);
+
 /* HACK: Code in GDB is currently checking to see the type of ui_out
    builder when determining which output to produce.  This function is
    a hack to encapsulate that test.  Once GDB manages to separate the
@@ -198,6 +204,12 @@ typedef void (flush_ftype) (struct ui_out * uiout);
 typedef int (redirect_ftype) (struct ui_out * uiout,
 			      struct ui_file * outstream);
 typedef void (data_destroy_ftype) (struct ui_out *uiout);
+typedef void (progress_start_ftype) (struct ui_out *uiout,
+				     const char *object,
+				     int should_print);
+typedef void (progress_notify_ftype) (struct ui_out *uiout,
+				      double howmuch);
+typedef void (progress_end_ftype) (struct ui_out *uiout);
 
 /* ui-out-impl */
 
@@ -223,6 +235,9 @@ struct ui_out_impl
     flush_ftype *flush;
     redirect_ftype *redirect;
     data_destroy_ftype *data_destroy;
+    progress_start_ftype *progress_start;
+    progress_notify_ftype *progress_notify;
+    progress_end_ftype *progress_end;
     int is_mi_like_p;
   };
 

@@ -29,6 +29,22 @@
 
 typedef struct cli_ui_out_data cli_out_data;
 
+enum meter_state
+{
+  START,
+  WORKING,
+  NO_PRINT
+};
+
+struct cli_progress_info
+{
+  int printing;
+  char *name;
+  double last_value;
+  struct cli_progress_info *prev;
+};
+
+#define PROGRESS_WIDTH 20
 
 /* Prototypes for local functions */
 
@@ -326,6 +342,83 @@ cli_redirect (struct ui_out *uiout, struct ui_file *outstream)
   return 0;
 }
 
+static void
+cli_progress_start (struct ui_out *uiout, const char *name, int should_print)
+{
+  cli_out_data *data = ui_out_data (uiout);
+  struct ui_file *stream = VEC_last (ui_filep, data->streams);
+  struct cli_progress_info *meter = XNEW (struct cli_progress_info);
+
+  meter->last_value = 0;
+  meter->name = xstrdup (name);
+  if (!ui_file_isatty (stream))
+    {
+      fprintf_unfiltered (stream, "%s...", meter->name);
+      meter->printing = WORKING;
+    }
+  else
+    meter->printing = should_print ? START : NO_PRINT;
+
+  meter->prev = data->meter;
+  data->meter = meter;
+}
+
+static void
+cli_progress_notify (struct ui_out *uiout, double howmuch)
+{
+  cli_out_data *data = ui_out_data (uiout);
+  struct ui_file *stream = VEC_last (ui_filep, data->streams);
+
+  if (data->meter->printing == NO_PRINT)
+    return;
+
+  if (data->meter->printing == START)
+    {
+      fprintf_unfiltered (stream, "%s\n", data->meter->name);
+      data->meter->printing = WORKING;
+    }
+
+  if (ui_file_isatty (stream))
+    {
+      int i, max;
+
+      max = PROGRESS_WIDTH * howmuch;
+      fprintf_unfiltered (stream, "\r[");
+      for (i = 0; i < PROGRESS_WIDTH; ++i)
+	fprintf_unfiltered (stream, i < max ? "#" : " ");
+      fprintf_unfiltered (stream, "]");
+      gdb_flush (stream);
+    }
+}
+
+static void
+cli_progress_end (struct ui_out *uiout)
+{
+  cli_out_data *data = ui_out_data (uiout);
+  struct ui_file *stream = VEC_last (ui_filep, data->streams);
+  struct cli_progress_info *meter = data->meter;
+
+  if (meter->printing != NO_PRINT)
+    {
+      if (ui_file_isatty (stream))
+	{
+	  int i;
+
+	  fprintf_unfiltered (stream, "\r");
+	  for (i = 0; i < PROGRESS_WIDTH + 2; ++i)
+	    fprintf_unfiltered (stream, " ");
+	  fprintf_unfiltered (stream, "\r");
+	  gdb_flush (stream);
+	}
+      else
+	fprintf_unfiltered (stream, "done.\n");
+    }
+
+  data->meter = meter->prev;
+  xfree (meter->name);
+  xfree (meter);
+}
+
 /* local functions */
 
 /* Like cli_field_fmt, but takes a variable number of args
@@ -389,10 +482,8 @@ cli_out_data_ctor (cli_out_data *self, struct ui_file *stream)
 {
   gdb_assert (stream != NULL);
 
-  self->streams = NULL;
+  memset (self, 0, sizeof (*self));
   VEC_safe_push (ui_filep, self->streams, stream);
-
-  self->suppress_output = 0;
 }
 
 /* Initialize private members at startup.  */

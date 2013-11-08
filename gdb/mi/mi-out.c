@@ -64,6 +64,10 @@ static void mi_message (struct ui_out *uiout, int verbosity,
 static void mi_wrap_hint (struct ui_out *uiout, char *identstring);
 static void mi_flush (struct ui_out *uiout);
 static int mi_redirect (struct ui_out *uiout, struct ui_file *outstream);
+static void mi_progress_start (struct ui_out *uiout, const char *name,
+			       int should_print);
+static void mi_progress_notify (struct ui_out *uiout, double howmuch);
+static void mi_progress_end (struct ui_out *uiout);
 
 /* This is the MI ui-out implementation functions vector */
 
@@ -86,6 +90,9 @@ static const struct ui_out_impl mi_ui_out_impl =
   mi_flush,
   mi_redirect,
   0,
+  mi_progress_start,
+  mi_progress_notify,
+  mi_progress_end,
   1, /* Needs MI hacks.  */
 };
 
@@ -296,6 +303,21 @@ mi_redirect (struct ui_out *uiout, struct ui_file *outstream)
     }
 
   return 0;
+}
+
+static void
+mi_progress_start (struct ui_out *uiout, const char *name, int should_print)
+{
+}
+
+static void
+mi_progress_notify (struct ui_out *uiout, double howmuch)
+{
+}
+
+static void
+mi_progress_end (struct ui_out *uiout)
+{
 }
 
 /* local functions */

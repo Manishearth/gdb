@@ -1156,6 +1156,8 @@ symbol_file_add_with_addrs (bfd *abfd, const char *name, int add_flags,
   const int should_print = (print_symbol_loading_p (from_tty, mainline, 1)
 			    && (readnow_symbol_files
 				|| (add_flags & SYMFILE_NO_READ) == 0));
+  struct cleanup *cleanup;
+  char *progress_text = NULL;
 
   if (readnow_symbol_files)
     {
@@ -1181,13 +1183,18 @@ symbol_file_add_with_addrs (bfd *abfd, const char *name, int add_flags,
   /* We either created a new mapped symbol table, mapped an existing
      symbol table file which has not had initial symbol reading
      performed, or need to read an unmapped symbol table.  */
+  cleanup = make_cleanup (null_cleanup, NULL);
   if (should_print)
     {
       if (deprecated_pre_add_symbol_hook)
 	deprecated_pre_add_symbol_hook (name);
+
+      progress_text = xstrprintf ("Reading %s", name);
+      make_cleanup (xfree, progress_text);
     }
 
-  progress_initialize (name, should_print);
+  make_cleanup_ui_out_progress_begin_end (current_uiout, progress_text,
+					  should_print);
   syms_from_objfile (objfile, addrs, add_flags);
 
   /* We now have at least a partial symbol table.  Check to see if the
@@ -1222,8 +1229,8 @@ symbol_file_add_with_addrs (bfd *abfd, const char *name, int add_flags,
       if (deprecated_post_add_symbol_hook)
 	deprecated_post_add_symbol_hook ();
     }
-  /* FIXME: cleanup */
-  progress_done ();
+
+  do_cleanups (cleanup);
 
   /* We print some messages regardless of whether 'from_tty ||
      info_verbose' is true, so make sure they go out at the right

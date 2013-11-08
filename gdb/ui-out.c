@@ -195,6 +195,11 @@ static void default_message (struct ui_out *uiout, int verbosity,
 static void default_wrap_hint (struct ui_out *uiout, char *identstring);
 static void default_flush (struct ui_out *uiout);
 static void default_data_destroy (struct ui_out *uiout);
+static void default_progress_start (struct ui_out *uiout,
+				    const char *object,
+				    int should_print);
+static void default_progress_notify (struct ui_out *uiout, double howmuch);
+static void default_progress_end (struct ui_out *uiout);
 
 /* This is the default ui-out implementation functions vector.  */
 
@@ -217,6 +222,9 @@ const struct ui_out_impl default_ui_out_impl =
   default_flush,
   NULL,
   default_data_destroy,
+  default_progress_start,
+  default_progress_notify,
+  default_progress_end,
   0, /* Does not need MI hacks.  */
 };
 
@@ -764,6 +772,23 @@ default_data_destroy (struct ui_out *uiout)
 {
 }
 
+static void
+default_progress_start (struct ui_out *uiout,
+			const char *object,
+			int should_print)
+{
+}
+
+static void
+default_progress_notify (struct ui_out *uiout, double howmuch)
+{
+}
+
+static void
+default_progress_end (struct ui_out *uiout)
+{
+}
+
 /* Interface to the implementation functions.  */
 
 void
@@ -1090,6 +1115,39 @@ ui_out_query_field (struct ui_out *uiout, int colno,
       }
 
   return 0;
+}
+
+/* A cleanup function that calls the progress_end method.  */
+
+static void
+do_progress_end (void *arg)
+{
+  struct ui_out *uiout = arg;
+
+  uiout->impl->progress_end (uiout);
+}
+
+/* Start a new progress meter on UIOUT.  TOPIC is the kind of progress
+   being reported, and OBJECT is the name of the associated object.
+   SHOULD_PRINT is true if the caller intends the progress to be
+   displayed to the user.  */
+
+struct cleanup *
+make_cleanup_ui_out_progress_begin_end (struct ui_out *uiout,
+					const char *object,
+					int should_print)
+{
+  uiout->impl->progress_start (uiout, object, should_print);
+  return make_cleanup (do_progress_end, uiout);
+}
+
+/* Emit some progress corresponding to the most recently created
+   progress meter.  HOWMUCH may range from 0.0 to 1.0.  */
+
+void
+ui_out_progress (struct ui_out *uiout, double howmuch)
+{
+  uiout->impl->progress_notify (uiout, howmuch);
 }
 
 /* Initalize private members at startup.  */

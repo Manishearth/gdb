@@ -2739,7 +2739,8 @@ create_cus_from_index_list (struct objfile *objfile,
       the_cu->is_dwz = is_dwz;
       dwarf2_per_objfile->all_comp_units[base_offset + i / 2] = the_cu;
 
-      progress_notify ((i + 2 * base_offset) / total_progress_steps);
+      ui_out_progress (current_uiout,
+		       (i + 2 * base_offset) / total_progress_steps);
     }
 }
 
@@ -2824,7 +2825,8 @@ create_signatured_type_table_from_index (struct objfile *objfile,
 
       dwarf2_per_objfile->all_type_units[i / 3] = sig_type;
 
-      progress_notify ((base_progress_step + i) / total_progress_steps);
+      ui_out_progress (current_uiout,
+		       (base_progress_step + i) / total_progress_steps);
     }
 
   dwarf2_per_objfile->signatured_types = sig_types_hash;
@@ -3740,7 +3742,7 @@ dw2_expand_all_symtabs (struct objfile *objfile)
       struct dwarf2_per_cu_data *per_cu = dw2_get_cutu (i);
 
       dw2_instantiate_symtab (per_cu);
-      progress_notify (i / (double) count);
+      ui_out_progress (current_uiout, i / (double) count);
     }
 }
 
@@ -6413,7 +6415,8 @@ dwarf2_build_psymtabs_hard (struct objfile *objfile)
       struct dwarf2_per_cu_data *per_cu = dw2_get_cutu (i);
 
       process_psymtab_comp_unit (per_cu, 0, language_minimal);
-      progress_notify (i / (double) dwarf2_per_objfile->n_comp_units);
+      ui_out_progress (current_uiout,
+		       i / (double) dwarf2_per_objfile->n_comp_units);
     }
 
   /* This has to wait until we read the CUs, we need the list of DWOs.  */

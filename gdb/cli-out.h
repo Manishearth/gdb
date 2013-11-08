@@ -35,6 +35,8 @@ struct cli_ui_out_data
   {
     VEC (ui_filep) *streams;
     int suppress_output;
+
+    struct cli_progress_info *meter;
   };
 
 extern const struct ui_out_impl cli_ui_out_impl;
