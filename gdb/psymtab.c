@@ -83,23 +83,24 @@ require_partial_symbols (struct objfile *objfile, int verbose)
 
       if (objfile->sf->sym_read_psymbols)
 	{
-	  if (verbose)
-	    {
-	      printf_unfiltered (_("Reading symbols from %s..."),
-				 objfile_name (objfile));
-	      gdb_flush (gdb_stdout);
-	    }
+	  struct cleanup *cleanup;
+	  char *text;
+
+	  text = xstrprintf ("Reading symbols from %s", objfile_name (objfile));
+	  cleanup = make_cleanup (xfree, text);
+
+	  make_cleanup_ui_out_progress_begin_end (current_uiout, text,
+						  verbose);
+
 	  (*objfile->sf->sym_read_psymbols) (objfile);
+
+	  do_cleanups (cleanup);
 	  if (verbose)
 	    {
 	      if (!objfile_has_symbols (objfile))
-		{
-		  wrap_here ("");
-		  printf_unfiltered (_("(no debugging symbols found)..."));
-		  wrap_here ("");
-		}
-
-	      printf_unfiltered (_("done.\n"));
+		printf_unfiltered (_(" (no debugging symbols found)\n"));
+	      else
+		printf_unfiltered (_(" done.\n"));
 	    }
 	}
     }

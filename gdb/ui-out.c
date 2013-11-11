@@ -1124,6 +1124,7 @@ do_progress_end (void *arg)
 {
   struct ui_out *uiout = arg;
 
+  uiout->impl->progress_notify (uiout, 1.0);
   uiout->impl->progress_end (uiout);
 }
 
