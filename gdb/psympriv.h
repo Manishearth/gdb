@@ -59,7 +59,7 @@ struct partial_symbol
 #define PSYMBOL_VALUE_RAW_ADDRESS(symbol) ((symbol)->pginfo.value.address + 0)
 #define PSYMBOL_VALUE_ADDRESS(objfile, symbol)	\
   ((symbol)->pginfo.value.address \
-   + (0 * (ANOFFSET ((objfile)->section_offsets, ((symbol)->pginfo.section)))))
+   + (ANOFFSET ((objfile)->section_offsets, ((symbol)->pginfo.section))))
 #define PSYMBOL_LANGUAGE(symbol)	(symbol)->pginfo.language
 #define PSYMBOL_SECTION(symbol)		(symbol)->pginfo.section
 #define PSYMBOL_OBJ_SECTION(objfile, symbol)			\
@@ -255,8 +255,15 @@ struct partial_symtab
   (ANOFFSET ((OBJF)->section_offsets, (INDEX))			\
    + ((((OFFS) == NULL)) ? 0 : ANOFFSET ((OFFS), (INDEX))))
 
-#define PSYMTAB_TEXTLOW(PST) ((PST)->textlow_ + 0)
-#define PSYMTAB_TEXTHIGH(PST) ((PST)->texthigh_ + 0)
+#define PSYMTAB_RAW_TEXTLOW(PST) ((PST)->textlow_ + 0)
+#define PSYMTAB_RAW_TEXTHIGH(PST) ((PST)->texthigh_ + 0)
+
+#define PSYMTAB_TEXTLOW(OBJFILE, PST)					\
+  ((PST)->textlow_							\
+   + ANOFFSET ((OBJFILE)->section_offsets, SECT_OFF_TEXT (OBJFILE)))
+#define PSYMTAB_TEXTHIGH(OBJFILE, PST)					\
+  ((PST)->texthigh_							\
+   + ANOFFSET ((OBJFILE)->section_offsets, SECT_OFF_TEXT (OBJFILE)))
 
 /* Set the "textlow" field on the partial symbol table, and mark the
    field as valid.  */
@@ -288,6 +295,7 @@ extern void sort_pst_symbols (struct objfile *, struct partial_symtab *);
 extern void add_psymbol_to_list (const char *, int,
 				 int, domain_enum,
 				 enum address_class,
+				 short /* section */,
 				 struct psymbol_allocation_list *,
 				 long, CORE_ADDR,
 				 enum language, struct objfile *);

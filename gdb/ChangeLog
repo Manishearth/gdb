@@ -1,5 +1,50 @@
 2014-08-06  Tom Tromey  <tromey@redhat.com>
 
+	* dbxread.c (find_stab_function_addr): Use
+	MSYMBOL_VALUE_RAW_ADDRESS.
+	(read_dbx_symtab): Use PSYMTAB_RAW_TEXTLOW, PSYMTAB_RAW_TEXTHIGH.
+	Don't add objfile offsets.
+	(end_psymtab): Use PSYMTAB_RAW_TEXTLOW, PSYMTAB_RAW_TEXTHIGH,
+	MSYMBOL_VALUE_RAW_ADDRESS.
+	(read_ofile_symtab): Update.
+	* dwarf2read.c (create_addrmap_from_index): Don't add objfile
+	offsets.
+	(dw2_relocate): Remove.
+	(dw2_find_pc_sect_symtab): Bias PC by the text offset before
+	searching addrmap.
+	(dwarf2_gdb_index_functions): Update.
+	(process_psymtab_comp_unit_reader, add_partial_symbol)
+	(add_partial_subprogram, dwarf2_ranges_read): Don't add objfile
+	offsets.  Update.
+	(load_partial_dies): Update.
+	(add_address_entry): Don't add objfile offsets.
+	* mdebugread.c (parse_symbol): Don't add objfile offsets.
+	(parse_lines): Remove 'pst' parameter, replace with 'textlow'.
+	Update.
+	(parse_partial_symbols): Don't add objfile offsets.  Use
+	PSYMTAB_RAW_TEXTLOW, PSYMTAB_RAW_TEXTHIGH.  Update.
+	(handle_psymbol_enumerators, psymtab_to_symtab_1): Update.
+	* objfiles.c (objfile_relocate1): Don't relocate psymtabs_addrmap
+	or call 'relocate' quick function.
+	* psympriv.h (PSYMBOL_VALUE_ADDRESS): Remove "0 *".
+	(PSYMTAB_RAW_TEXTLOW, PSYMTAB_RAW_TEXTHIGH): New macros.
+	(PSYMTAB_TEXTLOW, PSYMTAB_TEXTHIGH): Add 'objfile' parameter.
+	(add_psymbol_to_bcache): Add 'section' parameter.
+	* psymtab.c (find_pc_sect_psymtab_closer, find_pc_sect_psymtab)
+	(find_pc_psymbol): Update.
+	(fixup_psymbol_section, relocate_psymtabs): Remove.
+	(dump_psymtab, psym_functions): Update.
+	(add_psymbol_to_bcache, add_psymbol_to_list): Add 'section'
+	parameter.
+	(maintenance_info_psymtabs, maintenance_check_psymtabs): Update.
+	* symfile-debug.c (debug_qf_relocate): Remove.
+	(debug_sym_quick_functions): Update.
+	* symfile.h (struct quick_symbol_functions) <relocate>: Remove.
+	* xcoffread.c (scan_xcoff_symtab): Don't add objfile offsets.
+	Update.
+
+2014-08-06  Tom Tromey  <tromey@redhat.com>
+
 	* dbxread.c (end_psymtab): Use texthigh_valid and textlow_valid.
 	* mdebugread.c (parse_partial_symbols): Use textlow_valid.
 	(psymtab_to_symtab_1): Use texthigh_valid and textlow_valid.

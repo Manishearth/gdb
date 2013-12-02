@@ -2830,7 +2830,6 @@ create_addrmap_from_index (struct objfile *objfile, struct mapped_index *index)
   struct obstack temp_obstack;
   struct addrmap *mutable_map;
   struct cleanup *cleanup;
-  CORE_ADDR baseaddr;
 
   obstack_init (&temp_obstack);
   cleanup = make_cleanup_obstack_free (&temp_obstack);
@@ -2838,8 +2837,6 @@ create_addrmap_from_index (struct objfile *objfile, struct mapped_index *index)
 
   iter = index->address_table;
   end = iter + index->address_table_size;
-
-  baseaddr = ANOFFSET (objfile->section_offsets, SECT_OFF_TEXT (objfile));
 
   while (iter < end)
     {
@@ -2867,8 +2864,7 @@ create_addrmap_from_index (struct objfile *objfile, struct mapped_index *index)
 	  continue;
 	}
 
-      addrmap_set_empty (mutable_map, lo + baseaddr, hi + baseaddr - 1,
-			 dw2_get_cutu (cu_index));
+      addrmap_set_empty (mutable_map, lo, hi - 1, dw2_get_cutu (cu_index));
     }
 
   objfile->psymtabs_addrmap = addrmap_create_fixed (mutable_map,
@@ -3678,14 +3674,6 @@ dw2_dump (struct objfile *objfile)
 }
 
 static void
-dw2_relocate (struct objfile *objfile,
-	      const struct section_offsets *new_offsets,
-	      const struct section_offsets *delta)
-{
-  /* There's nothing to relocate here.  */
-}
-
-static void
 dw2_expand_symtabs_for_function (struct objfile *objfile,
 				 const char *func_name)
 {
@@ -3997,13 +3985,15 @@ dw2_find_pc_sect_symtab (struct objfile *objfile,
 {
   struct dwarf2_per_cu_data *data;
   struct symtab *result;
+  CORE_ADDR baseaddr
+    = ANOFFSET (objfile->section_offsets, SECT_OFF_TEXT (objfile));
 
   dw2_setup (objfile);
 
   if (!objfile->psymtabs_addrmap)
     return NULL;
 
-  data = addrmap_find (objfile->psymtabs_addrmap, pc);
+  data = addrmap_find (objfile->psymtabs_addrmap, pc - baseaddr);
   if (!data)
     return NULL;
 
@@ -4098,7 +4088,6 @@ const struct quick_symbol_functions dwarf2_gdb_index_functions =
   dw2_lookup_symbol,
   dw2_print_stats,
   dw2_dump,
-  dw2_relocate,
   dw2_expand_symtabs_for_function,
   dw2_expand_all_symtabs,
   dw2_expand_symtabs_with_fullname,
@@ -5849,7 +5838,6 @@ process_psymtab_comp_unit_reader (const struct die_reader_specs *reader,
   struct objfile *objfile = cu->objfile;
   struct dwarf2_per_cu_data *per_cu = cu->per_cu;
   struct attribute *attr;
-  CORE_ADDR baseaddr;
   CORE_ADDR best_lowpc = 0, best_highpc = 0;
   struct partial_symtab *pst;
   int has_pc_info;
@@ -5879,8 +5867,6 @@ process_psymtab_comp_unit_reader (const struct die_reader_specs *reader,
   if (attr != NULL)
     pst->dirname = DW_STRING (attr);
 
-  baseaddr = ANOFFSET (objfile->section_offsets, SECT_OFF_TEXT (objfile));
-
   dwarf2_find_base_address (comp_unit_die, cu);
 
   /* Possibly set the default values of LOWPC and HIGHPC from
@@ -5891,8 +5877,7 @@ process_psymtab_comp_unit_reader (const struct die_reader_specs *reader,
     /* Store the contiguous range if it is not empty; it can be empty for
        CUs with no code.  */
     addrmap_set_empty (objfile->psymtabs_addrmap,
-		       best_lowpc + baseaddr,
-		       best_highpc + baseaddr - 1, pst);
+		       best_lowpc, best_highpc - 1, pst);
 
   /* Check if comp unit has_children.
      If so, read the rest of the partial symbols from this comp unit.
@@ -5923,8 +5908,8 @@ process_psymtab_comp_unit_reader (const struct die_reader_specs *reader,
 	  best_highpc = highpc;
 	}
     }
-  SET_PSYMTAB_TEXTLOW (pst, best_lowpc + baseaddr);
-  SET_PSYMTAB_TEXTHIGH (pst, best_highpc + baseaddr);
+  SET_PSYMTAB_TEXTLOW (pst, best_lowpc);
+  SET_PSYMTAB_TEXTHIGH (pst, best_highpc);
 
   pst->n_global_syms = objfile->global_psymbols.next -
     (objfile->global_psymbols.list + pst->globals_offset);
@@ -5965,8 +5950,8 @@ process_psymtab_comp_unit_reader (const struct die_reader_specs *reader,
 			  ", %d global, %d static syms\n",
 			  per_cu->is_debug_types ? "type" : "comp",
 			  per_cu->offset.sect_off,
-			  paddress (gdbarch, PSYMTAB_TEXTLOW (pst)),
-			  paddress (gdbarch, PSYMTAB_TEXTHIGH (pst)),
+			  paddress (gdbarch, PSYMTAB_TEXTLOW (objfile, pst)),
+			  paddress (gdbarch, PSYMTAB_TEXTHIGH (objfile, pst)),
 			  pst->n_global_syms, pst->n_static_syms);
     }
 }
@@ -6789,10 +6774,7 @@ add_partial_symbol (struct partial_die_info *pdi, struct dwarf2_cu *cu)
   struct objfile *objfile = cu->objfile;
   CORE_ADDR addr = 0;
   const char *actual_name = NULL;
-  CORE_ADDR baseaddr;
   char *built_actual_name;
-
-  baseaddr = ANOFFSET (objfile->section_offsets, SECT_OFF_TEXT (objfile));
 
   built_actual_name = partial_die_full_name (pdi, cu);
   if (built_actual_name != NULL)
@@ -6815,8 +6797,9 @@ add_partial_symbol (struct partial_die_info *pdi, struct dwarf2_cu *cu)
 	  add_psymbol_to_list (actual_name, strlen (actual_name),
 			       built_actual_name != NULL,
 			       VAR_DOMAIN, LOC_BLOCK,
+			       SECT_OFF_TEXT (objfile),
 			       &objfile->global_psymbols,
-			       0, pdi->lowpc + baseaddr,
+			       0, pdi->lowpc,
 			       cu->language, objfile);
 	}
       else
@@ -6826,8 +6809,9 @@ add_partial_symbol (struct partial_die_info *pdi, struct dwarf2_cu *cu)
 	  add_psymbol_to_list (actual_name, strlen (actual_name),
 			       built_actual_name != NULL,
 			       VAR_DOMAIN, LOC_BLOCK,
+			       SECT_OFF_TEXT (objfile),
 			       &objfile->static_psymbols,
-			       0, pdi->lowpc + baseaddr,
+			       0, pdi->lowpc,
 			       cu->language, objfile);
 	}
       break;
@@ -6841,6 +6825,7 @@ add_partial_symbol (struct partial_die_info *pdi, struct dwarf2_cu *cu)
 	  list = &objfile->static_psymbols;
 	add_psymbol_to_list (actual_name, strlen (actual_name),
 			     built_actual_name != NULL, VAR_DOMAIN, LOC_STATIC,
+			     -1,
 			     list, 0, 0, cu->language, objfile);
       }
       break;
@@ -6876,8 +6861,9 @@ add_partial_symbol (struct partial_die_info *pdi, struct dwarf2_cu *cu)
 	    add_psymbol_to_list (actual_name, strlen (actual_name),
 				 built_actual_name != NULL,
 				 VAR_DOMAIN, LOC_STATIC,
+				 SECT_OFF_TEXT (objfile),
 				 &objfile->global_psymbols,
-				 0, addr + baseaddr,
+				 0, addr,
 				 cu->language, objfile);
 	}
       else
@@ -6893,8 +6879,9 @@ add_partial_symbol (struct partial_die_info *pdi, struct dwarf2_cu *cu)
 	  add_psymbol_to_list (actual_name, strlen (actual_name),
 			       built_actual_name != NULL,
 			       VAR_DOMAIN, LOC_STATIC,
+			       SECT_OFF_TEXT (objfile),
 			       &objfile->static_psymbols,
-			       0, addr + baseaddr,
+			       0, addr,
 			       cu->language, objfile);
 	}
       break;
@@ -6903,7 +6890,7 @@ add_partial_symbol (struct partial_die_info *pdi, struct dwarf2_cu *cu)
     case DW_TAG_subrange_type:
       add_psymbol_to_list (actual_name, strlen (actual_name),
 			   built_actual_name != NULL,
-			   VAR_DOMAIN, LOC_TYPEDEF,
+			   VAR_DOMAIN, LOC_TYPEDEF, -1,
 			   &objfile->static_psymbols,
 			   0, (CORE_ADDR) 0, cu->language, objfile);
       break;
@@ -6911,14 +6898,14 @@ add_partial_symbol (struct partial_die_info *pdi, struct dwarf2_cu *cu)
     case DW_TAG_namespace:
       add_psymbol_to_list (actual_name, strlen (actual_name),
 			   built_actual_name != NULL,
-			   VAR_DOMAIN, LOC_TYPEDEF,
+			   VAR_DOMAIN, LOC_TYPEDEF, -1,
 			   &objfile->global_psymbols,
 			   0, (CORE_ADDR) 0, cu->language, objfile);
       break;
     case DW_TAG_module:
       add_psymbol_to_list (actual_name, strlen (actual_name),
 			   built_actual_name != NULL,
-			   MODULE_DOMAIN, LOC_TYPEDEF,
+			   MODULE_DOMAIN, LOC_TYPEDEF, -1,
 			   &objfile->global_psymbols,
 			   0, (CORE_ADDR) 0, cu->language, objfile);
       break;
@@ -6942,7 +6929,7 @@ add_partial_symbol (struct partial_die_info *pdi, struct dwarf2_cu *cu)
 	 static vs. global.  */
       add_psymbol_to_list (actual_name, strlen (actual_name),
 			   built_actual_name != NULL,
-			   STRUCT_DOMAIN, LOC_TYPEDEF,
+			   STRUCT_DOMAIN, LOC_TYPEDEF, -1,
 			   (cu->language == language_cplus
 			    || cu->language == language_java)
 			   ? &objfile->global_psymbols
@@ -6953,7 +6940,7 @@ add_partial_symbol (struct partial_die_info *pdi, struct dwarf2_cu *cu)
     case DW_TAG_enumerator:
       add_psymbol_to_list (actual_name, strlen (actual_name),
 			   built_actual_name != NULL,
-			   VAR_DOMAIN, LOC_CONST,
+			   VAR_DOMAIN, LOC_CONST, -1,
 			   (cu->language == language_cplus
 			    || cu->language == language_java)
 			   ? &objfile->global_psymbols
@@ -7027,14 +7014,10 @@ add_partial_subprogram (struct partial_die_info *pdi,
             *highpc = pdi->highpc;
 	  if (need_pc)
 	    {
-	      CORE_ADDR baseaddr;
 	      struct objfile *objfile = cu->objfile;
 
-	      baseaddr = ANOFFSET (objfile->section_offsets,
-				   SECT_OFF_TEXT (objfile));
 	      addrmap_set_empty (objfile->psymtabs_addrmap,
-				 pdi->lowpc + baseaddr,
-				 pdi->highpc - 1 + baseaddr,
+				 pdi->lowpc, pdi->highpc - 1,
 				 cu->per_cu->v.psymtab);
 	    }
         }
@@ -11765,9 +11748,7 @@ dwarf2_ranges_read (unsigned offset, CORE_ADDR *low_return,
 
       if (ranges_pst != NULL)
 	addrmap_set_empty (objfile->psymtabs_addrmap,
-			   range_beginning + baseaddr,
-			   range_end - 1 + baseaddr,
-			   ranges_pst);
+			   range_beginning, range_end - 1, ranges_pst);
 
       /* FIXME: This is recording everything as a low-high
 	 segment of consecutive addresses.  We should have a
@@ -15338,7 +15319,7 @@ load_partial_dies (const struct die_reader_specs *reader,
 	{
 	  if (building_psymtab && part_die->name != NULL)
 	    add_psymbol_to_list (part_die->name, strlen (part_die->name), 0,
-				 VAR_DOMAIN, LOC_TYPEDEF,
+				 VAR_DOMAIN, LOC_TYPEDEF, -1,
 				 &objfile->static_psymbols,
 				 0, (CORE_ADDR) 0, cu->language, objfile);
 	  info_ptr = locate_pdi_sibling (reader, part_die, info_ptr);
@@ -15374,7 +15355,7 @@ load_partial_dies (const struct die_reader_specs *reader,
 		       _("malformed enumerator DIE ignored"));
 	  else if (building_psymtab)
 	    add_psymbol_to_list (part_die->name, strlen (part_die->name), 0,
-				 VAR_DOMAIN, LOC_CONST,
+				 VAR_DOMAIN, LOC_CONST, -1,
 				 (cu->language == language_cplus
 				  || cu->language == language_java)
 				 ? &objfile->global_psymbols
@@ -22315,13 +22296,10 @@ add_address_entry (struct objfile *objfile, struct obstack *obstack,
 {
   offset_type cu_index_to_write;
   gdb_byte addr[8];
-  CORE_ADDR baseaddr;
 
-  baseaddr = ANOFFSET (objfile->section_offsets, SECT_OFF_TEXT (objfile));
-
-  store_unsigned_integer (addr, 8, BFD_ENDIAN_LITTLE, start - baseaddr);
+  store_unsigned_integer (addr, 8, BFD_ENDIAN_LITTLE, start);
   obstack_grow (obstack, addr, 8);
-  store_unsigned_integer (addr, 8, BFD_ENDIAN_LITTLE, end - baseaddr);
+  store_unsigned_integer (addr, 8, BFD_ENDIAN_LITTLE, end);
   obstack_grow (obstack, addr, 8);
   cu_index_to_write = MAYBE_SWAP (cu_index);
   obstack_grow (obstack, &cu_index_to_write, sizeof (offset_type));
