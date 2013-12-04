@@ -4409,8 +4409,6 @@ dwarf2_create_include_psymtab (const char *name, struct partial_symtab *pst,
     }
 
   subpst->section_offsets = pst->section_offsets;
-  subpst->textlow = 0;
-  subpst->texthigh = 0;
 
   subpst->dependencies = (struct partial_symtab **)
     obstack_alloc (&objfile->objfile_obstack,
@@ -5925,8 +5923,8 @@ process_psymtab_comp_unit_reader (const struct die_reader_specs *reader,
 	  best_highpc = highpc;
 	}
     }
-  pst->textlow = best_lowpc + baseaddr;
-  pst->texthigh = best_highpc + baseaddr;
+  SET_PSYMTAB_TEXTLOW (pst, best_lowpc + baseaddr);
+  SET_PSYMTAB_TEXTHIGH (pst, best_highpc + baseaddr);
 
   pst->n_global_syms = objfile->global_psymbols.next -
     (objfile->global_psymbols.list + pst->globals_offset);
@@ -5967,8 +5965,8 @@ process_psymtab_comp_unit_reader (const struct die_reader_specs *reader,
 			  ", %d global, %d static syms\n",
 			  per_cu->is_debug_types ? "type" : "comp",
 			  per_cu->offset.sect_off,
-			  paddress (gdbarch, pst->textlow),
-			  paddress (gdbarch, pst->texthigh),
+			  paddress (gdbarch, PSYMTAB_TEXTLOW (pst)),
+			  paddress (gdbarch, PSYMTAB_TEXTHIGH (pst)),
 			  pst->n_global_syms, pst->n_static_syms);
     }
 }

@@ -1,5 +1,26 @@
 2014-08-06  Tom Tromey  <tromey@redhat.com>
 
+	* dbxread.c (read_dbx_symtab, end_psymtab, read_ofile_symtab):
+	Update.
+	* dwarf2read.c (dwarf2_create_include_psymtab): Don't initialize
+	textlow and texthigh fields.
+	(process_psymtab_comp_unit_reader): Update.
+	* mdebugread.c (parse_lines, parse_partial_symbols)
+	(psymtab_to_symtab_1): Update.
+	* psympriv.h (struct partial_symtab) <textlow_, texthigh_>: Rename
+	fields.  Update comment.
+	(PSYMTAB_TEXTLOW, PSYMTAB_TEXTHIGH, SET_PSYMTAB_TEXTLOW)
+	(SET_PSYMTAB_TEXTHIGH): New macros.
+	* psymtab.c (find_pc_sect_psymtab_closer, find_pc_sect_psymtab)
+	(find_pc_sect_psymbol, relocate_psymtabs, dump_psymtab)
+	(start_psymtab_common, maintenance_info_psymtabs)
+	(maintenance_check_psymtabs): Update.
+	* xcoffread.c (xcoff_end_psymtab): Don't initialize textlow and
+	texthigh fields.
+	(scan_xcoff_symtab): Update.
+
+2014-08-06  Tom Tromey  <tromey@redhat.com>
+
 	* psympriv.h (SET_PSYMBOL_VALUE_ADDRESS)
 	(PSYMBOL_VALUE_RAW_ADDRESS): New macros.
 	(PSYMBOL_VALUE_ADDRESS): Add 'objfile' parameter.

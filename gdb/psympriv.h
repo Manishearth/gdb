@@ -136,10 +136,11 @@ struct partial_symtab
 
   /* Range of text addresses covered by this file; texthigh is the
      beginning of the next section.  Do not use if PSYMTABS_ADDRMAP_SUPPORTED
-     is set.  */
+     is set.  Do not refer directly to these fields.  Instead, use the
+     accessor macros.  */
 
-  CORE_ADDR textlow;
-  CORE_ADDR texthigh;
+  CORE_ADDR textlow_;
+  CORE_ADDR texthigh_;
 
   /* If NULL, this is an ordinary partial symbol table.
 
@@ -246,6 +247,12 @@ struct partial_symtab
 #define PST_OFFSET(OBJF, OFFS, INDEX)				\
   (ANOFFSET ((OBJF)->section_offsets, (INDEX))			\
    + ((((OFFS) == NULL)) ? 0 : ANOFFSET ((OFFS), (INDEX))))
+
+#define PSYMTAB_TEXTLOW(PST) ((PST)->textlow_ + 0)
+#define PSYMTAB_TEXTHIGH(PST) ((PST)->texthigh_ + 0)
+
+#define SET_PSYMTAB_TEXTLOW(PST, V) (((PST)->textlow_) = (V))
+#define SET_PSYMTAB_TEXTHIGH(PST, V) (((PST)->texthigh_) = (V))
 
 extern void sort_pst_symbols (struct objfile *, struct partial_symtab *);
 

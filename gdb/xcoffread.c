@@ -2096,8 +2096,6 @@ xcoff_end_psymtab (struct objfile *objfile, struct partial_symtab *pst,
 						   sizeof (struct symloc));
       ((struct symloc *) subpst->read_symtab_private)->first_symnum = 0;
       ((struct symloc *) subpst->read_symtab_private)->numsyms = 0;
-      subpst->textlow = 0;
-      subpst->texthigh = 0;
 
       /* We could save slight bits of space by only making one of these,
          shared by the entire set of include files.  FIXME-someday.  */
@@ -2349,10 +2347,11 @@ scan_xcoff_symtab (struct objfile *objfile)
 			CORE_ADDR highval =
 			  symbol.n_value + csect_aux.x_csect.x_scnlen.l;
 
-			if (highval > pst->texthigh)
-			  pst->texthigh = highval;
-			if (pst->textlow == 0 || symbol.n_value < pst->textlow)
-			  pst->textlow = symbol.n_value;
+			if (highval > PSYMTAB_TEXTHIGH (pst))
+			  SET_PSYMTAB_TEXTHIGH (pst, highval);
+			if (PSYMTAB_TEXTLOW (pst) == 0
+			    || symbol.n_value < PSYMTAB_TEXTLOW (pst))
+			  SET_PSYMTAB_TEXTLOW (pst, symbol.n_value);
 		      }
 		    misc_func_recorded = 0;
 		    break;
