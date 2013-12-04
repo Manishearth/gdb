@@ -2760,7 +2760,7 @@ parse_partial_symbols (struct objfile *objfile)
 
 			  /* Kludge for Irix 5.2 zero fh->adr.  */
 			  if (!relocatable
-			      && (PSYMTAB_TEXTLOW (pst) == 0
+			      && (!pst->textlow_valid
 				  || procaddr < PSYMTAB_TEXTLOW (pst)))
 			    SET_PSYMTAB_TEXTLOW (pst, procaddr);
 			  if (high > PSYMTAB_TEXTHIGH (pst))
@@ -3558,7 +3558,7 @@ parse_partial_symbols (struct objfile *objfile)
 
 		  /* Kludge for Irix 5.2 zero fh->adr.  */
 		  if (!relocatable
-		      && (PSYMTAB_TEXTLOW (pst) == 0
+		      && (!pst->textlow_valid
 			  || procaddr < PSYMTAB_TEXTLOW (pst)))
 		    SET_PSYMTAB_TEXTLOW (pst, procaddr);
 
@@ -3759,7 +3759,7 @@ parse_partial_symbols (struct objfile *objfile)
          other cases.  */
       save_pst = fdr_to_pst[f_idx].pst;
       if (save_pst != NULL
-	  && PSYMTAB_TEXTLOW (save_pst) != 0
+	  && save_pst->textlow_valid
 	  && !(objfile->flags & OBJF_REORDERED))
 	{
 	  ALL_OBJFILE_PSYMTABS (objfile, pst)
@@ -3973,7 +3973,7 @@ psymtab_to_symtab_1 (struct objfile *objfile,
   /* Do nothing if this is a dummy psymtab.  */
 
   if (pst->n_global_syms == 0 && pst->n_static_syms == 0
-      && PSYMTAB_TEXTLOW (pst) == 0 && PSYMTAB_TEXTHIGH (pst) == 0)
+      && !pst->textlow_valid && !pst->texthigh_valid)
     return;
 
   /* Now read the symbols for this symtab.  */

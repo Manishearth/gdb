@@ -137,7 +137,9 @@ struct partial_symtab
   /* Range of text addresses covered by this file; texthigh is the
      beginning of the next section.  Do not use if PSYMTABS_ADDRMAP_SUPPORTED
      is set.  Do not refer directly to these fields.  Instead, use the
-     accessor macros.  */
+     accessor macros.  The validity of these fields is determined by the
+     textlow_valid and texthigh_valid fields; these are located later
+     in this structure for better packing.  */
 
   CORE_ADDR textlow_;
   CORE_ADDR texthigh_;
@@ -223,6 +225,11 @@ struct partial_symtab
 
   ENUM_BITFIELD (psymtab_search_status) searched_flag : 2;
 
+  /* Validity of the textlow_ and texthigh_ fields.  */
+
+  unsigned int textlow_valid : 1;
+  unsigned int texthigh_valid : 1;
+
   /* Pointer to symtab eventually allocated for this source file, 0 if
      !readin or if we haven't looked for the symtab after it was readin.  */
 
@@ -251,8 +258,28 @@ struct partial_symtab
 #define PSYMTAB_TEXTLOW(PST) ((PST)->textlow_ + 0)
 #define PSYMTAB_TEXTHIGH(PST) ((PST)->texthigh_ + 0)
 
-#define SET_PSYMTAB_TEXTLOW(PST, V) (((PST)->textlow_) = (V))
-#define SET_PSYMTAB_TEXTHIGH(PST, V) (((PST)->texthigh_) = (V))
+/* Set the "textlow" field on the partial symbol table, and mark the
+   field as valid.  */
+
+static inline void
+set_psymtab_textlow (struct partial_symtab *pst, CORE_ADDR low)
+{
+  pst->textlow_ = low;
+  pst->textlow_valid = 1;
+}
+
+/* Set the "texthigh" field on the partial symbol table, and mark the
+   field as valid.  */
+
+static inline void
+set_psymtab_texthigh (struct partial_symtab *pst, CORE_ADDR high)
+{
+  pst->texthigh_ = high;
+  pst->texthigh_valid = 1;
+}
+
+#define SET_PSYMTAB_TEXTLOW(PST, V) set_psymtab_textlow ((PST), (V))
+#define SET_PSYMTAB_TEXTHIGH(PST, V) set_psymtab_texthigh ((PST), (V))
 
 extern void sort_pst_symbols (struct objfile *, struct partial_symtab *);
 

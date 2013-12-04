@@ -2349,7 +2349,7 @@ scan_xcoff_symtab (struct objfile *objfile)
 
 			if (highval > PSYMTAB_TEXTHIGH (pst))
 			  SET_PSYMTAB_TEXTHIGH (pst, highval);
-			if (PSYMTAB_TEXTLOW (pst) == 0
+			if (!pst->textlow_valid
 			    || symbol.n_value < PSYMTAB_TEXTLOW (pst))
 			  SET_PSYMTAB_TEXTLOW (pst, symbol.n_value);
 		      }

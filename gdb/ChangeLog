@@ -1,5 +1,17 @@
 2014-08-06  Tom Tromey  <tromey@redhat.com>
 
+	* dbxread.c (end_psymtab): Use texthigh_valid and textlow_valid.
+	* mdebugread.c (parse_partial_symbols): Use textlow_valid.
+	(psymtab_to_symtab_1): Use texthigh_valid and textlow_valid.
+	* psympriv.h (struct partial_symtab) <textlow_, texthigh_>: Update
+	comment.
+	<textlow_valid, texthigh_valid>: New fields.
+	(set_psymtab_textlow, set_psymtab_texthigh): New inline functions.
+	(SET_PSYMTAB_TEXTLOW, SET_PSYMTAB_TEXTHIGH): Redefine.
+	* xcoffread.c (scan_xcoff_symtab): Use textlow_valid.
+
+2014-08-06  Tom Tromey  <tromey@redhat.com>
+
 	* dbxread.c (read_dbx_symtab, end_psymtab, read_ofile_symtab):
 	Update.
 	* dwarf2read.c (dwarf2_create_include_psymtab): Don't initialize
