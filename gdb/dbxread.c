@@ -2176,8 +2176,7 @@ start_psymtab (struct objfile *objfile, char *filename, CORE_ADDR textlow,
 	       struct partial_symbol **static_syms)
 {
   struct partial_symtab *result =
-    start_psymtab_common (objfile, objfile->section_offsets,
-			  filename, textlow, global_syms, static_syms);
+    start_psymtab_common (objfile, filename, textlow, global_syms, static_syms);
 
   result->read_symtab_private = obstack_alloc (&objfile->objfile_obstack,
 					       sizeof (struct symloc));
@@ -2499,10 +2498,6 @@ read_ofile_symtab (struct objfile *objfile, struct partial_symtab *pst)
   sym_size = LDSYMLEN (pst);
   text_offset = pst->textlow;
   text_size = pst->texthigh - pst->textlow;
-  /* This cannot be simply objfile->section_offsets because of
-     elfstab_offset_sections() which initializes the psymtab section
-     offsets information in a special way, and that is different from
-     objfile->section_offsets.  */ 
   section_offsets = pst->section_offsets;
 
   dbxread_objfile = objfile;
@@ -2687,8 +2682,9 @@ cp_set_block_scope (const struct symbol *symbol,
    SECTION_OFFSETS is a set of amounts by which the sections of this
    object file were relocated when it was loaded into memory.  Note
    that these section_offsets are not the objfile->section_offsets but
-   the pst->section_offsets.  All symbols that refer to memory
-   locations need to be offset by these amounts.
+   the pst->section_offsets, used in addition to the objfile's
+   offsets.  All symbols that refer to memory locations need to be
+   offset by these amounts.
    OBJFILE is the object file from which we are reading symbols.  It
    is used in end_symtab.  */
 
@@ -2730,7 +2726,7 @@ process_one_symbol (int type, int desc, CORE_ADDR valu, char *name,
       /* N_LBRAC, N_RBRAC and N_SLINE entries are not relative to the
 	 function start address, so just use the text offset.  */
       function_start_offset =
-	ANOFFSET (section_offsets, SECT_OFF_TEXT (objfile));
+	PST_OFFSET (objfile, section_offsets, SECT_OFF_TEXT (objfile));
     }
 
   /* Something is wrong if we see real data before seeing a source
@@ -2797,7 +2793,7 @@ process_one_symbol (int type, int desc, CORE_ADDR valu, char *name,
       sline_found_in_function = 0;
 
       /* Relocate for dynamic loading.  */
-      valu += ANOFFSET (section_offsets, SECT_OFF_TEXT (objfile));
+      valu += PST_OFFSET (objfile, section_offsets, SECT_OFF_TEXT (objfile));
       valu = gdbarch_addr_bits_remove (gdbarch, valu);
       last_function_start = valu;
 
@@ -2899,7 +2895,7 @@ process_one_symbol (int type, int desc, CORE_ADDR valu, char *name,
     case N_FN_SEQ:
       /* This kind of symbol indicates the start of an object file.
          Relocate for dynamic loading.  */
-      valu += ANOFFSET (section_offsets, SECT_OFF_TEXT (objfile));
+      valu += PST_OFFSET (objfile, section_offsets, SECT_OFF_TEXT (objfile));
       break;
 
     case N_SO:
@@ -2907,7 +2903,7 @@ process_one_symbol (int type, int desc, CORE_ADDR valu, char *name,
          source file.  Finish the symbol table of the previous source
          file (if any) and start accumulating a new symbol table.
          Relocate for dynamic loading.  */
-      valu += ANOFFSET (section_offsets, SECT_OFF_TEXT (objfile));
+      valu += PST_OFFSET (objfile, section_offsets, SECT_OFF_TEXT (objfile));
 
       n_opt_found = 0;
 
@@ -2944,7 +2940,7 @@ process_one_symbol (int type, int desc, CORE_ADDR valu, char *name,
          sub-source-file, one whose contents were copied or included
          in the compilation of the main source file (whose name was
          given in the N_SO symbol).  Relocate for dynamic loading.  */
-      valu += ANOFFSET (section_offsets, SECT_OFF_TEXT (objfile));
+      valu += PST_OFFSET (objfile, section_offsets, SECT_OFF_TEXT (objfile));
       start_subfile (name, current_subfile->dirname);
       break;
 
@@ -3049,7 +3045,8 @@ process_one_symbol (int type, int desc, CORE_ADDR valu, char *name,
 		   elfstab_offset_sections ever starts dealing with
 		   the text offset, and we still need to do this, we
 		   need to invent a SECT_OFF_ADDR_KLUDGE or something.  */
-		valu += ANOFFSET (section_offsets, SECT_OFF_TEXT (objfile));
+		valu += PST_OFFSET (objfile, section_offsets,
+				     SECT_OFF_TEXT (objfile));
 		goto define_a_symbol;
 	      }
 	  }
@@ -3071,22 +3068,22 @@ process_one_symbol (int type, int desc, CORE_ADDR valu, char *name,
 
     case_N_STSYM:		/* Static symbol in data segment.  */
     case N_DSLINE:		/* Source line number, data segment.  */
-      valu += ANOFFSET (section_offsets, SECT_OFF_DATA (objfile));
+      valu += PST_OFFSET (objfile, section_offsets, SECT_OFF_DATA (objfile));
       goto define_a_symbol;
 
     case_N_LCSYM:		/* Static symbol in BSS segment.  */
     case N_BSLINE:		/* Source line number, BSS segment.  */
       /* N_BROWS: overlaps with N_BSLINE.  */
-      valu += ANOFFSET (section_offsets, SECT_OFF_BSS (objfile));
+      valu += PST_OFFSET (objfile, section_offsets, SECT_OFF_BSS (objfile));
       goto define_a_symbol;
 
     case_N_ROSYM:		/* Static symbol in read-only data segment.  */
-      valu += ANOFFSET (section_offsets, SECT_OFF_RODATA (objfile));
+      valu += PST_OFFSET (objfile, section_offsets, SECT_OFF_RODATA (objfile));
       goto define_a_symbol;
 
     case N_ENTRY:		/* Alternate entry point.  */
       /* Relocate for dynamic loading.  */
-      valu += ANOFFSET (section_offsets, SECT_OFF_TEXT (objfile));
+      valu += PST_OFFSET (objfile, section_offsets, SECT_OFF_TEXT (objfile));
       goto define_a_symbol;
 
       /* The following symbol types we don't know how to process.
@@ -3139,8 +3136,8 @@ process_one_symbol (int type, int desc, CORE_ADDR valu, char *name,
 	      /* Deal with the SunPRO 3.0 compiler which omits the
 	         address from N_FUN symbols.  */
 	      if (type == N_FUN
-		  && valu == ANOFFSET (section_offsets,
-				       SECT_OFF_TEXT (objfile))
+		  && valu == PST_OFFSET (objfile, section_offsets,
+					  SECT_OFF_TEXT (objfile))
 		  && gdbarch_sofun_address_maybe_missing (gdbarch))
 		{
 		  CORE_ADDR minsym_valu = 

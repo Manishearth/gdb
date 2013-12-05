@@ -581,18 +581,21 @@ parse_symbol (SYMR *sh, union aux_ext *ax, char *ext_sh, int bigend,
          The value of a stBlock symbol is the displacement from the
          procedure address.  */
       if (sh->st != stEnd && sh->st != stBlock)
-	sh->value += ANOFFSET (section_offsets, SECT_OFF_TEXT (objfile));
+	sh->value += PST_OFFSET (objfile, section_offsets,
+				   SECT_OFF_TEXT (objfile));
       break;
     case scData:
     case scSData:
     case scRData:
     case scPData:
     case scXData:
-      sh->value += ANOFFSET (section_offsets, SECT_OFF_DATA (objfile));
+      sh->value += PST_OFFSET (objfile, section_offsets,
+			       SECT_OFF_DATA (objfile));
       break;
     case scBss:
     case scSBss:
-      sh->value += ANOFFSET (section_offsets, SECT_OFF_BSS (objfile));
+      sh->value += PST_OFFSET (objfile, section_offsets,
+			       SECT_OFF_BSS (objfile));
       break;
     }
 
@@ -2647,7 +2650,7 @@ parse_partial_symbols (struct objfile *objfile)
 	}
       else
 	textlow = 0;
-      pst = start_psymtab_common (objfile, objfile->section_offsets,
+      pst = start_psymtab_common (objfile,
 				  fdr_name (fh),
 				  textlow,
 				  objfile->global_psymbols.next,
@@ -4052,8 +4055,8 @@ psymtab_to_symtab_1 (struct objfile *objfile,
 		      && previous_stab_code != (unsigned char) N_SO
 		      && *name == '\000')
 		    {
-		      valu += ANOFFSET (pst->section_offsets,
-					SECT_OFF_TEXT (objfile));
+		      valu += PST_OFFSET (objfile, pst->section_offsets,
+					  SECT_OFF_TEXT (objfile));
 		      previous_stab_code = N_SO;
 		      st = end_symtab (valu, objfile,
 				       SECT_OFF_TEXT (objfile));
@@ -4103,8 +4106,8 @@ psymtab_to_symtab_1 (struct objfile *objfile,
 	      else
 		{
 		  /* Handle encoded stab line number.  */
-		  valu += ANOFFSET (pst->section_offsets,
-				    SECT_OFF_TEXT (objfile));
+		  valu += PST_OFFSET (objfile, pst->section_offsets,
+				      SECT_OFF_TEXT (objfile));
 		  record_line (current_subfile, sh.index,
 			       gdbarch_addr_bits_remove (gdbarch, valu));
 		}
@@ -4757,7 +4760,6 @@ new_psymtab (char *name, struct objfile *objfile)
   struct partial_symtab *psymtab;
 
   psymtab = allocate_psymtab (name, objfile);
-  psymtab->section_offsets = objfile->section_offsets;
 
   /* Keep a backpointer to the file's symbols.  */
 

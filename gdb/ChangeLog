@@ -1,5 +1,25 @@
 2014-08-06  Tom Tromey  <tromey@redhat.com>
 
+	* dbxread.c (start_psymtab): Update.
+	(read_ofile_symtab): Remove comment.
+	(cp_set_block_scope): Update comment.
+	(process_one_symbol): Use PST_OFFSET.
+	* dwarf2read.c (create_partial_symtab): Update.
+	* elfread.c (elfstab_offset_sections): Compute new offset relative
+	to the objfile's offset.
+	* mdebugread.c (parse_symbol): Use PST_OFFSET.
+	(parse_partial_symbols): Update.  Use PST_OFFSET.
+	(new_psymtab): Don't initialize section_offsets field.
+	* psympriv.h (struct partial_symtab) <section_offsets>: Update
+	comment.
+	(PST_OFFSET): New macro.
+	(start_psymtab_common): Remove section_offsets argument.
+	* psymtab.c (dump_psymtab): Use PST_OFFSET.
+	(start_psymtab_common): Remove section_offsets argument.
+	* xcoffread.c (xcoff_start_psymtab): Update.
+
+2014-08-06  Tom Tromey  <tromey@redhat.com>
+
 	* dbxread.c (end_psymtab): Remove dead code.
 
 2014-08-06  Yao Qi  <yao@codesourcery.com>

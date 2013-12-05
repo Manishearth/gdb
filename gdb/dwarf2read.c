@@ -5809,8 +5809,7 @@ create_partial_symtab (struct dwarf2_per_cu_data *per_cu, const char *name)
   struct objfile *objfile = per_cu->objfile;
   struct partial_symtab *pst;
 
-  pst = start_psymtab_common (objfile, objfile->section_offsets,
-			      name, 0,
+  pst = start_psymtab_common (objfile, name, 0,
 			      objfile->global_psymbols.next,
 			      objfile->static_psymbols.next);
 

@@ -98,9 +98,11 @@ struct partial_symtab
 
   const char *dirname;
 
-  /* Set of relocation offsets to apply to each section.
-     This is typically objfile->section_offsets, but in some cases
-     it's different.  See, e.g., elfstab_offset_sections.  */
+  /* Set of relocation offsets to apply to each section.  Offsets here
+     are applied when expanding this psymtab to a full symtab.  This
+     is typically NULL, which means no additional offsets need to be
+     applied, but in some cases it's different.  See, e.g.,
+     elfstab_offset_sections.  */
 
   struct section_offsets *section_offsets;
 
@@ -210,6 +212,13 @@ struct partial_symtab
   void *read_symtab_private;
 };
 
+/* Compute a section offset given an objfile, a section_offsets field
+   from a partial symtab, and an index.  */
+
+#define PST_OFFSET(OBJF, OFFS, INDEX)				\
+  (ANOFFSET ((OBJF)->section_offsets, (INDEX))			\
+   + ((((OFFS) == NULL)) ? 0 : ANOFFSET ((OFFS), (INDEX))))
+
 extern void sort_pst_symbols (struct objfile *, struct partial_symtab *);
 
 /* Add any kind of symbol to a psymbol_allocation_list.  */
@@ -224,7 +233,6 @@ extern void add_psymbol_to_list (const char *, int,
 extern void init_psymbol_list (struct objfile *, int);
 
 extern struct partial_symtab *start_psymtab_common (struct objfile *,
-						    struct section_offsets *,
 						    const char *, CORE_ADDR,
 						    struct partial_symbol **,
 						    struct partial_symbol **);

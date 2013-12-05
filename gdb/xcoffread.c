@@ -2028,7 +2028,7 @@ xcoff_start_psymtab (struct objfile *objfile,
 		     struct partial_symbol **static_syms)
 {
   struct partial_symtab *result =
-    start_psymtab_common (objfile, objfile->section_offsets,
+    start_psymtab_common (objfile,
 			  filename,
 			  /* We fill in textlow later.  */
 			  0,
