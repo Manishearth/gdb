@@ -90,7 +90,6 @@ const struct extension_language_defn extension_language_python =
 #include "cli/cli-decode.h"
 #include "charset.h"
 #include "top.h"
-#include "solib.h"
 #include "python-internal.h"
 #include "linespec.h"
 #include "source.h"
@@ -680,31 +679,6 @@ execute_gdb_command (PyObject *self, PyObject *args, PyObject *kw)
   Py_RETURN_NONE;
 }
 
-/* Implementation of gdb.solib_name (Long) -> String.
-   Returns the name of the shared library holding a given address, or None.  */
-
-static PyObject *
-gdbpy_solib_name (PyObject *self, PyObject *args)
-{
-  char *soname;
-  PyObject *str_obj;
-  gdb_py_longest pc;
-
-  if (!PyArg_ParseTuple (args, GDB_PY_LL_ARG, &pc))
-    return NULL;
-
-  soname = solib_name_from_address (current_program_space, pc);
-  if (soname)
-    str_obj = PyString_Decode (soname, strlen (soname), host_charset (), NULL);
-  else
-    {
-      str_obj = Py_None;
-      Py_INCREF (Py_None);
-    }
-
-  return str_obj;
-}
-
 /* A Python function which is a wrapper for decode_line_1.  */
 
 static PyObject *
@@ -836,33 +810,6 @@ gdbpy_parse_and_eval (PyObject *self, PyObject *args)
   GDB_PY_HANDLE_EXCEPTION (except);
 
   return value_to_value_object (result);
-}
-
-/* Implementation of gdb.find_pc_line function.
-   Returns the gdb.Symtab_and_line object corresponding to a PC value.  */
-
-static PyObject *
-gdbpy_find_pc_line (PyObject *self, PyObject *args)
-{
-  gdb_py_ulongest pc_llu;
-  volatile struct gdb_exception except;
-  PyObject *result = NULL; /* init for gcc -Wall */
-
-  if (!PyArg_ParseTuple (args, GDB_PY_LLU_ARG, &pc_llu))
-    return NULL;
-
-  TRY_CATCH (except, RETURN_MASK_ALL)
-    {
-      struct symtab_and_line sal;
-      CORE_ADDR pc;
-
-      pc = (CORE_ADDR) pc_llu;
-      sal = find_pc_line (pc, 0);
-      result = symtab_and_line_to_sal_object (sal);
-    }
-  GDB_PY_HANDLE_EXCEPTION (except);
-
-  return result;
 }
 
 /* Read a file as Python code.
@@ -1220,20 +1167,6 @@ gdbpy_print_stack (void)
 
 
 
-/* Return the current Progspace.
-   There always is one.  */
-
-static PyObject *
-gdbpy_get_current_progspace (PyObject *unused1, PyObject *unused2)
-{
-  PyObject *result;
-
-  result = pspace_to_pspace_object (current_program_space);
-  if (result)
-    Py_INCREF (result);
-  return result;
-}
-
 /* Return a sequence holding all the Progspaces.  */
 
 static PyObject *
@@ -1306,32 +1239,6 @@ gdbpy_get_current_objfile (PyObject *unused1, PyObject *unused2)
   if (result)
     Py_INCREF (result);
   return result;
-}
-
-/* Return a sequence holding all the Objfiles.  */
-
-static PyObject *
-gdbpy_objfiles (PyObject *unused1, PyObject *unused2)
-{
-  struct objfile *objf;
-  PyObject *list;
-
-  list = PyList_New (0);
-  if (!list)
-    return NULL;
-
-  ALL_OBJFILES (objf)
-  {
-    PyObject *item = objfile_to_objfile_object (objf);
-
-    if (!item || PyList_Append (list, item) == -1)
-      {
-	Py_DECREF (list);
-	return NULL;
-      }
-  }
-
-  return list;
 }
 
 /* Compute the list of active python type printers and store them in
@@ -1919,15 +1826,11 @@ set to True." },
   { "default_visualizer", gdbpy_default_visualizer, METH_VARARGS,
     "Find the default visualizer for a Value." },
 
-  { "current_progspace", gdbpy_get_current_progspace, METH_NOARGS,
-    "Return the current Progspace." },
   { "progspaces", gdbpy_progspaces, METH_NOARGS,
     "Return a sequence of all progspaces." },
 
   { "current_objfile", gdbpy_get_current_objfile, METH_NOARGS,
     "Return the current Objfile being loaded, or None." },
-  { "objfiles", gdbpy_objfiles, METH_NOARGS,
-    "Return a sequence of all loaded objfiles." },
 
   { "newest_frame", gdbpy_newest_frame, METH_NOARGS,
     "newest_frame () -> gdb.Frame.\n\
@@ -1953,11 +1856,6 @@ a boolean indicating if name is a field of the current implied argument\n\
     METH_VARARGS | METH_KEYWORDS,
     "lookup_global_symbol (name [, domain]) -> symbol\n\
 Return the symbol corresponding to the given name (or None)." },
-  { "block_for_pc", gdbpy_block_for_pc, METH_VARARGS,
-    "Return the block containing the given pc value, or None." },
-  { "solib_name", gdbpy_solib_name, METH_VARARGS,
-    "solib_name (Long) -> String.\n\
-Return the name of the shared library holding a given address, or None." },
   { "decode_line", gdbpy_decode_line, METH_VARARGS,
     "decode_line (String) -> Tuple.  Decode a string argument the way\n\
 that 'break' or 'edit' does.  Return a tuple containing two elements.\n\
@@ -1969,9 +1867,6 @@ gdb.Symtab_and_line objects (or None)."},
     "parse_and_eval (String) -> Value.\n\
 Parse String as an expression, evaluate it, and return the result as a Value."
   },
-  { "find_pc_line", gdbpy_find_pc_line, METH_VARARGS,
-    "find_pc_line (pc) -> Symtab_and_line.\n\
-Return the gdb.Symtab_and_line object corresponding to the pc value." },
 
   { "post_event", gdbpy_post_event, METH_VARARGS,
     "Post an event into gdb's event loop." },

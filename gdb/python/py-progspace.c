@@ -24,6 +24,8 @@
 #include "objfiles.h"
 #include "language.h"
 #include "arch-utils.h"
+#include "solib.h"
+#include "block.h"
 
 typedef struct
 {
@@ -48,6 +50,17 @@ static PyTypeObject pspace_object_type
     CPYCHECKER_TYPE_OBJECT_FOR_TYPEDEF ("pspace_object");
 
 static const struct program_space_data *pspy_pspace_data_key;
+
+/* Require that PSPACE be a valid program space ID.  */
+#define PSPY_REQUIRE_VALID(Pspace)				\
+  do {								\
+    if (!Pspace->pspace)					\
+      {								\
+	PyErr_SetString (PyExc_RuntimeError,			\
+			 _("program space no longer exists."));	\
+	return NULL;						\
+      }								\
+  } while (0)
 
 
 
@@ -254,6 +267,160 @@ pspy_set_type_printers (PyObject *o, PyObject *value, void *ignore)
   return 0;
 }
 
+/* Return a sequence holding all the Objfiles.  */
+
+static PyObject *
+pspy_objfiles (PyObject *o, PyObject *args)
+{
+  PyObject *list;
+  pspace_object *self = (pspace_object *) o;
+
+  list = PyList_New (0);
+  if (!list)
+    return NULL;
+
+  if (self->pspace != NULL)
+    {
+      struct objfile *objf;
+
+      ALL_PSPACE_OBJFILES (self->pspace, objf)
+	{
+	  PyObject *item = objfile_to_objfile_object (objf);
+
+	  if (!item || PyList_Append (list, item) == -1)
+	    {
+	      Py_DECREF (list);
+	      return NULL;
+	    }
+	}
+    }
+
+  return list;
+}
+
+/* Implementation of solib_name (Long) -> String.
+   Returns the name of the shared library holding a given address, or None.  */
+
+static PyObject *
+pspy_solib_name (PyObject *o, PyObject *args)
+{
+  char *soname;
+  PyObject *str_obj;
+  gdb_py_longest pc;
+  pspace_object *self = (pspace_object *) o;
+
+  PSPY_REQUIRE_VALID (self);
+
+  if (!PyArg_ParseTuple (args, GDB_PY_LL_ARG, &pc))
+    return NULL;
+
+  soname = solib_name_from_address (self->pspace, pc);
+  if (soname)
+    str_obj = PyString_Decode (soname, strlen (soname), host_charset (), NULL);
+  else
+    {
+      str_obj = Py_None;
+      Py_INCREF (Py_None);
+    }
+
+  return str_obj;
+}
+
+/* Return the innermost lexical block containing the specified pc value,
+   or 0 if there is none.  */
+static PyObject *
+pspy_block_for_pc (PyObject *o, PyObject *args)
+{
+  gdb_py_ulongest pc;
+  struct block *block = NULL;
+  struct obj_section *section = NULL;
+  struct symtab *symtab = NULL;
+  volatile struct gdb_exception except;
+  pspace_object *self = (pspace_object *) o;
+
+  PSPY_REQUIRE_VALID (self);
+
+  if (!PyArg_ParseTuple (args, GDB_PY_LLU_ARG, &pc))
+    return NULL;
+
+  TRY_CATCH (except, RETURN_MASK_ALL)
+    {
+      struct cleanup *cleanup = save_current_space_and_thread ();
+
+      set_current_program_space (self->pspace);
+
+      section = find_pc_mapped_section (pc);
+      symtab = find_pc_sect_symtab (pc, section);
+
+      if (symtab != NULL && symtab->objfile != NULL)
+	block = block_for_pc (pc);
+
+      do_cleanups (cleanup);
+    }
+  GDB_PY_HANDLE_EXCEPTION (except);
+
+  if (!symtab || symtab->objfile == NULL)
+    {
+      PyErr_SetString (PyExc_RuntimeError,
+		       _("Cannot locate object file for block."));
+      return NULL;
+    }
+
+  if (block)
+    return block_to_block_object (block, symtab->objfile);
+
+  Py_RETURN_NONE;
+}
+
+/* Implementation of the find_pc_line function.
+   Returns the gdb.Symtab_and_line object corresponding to a PC value.  */
+
+static PyObject *
+pspy_find_pc_line (PyObject *o, PyObject *args)
+{
+  gdb_py_ulongest pc_llu;
+  volatile struct gdb_exception except;
+  PyObject *result = NULL; /* init for gcc -Wall */
+  pspace_object *self = (pspace_object *) o;
+
+  PSPY_REQUIRE_VALID (self);
+
+  if (!PyArg_ParseTuple (args, GDB_PY_LLU_ARG, &pc_llu))
+    return NULL;
+
+  TRY_CATCH (except, RETURN_MASK_ALL)
+    {
+      struct symtab_and_line sal;
+      CORE_ADDR pc;
+      struct cleanup *cleanup = save_current_space_and_thread ();
+
+      set_current_program_space (self->pspace);
+
+      pc = (CORE_ADDR) pc_llu;
+      sal = find_pc_line (pc, 0);
+      result = symtab_and_line_to_sal_object (sal);
+
+      do_cleanups (cleanup);
+    }
+  GDB_PY_HANDLE_EXCEPTION (except);
+
+  return result;
+}
+
+/* Implementation of is_valid (self) -> Boolean.
+   Returns True if this program space still exists in GDB.  */
+
+static PyObject *
+pspy_is_valid (PyObject *o, PyObject *args)
+{
+  pspace_object *self = (pspace_object *) o;
+
+  if (self->pspace == NULL)
+    Py_RETURN_FALSE;
+
+  Py_RETURN_TRUE;
+}
+
 
 
 /* Clear the PSPACE pointer in a Pspace object and remove the reference.  */
@@ -363,6 +530,24 @@ static PyGetSetDef pspace_getset[] =
   { NULL }
 };
 
+static PyMethodDef pspace_object_methods[] =
+{
+  { "objfiles", pspy_objfiles, METH_NOARGS,
+    "Return a sequence of the program space's objfiles." },
+  { "solib_name", pspy_solib_name, METH_VARARGS,
+    "solib_name (Long) -> String.\n\
+Return the name of the shared library holding a given address, or None." },
+  { "block_for_pc", pspy_block_for_pc, METH_VARARGS,
+    "Return the block containing the given pc value, or None." },
+  { "find_pc_line", pspy_find_pc_line, METH_VARARGS,
+    "find_pc_line (pc) -> Symtab_and_line.\n\
+Return the gdb.Symtab_and_line object corresponding to the pc value." },
+  { "is_valid", pspy_is_valid, METH_NOARGS,
+    "is_valid () -> Boolean.\n\
+Return true if this program space is valid, false if not." },
+  { NULL }
+};
+
 static PyTypeObject pspace_object_type =
 {
   PyVarObject_HEAD_INIT (NULL, 0)
@@ -392,7 +577,7 @@ static PyTypeObject pspace_object_type =
   0,				  /* tp_weaklistoffset */
   0,				  /* tp_iter */
   0,				  /* tp_iternext */
-  0,				  /* tp_methods */
+  pspace_object_methods,	  /* tp_methods */
   0,				  /* tp_members */
   pspace_getset,		  /* tp_getset */
   0,				  /* tp_base */

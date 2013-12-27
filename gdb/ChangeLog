@@ -1,3 +1,22 @@
+2014-06-17  Tom Tromey  <tromey@redhat.com>
+
+	* python/lib/gdb/__init__.py (current_progspace, objfiles)
+	(solib_name, block_for_pc, find_pc_line): New functions.
+	* python/py-block.c (gdbpy_block_for_pc): Remove.
+	* python/py-inferior.c (infpy_get_progspace): New function.
+	(inferior_object_getset) <progspace>: Add.
+	* python/py-progspace.c (PSPY_REQUIRE_VALID): New macro.
+	(pspy_objfiles, pspy_solib_name, pspy_block_for_pc)
+	(pspy_find_pc_line, pspy_is_valid): New functions.
+	(pspace_object_methods): New global.
+	(pspace_object_type): Reference pspace_object_methods.
+	* python/python-internal.h (gdbpy_block_for_pc): Don't declare.
+	* python/python.c: Don't include solib.h.
+	(gdbpy_solib_name, gdbpy_find_pc_line)
+	(gdbpy_get_current_progspace, gdbpy_objfiles): Remove.
+	(GdbMethods) <current_progspace, objfiles, block_for_pc,
+	solib_name, find_pc_line>: Remove entries.
+
 2014-06-16  Keith Seitz  <keiths@redhat.com>
 
 	PR mi/15863

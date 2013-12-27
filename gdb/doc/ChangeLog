@@ -1,3 +1,13 @@
+2014-06-17  Tom Tromey  <tromey@redhat.com>
+
+	* python.texi (Basic Python): Update docs for find_pc_line,
+	solib_name.
+	(Inferiors In Python): Document Inferior.progspace.
+	(Progspaces In Python): Update docs for current_progspace.
+	Document block_for_pc, find_pc_line, is_valid, objfiles,
+	solib_name.
+	(Objfiles In Python): Update docs for gdb.objfiles.
+
 2014-06-09  Siva Chandra Reddy  <sivachandra@google.com>
 
 	* python.texi (Xmethod API): Add space before the opening

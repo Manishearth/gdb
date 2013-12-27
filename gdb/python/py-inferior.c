@@ -363,6 +363,23 @@ infpy_get_pid (PyObject *self, void *closure)
   return PyLong_FromLong (inf->inferior->pid);
 }
 
+/* Implement the "progspace" method.  */
+
+static PyObject *
+infpy_get_progspace (PyObject *self, void *closure)
+{
+  inferior_object *inf = (inferior_object *) self;
+  PyObject *result;
+
+  INFPY_REQUIRE_VALID (inf);
+
+  result = pspace_to_pspace_object (inf->inferior->pspace);
+  if (result != NULL)
+    Py_INCREF (result);
+
+  return result;
+}
+
 static PyObject *
 infpy_get_was_attached (PyObject *self, void *closure)
 {
@@ -809,6 +826,8 @@ static PyGetSetDef inferior_object_getset[] =
 {
   { "num", infpy_get_num, NULL, "ID of inferior, as assigned by GDB.", NULL },
   { "pid", infpy_get_pid, NULL, "PID of inferior, as assigned by the OS.",
+    NULL },
+  { "progspace", infpy_get_progspace, NULL, "Progspace of inferior.",
     NULL },
   { "was_attached", infpy_get_was_attached, NULL,
     "True if the inferior was created using 'attach'.", NULL },
