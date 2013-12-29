@@ -107,33 +107,24 @@ set lines 10
 gdb_test_no_output "set height $lines"
 
 set test "verify pagination beforehand"
-gdb_test_multiple "python print (\"\\n\" * $lines)" $test {
-    -re "---Type <return>" {
-	exp_continue
-    }
-    -re " to continue, or q <return>" {
-	exp_continue
-    }
-    -re " to quit---$" {
-	pass $test
-    }
+set arglist {}
+for {set i 0} {$i < $lines} {incr i} {
+    lappend arglist ""
 }
+lappend arglist ""
+send_gdb "python print (\"\\n\" * $lines)\n"
+gdb_expect_list $test \
+    ".*---Type <return> to continue, q <return> to quit, or c <return> to\r\n *continue without paging---" \
+    $arglist
 gdb_test "q" "Quit.*Error while executing Python.*" "verify pagination beforehand: q"
 
 gdb_test "python if gdb.execute('python print (\"\\\\n\" * $lines)', to_string=True) == \"\\n\" * [expr $lines + 1]: print (\"yes\")" "yes" "gdb.execute does not page"
 
 set test "verify pagination afterwards"
-gdb_test_multiple "python print (\"\\n\" * $lines)" $test {
-    -re "---Type <return>" {
-	exp_continue
-    }
-    -re " to continue, or q <return>" {
-	exp_continue
-    }
-    -re " to quit---$" {
-	pass $test
-    }
-}
+send_gdb "python print (\"\\n\" * $lines)\n"
+gdb_expect_list $test \
+    ".*---Type <return> to continue, q <return> to quit, or c <return> to\r\n *continue without paging---" \
+    $arglist
 gdb_test "q" "Quit.*Error while executing Python.*" "verify pagination afterwards: q"
 
 gdb_test_no_output "set height 0"

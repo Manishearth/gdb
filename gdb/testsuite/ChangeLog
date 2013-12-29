@@ -1,3 +1,8 @@
+2014-06-24  Tom Tromey  <tromey@redhat.com>
+
+	* gdb.base/page.exp: Update expected output.  Add new tests.
+	* gdb.python/python.exp: Update expected output.
+
 2014-06-23  Pedro Alves  <palves@redhat.com>
 
 	* gdb.base/watchpoint-reuse-slot.c: New file.

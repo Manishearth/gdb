@@ -1,3 +1,12 @@
+2014-06-24  Tom Tromey  <tromey@redhat.com>
+
+	PR cli/12326:
+	* utils.c (pagination_disabled_for_command): New global.
+	(prompt_for_continue): Allow "c" response to prompt.
+	(reinitialize_more_filter): Clear
+	pagination_disabled_for_command.
+	(fputs_maybe_filtered): Check pagination_disabled_for_command.
+
 2014-06-24  Yao Qi  <yao@codesourcery.com>
 
 	* arm-linux-tdep.c (arm_linux_skip_trampoline_code): New.
