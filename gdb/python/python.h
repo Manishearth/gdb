@@ -24,6 +24,7 @@
 #include "mi/mi-cmds.h"
 
 struct gdbpy_breakpoint_object;
+struct command_line;
 
 /* The suffix of per-objfile scripts to auto-load.
    E.g. When the program loads libfoo.so, look for libfoo-gdb.py.  */
