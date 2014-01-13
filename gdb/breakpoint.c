@@ -340,17 +340,6 @@ static char *dprintf_channel = "";
    has disconnected.  */
 static int disconnected_dprintf = 1;
 
-/* A reference-counted struct command_line.  This lets multiple
-   breakpoints share a single command list.  */
-struct counted_command_line
-{
-  /* The reference count.  */
-  int refc;
-
-  /* The command list.  */
-  struct command_line *commands;
-};
-
 struct command_line *
 breakpoint_commands (struct breakpoint *b)
 {
@@ -658,64 +647,6 @@ clear_breakpoint_hit_counts (void)
 
   ALL_BREAKPOINTS (b)
     b->hit_count = 0;
-}
-
-/* Allocate a new counted_command_line with reference count of 1.
-   The new structure owns COMMANDS.  */
-
-static struct counted_command_line *
-alloc_counted_command_line (struct command_line *commands)
-{
-  struct counted_command_line *result
-    = xmalloc (sizeof (struct counted_command_line));
-
-  result->refc = 1;
-  result->commands = commands;
-  return result;
-}
-
-/* Increment reference count.  This does nothing if CMD is NULL.  */
-
-static void
-incref_counted_command_line (struct counted_command_line *cmd)
-{
-  if (cmd)
-    ++cmd->refc;
-}
-
-/* Decrement reference count.  If the reference count reaches 0,
-   destroy the counted_command_line.  Sets *CMDP to NULL.  This does
-   nothing if *CMDP is NULL.  */
-
-static void
-decref_counted_command_line (struct counted_command_line **cmdp)
-{
-  if (*cmdp)
-    {
-      if (--(*cmdp)->refc == 0)
-	{
-	  free_command_lines (&(*cmdp)->commands);
-	  xfree (*cmdp);
-	}
-      *cmdp = NULL;
-    }
-}
-
-/* A cleanup function that calls decref_counted_command_line.  */
-
-static void
-do_cleanup_counted_command_line (void *arg)
-{
-  decref_counted_command_line (arg);
-}
-
-/* Create a cleanup that calls decref_counted_command_line on the
-   argument.  */
-
-static struct cleanup *
-make_cleanup_decref_counted_command_line (struct counted_command_line **cmdp)
-{
-  return make_cleanup (do_cleanup_counted_command_line, cmdp);
 }
 
 

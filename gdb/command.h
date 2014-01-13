@@ -422,4 +422,25 @@ extern struct command_line *read_command_lines_1 (char * (*) (void), int,
 
 extern void free_command_lines (struct command_line **);
 
+/* A reference-counted struct command_line.  This lets multiple
+   breakpoints share a single command list.  */
+struct counted_command_line
+{
+  /* The reference count.  */
+  int refc;
+
+  /* The command list.  */
+  struct command_line *commands;
+};
+
+extern struct counted_command_line *alloc_counted_command_line
+     (struct command_line *cmd);
+
+extern void incref_counted_command_line (struct counted_command_line *cmd);
+
+extern void decref_counted_command_line (struct counted_command_line **cmdp);
+
+extern struct cleanup *make_cleanup_decref_counted_command_line
+     (struct counted_command_line **cmdp);
+
 #endif /* !defined (COMMAND_H) */

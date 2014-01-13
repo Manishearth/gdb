@@ -1388,6 +1388,64 @@ copy_command_lines (struct command_line *cmds)
 
   return result;
 }
+
+/* Allocate a new counted_command_line with reference count of 1.
+   The new structure owns COMMANDS.  */
+
+struct counted_command_line *
+alloc_counted_command_line (struct command_line *commands)
+{
+  struct counted_command_line *result
+    = xmalloc (sizeof (struct counted_command_line));
+
+  result->refc = 1;
+  result->commands = commands;
+  return result;
+}
+
+/* Increment reference count.  This does nothing if CMD is NULL.  */
+
+void
+incref_counted_command_line (struct counted_command_line *cmd)
+{
+  if (cmd)
+    ++cmd->refc;
+}
+
+/* Decrement reference count.  If the reference count reaches 0,
+   destroy the counted_command_line.  Sets *CMDP to NULL.  This does
+   nothing if *CMDP is NULL.  */
+
+void
+decref_counted_command_line (struct counted_command_line **cmdp)
+{
+  if (*cmdp)
+    {
+      if (--(*cmdp)->refc == 0)
+	{
+	  free_command_lines (&(*cmdp)->commands);
+	  xfree (*cmdp);
+	}
+      *cmdp = NULL;
+    }
+}
+
+/* A cleanup function that calls decref_counted_command_line.  */
+
+static void
+do_cleanup_counted_command_line (void *arg)
+{
+  decref_counted_command_line (arg);
+}
+
+/* Create a cleanup that calls decref_counted_command_line on the
+   argument.  */
+
+struct cleanup *
+make_cleanup_decref_counted_command_line (struct counted_command_line **cmdp)
+{
+  return make_cleanup (do_cleanup_counted_command_line, cmdp);
+}
 
 /* Validate that *COMNAME is a valid name for a command.  Return the
    containing command list, in case it starts with a prefix command.
