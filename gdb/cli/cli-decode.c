@@ -802,6 +802,7 @@ delete_cmd (const char *name, struct cmd_list_element **list,
 	    iter->hookee_post->hook_post = 0;
 	  if (iter->doc && (iter->flags & DOC_ALLOCATED) != 0)
 	    xfree (iter->doc);
+	  decref_counted_command_line (&iter->user_commands);
 	  *posthook = iter->hook_post;
 	  *posthookee = iter->hookee_post;
 
