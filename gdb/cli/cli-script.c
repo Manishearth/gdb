@@ -45,6 +45,8 @@ recurse_read_control_structure (char * (*read_next_line_func) (void),
 
 static char *insert_args (char *line);
 
+static void free_command_lines (struct command_line **lptr);
+
 static struct cleanup * setup_user_args (char *p);
 
 static char *read_next_line (void);
@@ -1328,7 +1330,7 @@ read_command_lines_1 (char * (*read_next_line_func) (void), int parse_commands,
 
 /* Free a chain of struct command_line's.  */
 
-void
+static void
 free_command_lines (struct command_line **lptr)
 {
   struct command_line *l = *lptr;
