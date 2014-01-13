@@ -1608,7 +1608,10 @@ define_command (char *comname, int from_tty)
   newc = add_cmd (comname, class_user, user_defined_command,
 		  (c && c->class == class_user)
 		  ? c->doc : xstrdup ("User-defined."), list);
-  newc->user_commands = alloc_counted_command_line (cmds);
+  if (cmds == NULL)
+    newc->user_commands = NULL;
+  else
+    newc->user_commands = alloc_counted_command_line (cmds);
 
   /* If this new command is a hook, then mark both commands as being
      tied.  */
