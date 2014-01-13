@@ -329,14 +329,15 @@ do_restore_user_call_depth (void * call_depth)
 void
 execute_user_command (struct cmd_list_element *c, char *args)
 {
+  struct counted_command_line *counted;
   struct command_line *cmdlines;
   struct cleanup *old_chain;
   enum command_control_type ret;
   static int user_call_depth = 0;
   extern unsigned int max_user_call_depth;
 
-  cmdlines = c->user_commands;
-  if (cmdlines == 0)
+  counted = c->user_commands;
+  if (counted == 0)
     /* Null command */
     return;
 
@@ -346,6 +347,9 @@ execute_user_command (struct cmd_list_element *c, char *args)
     error (_("Max user call depth exceeded -- command aborted."));
 
   make_cleanup (do_restore_user_call_depth, &user_call_depth);
+
+  incref_counted_command_line (counted);
+  make_cleanup_decref_counted_command_line (&counted);
 
   /* Set the instream to 0, indicating execution of a
      user-defined function.  */
@@ -359,6 +363,7 @@ execute_user_command (struct cmd_list_element *c, char *args)
   make_cleanup_restore_integer (&interpreter_async);
   interpreter_async = 0;
 
+  cmdlines = counted->commands;
   command_nest_depth++;
   while (cmdlines)
     {
@@ -1596,12 +1601,12 @@ define_command (char *comname, int from_tty)
   cmds = read_command_lines (tmpbuf, from_tty, 1, 0, 0);
 
   if (c && c->class == class_user)
-    free_command_lines (&c->user_commands);
+    decref_counted_command_line (&c->user_commands);
 
   newc = add_cmd (comname, class_user, user_defined_command,
 		  (c && c->class == class_user)
 		  ? c->doc : xstrdup ("User-defined."), list);
-  newc->user_commands = cmds;
+  newc->user_commands = alloc_counted_command_line (cmds);
 
   /* If this new command is a hook, then mark both commands as being
      tied.  */
@@ -1749,9 +1754,9 @@ show_user_1 (struct cmd_list_element *c, const char *prefix, const char *name,
       return;
     }
 
-  cmdlines = c->user_commands;
-  if (!cmdlines)
+  if (c->user_commands == NULL)
     return;
+  cmdlines = c->user_commands->commands;
   fprintf_filtered (stream, "User command \"%s%s\":\n", prefix, name);
 
   print_command_lines (current_uiout, cmdlines, 1);

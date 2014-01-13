@@ -197,7 +197,7 @@ struct cmd_list_element
     const char *const *enums;
 
     /* Pointer to command strings of user-defined commands */
-    struct command_line *user_commands;
+    struct counted_command_line *user_commands;
 
     /* Pointer to command that is hooked by this one, (by hook_pre)
        so the hook can be removed when this one is deleted.  */
