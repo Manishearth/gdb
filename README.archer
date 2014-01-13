@@ -1,0 +1,13 @@
+currently I think you can't
+
+define zzz
+  printf "in zzz\n"
+  define zzz
+    printf "hmm\n"
+  end
+end
+
+
+nothing ever marks "define" as a control command.
+and if you try this interactively it will stop
+at the first "end", totally incorrectly
