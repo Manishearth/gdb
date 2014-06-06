@@ -11701,7 +11701,7 @@ show_range_stepping (struct ui_file *file, int from_tty,
 /* The "set/show range-stepping" set hook.  */
 
 static void
-set_range_stepping (char *ignore_args, int from_tty,
+set_range_stepping (const char *ignore_args, int from_tty,
 		    struct cmd_list_element *c)
 {
   struct remote_state *rs = get_remote_state ();
