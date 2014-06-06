@@ -251,7 +251,7 @@ goto_bookmark_command (const char *args, int from_tty)
 {
   struct bookmark *b;
   unsigned long num;
-  char *p = args;
+  const char *p = args;
 
   if (args == NULL || args[0] == '\0')
     error (_("Command requires an argument."));
