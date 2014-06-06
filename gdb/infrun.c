@@ -178,7 +178,7 @@ int non_stop = 0;
 static int non_stop_1 = 0;
 
 static void
-set_non_stop (char *args, int from_tty,
+set_non_stop (const char *args, int from_tty,
 	      struct cmd_list_element *c)
 {
   if (target_has_execution)
@@ -336,7 +336,8 @@ int stop_on_solib_events;
    as appropriate when the above flag is changed.  */
 
 static void
-set_stop_on_solib_events (char *args, int from_tty, struct cmd_list_element *c)
+set_stop_on_solib_events (const char *args, int from_tty,
+			  struct cmd_list_element *c)
 {
   update_solib_breakpoints ();
 }
