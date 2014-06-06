@@ -20,6 +20,7 @@
 #include "defs.h"
 #include "python-internal.h"
 #include "exceptions.h"
+#include "objfiles.h"
 
 typedef struct {
   PyObject_HEAD
@@ -448,7 +449,8 @@ ltpy_iternext (PyObject *self)
       item = &(symtab->linetable->item[iter_obj->current_index]);
     }
 
-  obj = build_linetable_entry (item->line, item->pc);
+  obj = build_linetable_entry (item->line,
+			       LINETABLE_ENTRY_ADDRESS (symtab, *item));
   iter_obj->current_index++;
 
   return obj;

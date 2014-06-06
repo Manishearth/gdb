@@ -17185,7 +17185,6 @@ dwarf_decode_lines_1 (struct line_header *lh, const char *comp_dir,
   const gdb_byte *line_end;
   unsigned int bytes_read, extended_len;
   unsigned char op_code, extended_op, adj_opcode;
-  CORE_ADDR baseaddr;
   struct objfile *objfile = cu->objfile;
   bfd *abfd = objfile->obfd;
   struct gdbarch *gdbarch = get_objfile_arch (objfile);
@@ -17193,8 +17192,6 @@ dwarf_decode_lines_1 (struct line_header *lh, const char *comp_dir,
   struct subfile *last_subfile = NULL;
   void (*p_record_line) (struct subfile *subfile, int line, CORE_ADDR pc)
     = record_line;
-
-  baseaddr = ANOFFSET (objfile->section_offsets, SECT_OFF_TEXT (objfile));
 
   line_ptr = lh->statement_program_start;
   line_end = lh->statement_program_end;
@@ -17308,7 +17305,6 @@ dwarf_decode_lines_1 (struct line_header *lh, const char *comp_dir,
 
 		  op_index = 0;
 		  line_ptr += bytes_read;
-		  address += baseaddr;
 		  break;
 		case DW_LNE_define_file:
                   {

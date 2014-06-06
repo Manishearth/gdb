@@ -745,17 +745,8 @@ objfile_relocate1 (struct objfile *objfile,
 
     ALL_OBJFILE_SYMTABS (objfile, s)
     {
-      struct linetable *l;
       const struct blockvector *bv;
       int i;
-
-      /* First the line table.  */
-      l = LINETABLE (s);
-      if (l)
-	{
-	  for (i = 0; i < l->nitems; ++i)
-	    l->item[i].pc += ANOFFSET (delta, s->block_line_section);
-	}
 
       /* Don't relocate a shared blockvector more than once.  */
       if (!s->primary)

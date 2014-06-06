@@ -319,7 +319,10 @@ dump_symtab_1 (struct objfile *objfile, struct symtab *symtab,
       for (i = 0; i < len; i++)
 	{
 	  fprintf_filtered (outfile, " line %d at ", l->item[i].line);
-	  fputs_filtered (paddress (gdbarch, l->item[i].pc), outfile);
+	  fputs_filtered (paddress (gdbarch,
+				    LINETABLE_ENTRY_ADDRESS (symtab,
+							     l->item[i])),
+			  outfile);
 	  fprintf_filtered (outfile, "\n");
 	}
     }
