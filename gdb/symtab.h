@@ -899,7 +899,7 @@ struct symtab
   /* Table mapping core addresses to line numbers for this file.
      Can be NULL if none.  Never shared between different symtabs.  */
 
-  struct linetable *linetable;
+  const struct linetable *linetable;
 
   /* Section in objfile->section_offsets for the blockvector and
      the linetable.  Probably always SECT_OFF_TEXT.  */
@@ -1418,7 +1418,7 @@ void iterate_over_symtabs (const char *name,
 DEF_VEC_I (CORE_ADDR);
 
 VEC (CORE_ADDR) *find_pcs_for_symtab_line (struct symtab *symtab, int line,
-					   struct linetable_entry **best_entry);
+					   const struct linetable_entry **best_entry);
 
 /* Callback for LA_ITERATE_OVER_SYMBOLS.  The callback will be called
    once per matching symbol SYM, with DATA being the argument of the

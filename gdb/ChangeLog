@@ -1,5 +1,26 @@
 2014-08-06  Tom Tromey  <tromey@redhat.com>
 
+	* buildsym.c (end_symtab_from_static_block): Update.
+	* disasm.c (do_mixed_source_and_assembly, gdb_disassembly):
+	Update.
+	* jit.c (finalize_symtab): Update and rearrange for
+	constification.
+	* linespec.c (create_sals_line_offset): Update.
+	(decode_digits_ordinary): Make "best_entry" const.
+	* mdebugread.c (psymtab_to_symtab_1): Update.
+	(new_symtab): Add "lines" parameter.
+	* mi/mi-symbol-cmds.c (mi_cmd_symbol_list_lines): Update.
+	* python/py-linetable.c (ltpy_get_pcs_for_line, ltpy_has_line)
+	(ltpy_get_all_source_lines, ltpy_iternext): Update.
+	* symmisc.c (dump_symtab_1): Update.
+	* symtab.c (find_pc_sect_line, find_line_symtab)
+	(find_pcs_for_symtab_line, find_line_common)
+	(skip_prologue_using_lineinfo, skip_prologue_using_sal): Update.
+	* symtab.h (struct symtab) <linetable>: Now const.
+	(find_pcs_for_symtab_line): Update.
+
+2014-08-06  Tom Tromey  <tromey@redhat.com>
+
 	Obsoletes PR symtab/8077:
 	* buildsym.c (record_line, compare_line_numbers): Update.
 	* coffread.c (enter_linenos): Don't add section offset when

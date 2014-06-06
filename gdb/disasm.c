@@ -195,7 +195,7 @@ dump_insns (struct gdbarch *gdbarch, struct ui_out *uiout,
 static void
 do_mixed_source_and_assembly (struct gdbarch *gdbarch, struct ui_out *uiout,
 			      struct disassemble_info *di, int nlines,
-			      struct linetable_entry *le,
+			      const struct linetable_entry *le,
 			      CORE_ADDR low, CORE_ADDR high,
 			      struct symtab *symtab,
 			      int how_many, int flags, struct ui_file *stb)
@@ -419,7 +419,7 @@ gdb_disassembly (struct gdbarch *gdbarch, struct ui_out *uiout,
   struct disassemble_info di = gdb_disassemble_info (gdbarch, stb);
   /* To collect the instruction outputted from opcodes.  */
   struct symtab *symtab = NULL;
-  struct linetable_entry *le = NULL;
+  const struct linetable_entry *le = NULL;
   int nlines = -1;
 
   /* Assume symtab is valid for whole PC range.  */

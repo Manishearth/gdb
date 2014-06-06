@@ -356,7 +356,7 @@ static void decode_digits_ordinary (struct linespec_state *self,
 				    linespec_p ls,
 				    int line,
 				    struct symtabs_and_lines *sals,
-				    struct linetable_entry **best_entry);
+				    const struct linetable_entry **best_entry);
 
 static void decode_digits_list_mode (struct linespec_state *self,
 				     linespec_p ls,
@@ -1895,7 +1895,7 @@ create_sals_line_offset (struct linespec_state *self,
     decode_digits_list_mode (self, ls, &values, val);
   else
     {
-      struct linetable_entry *best_entry = NULL;
+      const struct linetable_entry *best_entry = NULL;
       int *filter;
       const struct block **blocks;
       struct cleanup *cleanup;
@@ -3303,7 +3303,7 @@ decode_digits_ordinary (struct linespec_state *self,
 			linespec_p ls,
 			int line,
 			struct symtabs_and_lines *sals,
-			struct linetable_entry **best_entry)
+			const struct linetable_entry **best_entry)
 {
   int ix;
   struct symtab *elt;

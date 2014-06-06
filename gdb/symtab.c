@@ -75,7 +75,7 @@ static void variables_info (char *, int);
 
 static void sources_info (char *, int);
 
-static int find_line_common (struct linetable *, int, int *, int);
+static int find_line_common (const struct linetable *, int, int *, int);
 
 static struct symbol *lookup_symbol_aux (const char *name,
 					 const struct block *block,
@@ -2274,10 +2274,10 @@ struct symtab_and_line
 find_pc_sect_line (CORE_ADDR pc, struct obj_section *section, int notcurrent)
 {
   struct symtab *s;
-  struct linetable *l;
+  const struct linetable *l;
   int len;
   int i;
-  struct linetable_entry *item;
+  const struct linetable_entry *item;
   struct symtab_and_line val;
   const struct blockvector *bv;
   struct bound_minimal_symbol msymbol;
@@ -2285,7 +2285,7 @@ find_pc_sect_line (CORE_ADDR pc, struct obj_section *section, int notcurrent)
 
   /* Info on best line seen so far, and where it starts, and its file.  */
 
-  struct linetable_entry *best = NULL;
+  const struct linetable_entry *best = NULL;
   CORE_ADDR best_end = 0;
   struct symtab *best_symtab = 0;
 
@@ -2294,12 +2294,12 @@ find_pc_sect_line (CORE_ADDR pc, struct obj_section *section, int notcurrent)
      If we don't find a line whose range contains PC,
      we will use a line one less than this,
      with a range from the start of that file to the first line's pc.  */
-  struct linetable_entry *alt = NULL;
+  const struct linetable_entry *alt = NULL;
   struct symtab *alt_symtab = NULL;
 
   /* Info on best line seen in this file.  */
 
-  struct linetable_entry *prev;
+  const struct linetable_entry *prev;
 
   /* If this pc is not from the current frame,
      it is the address of the end of a call instruction.
@@ -2556,7 +2556,7 @@ find_line_symtab (struct symtab *symtab, int line,
      so far seen.  */
 
   int best_index;
-  struct linetable *best_linetable;
+  const struct linetable *best_linetable;
   struct symtab *best_symtab;
 
   /* First try looking it up in the given symtab.  */
@@ -2594,7 +2594,7 @@ find_line_symtab (struct symtab *symtab, int line,
 
       ALL_SYMTABS (objfile, s)
       {
-	struct linetable *l;
+	const struct linetable *l;
 	int ind;
 
 	if (FILENAME_CMP (symtab->filename, s->filename) != 0)
@@ -2641,11 +2641,11 @@ done:
 
 VEC (CORE_ADDR) *
 find_pcs_for_symtab_line (struct symtab *symtab, int line,
-			  struct linetable_entry **best_item)
+			  const struct linetable_entry **best_item)
 {
   int start = 0;
   VEC (CORE_ADDR) *result = NULL;
-  struct linetable *linetable = LINETABLE (symtab);
+  const struct linetable *linetable = LINETABLE (symtab);
 
   /* First, collect all the PCs that are at this line.  */
   while (1)
@@ -2659,7 +2659,7 @@ find_pcs_for_symtab_line (struct symtab *symtab, int line,
 
       if (!was_exact)
 	{
-	  struct linetable_entry *item = &linetable->item[idx];
+	  const struct linetable_entry *item = &linetable->item[idx];
 
 	  if (*best_item == NULL || item->line < (*best_item)->line)
 	    *best_item = item;
@@ -2683,7 +2683,7 @@ find_pcs_for_symtab_line (struct symtab *symtab, int line,
 int
 find_line_pc (struct symtab *symtab, int line, CORE_ADDR *pc)
 {
-  struct linetable *l;
+  const struct linetable *l;
   int ind;
 
   *pc = 0;
@@ -2748,7 +2748,7 @@ find_line_pc_range (struct symtab_and_line sal, CORE_ADDR *startptr,
    Set *EXACT_MATCH nonzero if the value returned is an exact match.  */
 
 static int
-find_line_common (struct linetable *l, int lineno,
+find_line_common (const struct linetable *l, int lineno,
 		  int *exact_match, int start)
 {
   int i;
@@ -2771,7 +2771,7 @@ find_line_common (struct linetable *l, int lineno,
   len = l->nitems;
   for (i = start; i < len; i++)
     {
-      struct linetable_entry *item = &(l->item[i]);
+      const struct linetable_entry *item = &(l->item[i]);
 
       if (item->line == lineno)
 	{
@@ -2811,7 +2811,7 @@ static CORE_ADDR
 skip_prologue_using_lineinfo (CORE_ADDR func_addr, struct symtab *symtab)
 {
   CORE_ADDR func_start, func_end;
-  struct linetable *l;
+  const struct linetable *l;
   int i;
 
   /* Give up if this symbol has no lineinfo table.  */
@@ -2830,7 +2830,7 @@ skip_prologue_using_lineinfo (CORE_ADDR func_addr, struct symtab *symtab)
      address we are looking for.  */
   for (i = 0; i < l->nitems; i++)
     {
-      struct linetable_entry *item = &(l->item[i]);
+      const struct linetable_entry *item = &(l->item[i]);
 
       /* Don't use line numbers of zero, they mark special entries in
 	 the table.  See the commentary on symtab.h before the
@@ -4957,7 +4957,7 @@ skip_prologue_using_sal (struct gdbarch *gdbarch, CORE_ADDR func_addr)
 	 do this.  */
       if (prologue_sal.symtab->language != language_asm)
 	{
-	  struct linetable *linetable = LINETABLE (prologue_sal.symtab);
+	  const struct linetable *linetable = LINETABLE (prologue_sal.symtab);
 	  int idx = 0;
 
 	  /* Skip any earlier lines, and any end-of-sequence marker

@@ -35,7 +35,7 @@ mi_cmd_symbol_list_lines (char *command, char **argv, int argc)
   int i;
   struct cleanup *cleanup_stack, *cleanup_tuple;
   struct ui_out *uiout = current_uiout;
-  struct linetable *linetable;
+  const struct linetable *linetable;
 
   if (argc != 1)
     error (_("-symbol-list-lines: Usage: SOURCE_FILENAME"));

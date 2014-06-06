@@ -657,8 +657,11 @@ finalize_symtab (struct gdb_symtab *stab, struct objfile *objfile)
       size_t size = ((stab->linetable->nitems - 1)
 		     * sizeof (struct linetable_entry)
 		     + sizeof (struct linetable));
-      LINETABLE (symtab) = obstack_alloc (&objfile->objfile_obstack, size);
-      memcpy (LINETABLE (symtab), stab->linetable, size);
+      struct linetable *new_table;
+
+      new_table = obstack_alloc (&objfile->objfile_obstack, size);
+      memcpy (new_table, stab->linetable, size);
+      LINETABLE (symtab) = new_table;
     }
   else
     {
