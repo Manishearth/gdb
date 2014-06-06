@@ -303,7 +303,7 @@ trace_save (const char *filename, struct trace_file_writer *writer,
 }
 
 static void
-trace_save_command (char *args, int from_tty)
+trace_save_command (const char *args, int from_tty)
 {
   int target_does_save = 0;
   char **argv;
