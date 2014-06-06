@@ -355,7 +355,7 @@ static struct cmd_list_element *maint_show_ada_cmdlist;
 /* Implement the "maintenance set ada" (prefix) command.  */
 
 static void
-maint_set_ada_cmd (char *args, int from_tty)
+maint_set_ada_cmd (const char *args, int from_tty)
 {
   help_list (maint_set_ada_cmdlist, "maintenance set ada ", all_commands,
 	     gdb_stdout);
@@ -364,7 +364,7 @@ maint_set_ada_cmd (char *args, int from_tty)
 /* Implement the "maintenance show ada" (prefix) command.  */
 
 static void
-maint_show_ada_cmd (char *args, int from_tty)
+maint_show_ada_cmd (const char *args, int from_tty)
 {
   cmd_show_list (maint_show_ada_cmdlist, from_tty, "");
 }
@@ -12921,7 +12921,7 @@ ada_exceptions_list (const char *regexp)
 /* Implement the "info exceptions" command.  */
 
 static void
-info_exceptions_command (char *regexp, int from_tty)
+info_exceptions_command (const char *regexp, int from_tty)
 {
   VEC(ada_exc_info) *exceptions;
   struct cleanup *cleanup;

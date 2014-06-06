@@ -1696,7 +1696,8 @@ show_gdb_datadir (struct ui_file *file, int from_tty,
 }
 
 static void
-set_history_filename (char *args, int from_tty, struct cmd_list_element *c)
+set_history_filename (const char *args, int from_tty,
+		      struct cmd_list_element *c)
 {
   /* We include the current directory so that if the user changes
      directories the file written will be the same as the one

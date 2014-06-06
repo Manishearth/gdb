@@ -270,7 +270,7 @@ pascm_signal_setshow_error (SCM exception, const char *msg)
    Note: ARGS is always passed as NULL.  */
 
 static void
-pascm_set_func (char *args, int from_tty, struct cmd_list_element *c)
+pascm_set_func (const char *args, int from_tty, struct cmd_list_element *c)
 {
   param_smob *p_smob = (param_smob *) get_cmd_context (c);
   SCM self, result, exception;

@@ -422,10 +422,10 @@ handle_gnu_v3_exceptions (int tempflag, char *except_rx, char *cond_string,
 static char *
 extract_exception_regexp (const char **string)
 {
-  char *start;
-  char *last, *last_space;
+  const char *start;
+  const char *last, *last_space;
 
-  start = skip_spaces (*string);
+  start = skip_spaces_const (*string);
 
   last = start;
   last_space = start;

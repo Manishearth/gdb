@@ -342,7 +342,7 @@ cmd_record_goto (char *arg, int from_tty)
 /* The "record goto begin" command.  */
 
 static void
-cmd_record_goto_begin (char *arg, int from_tty)
+cmd_record_goto_begin (const char *arg, int from_tty)
 {
   if (arg != NULL && *arg != '\0')
     error (_("Junk after argument: %s."), arg);
@@ -354,7 +354,7 @@ cmd_record_goto_begin (char *arg, int from_tty)
 /* The "record goto end" command.  */
 
 static void
-cmd_record_goto_end (char *arg, int from_tty)
+cmd_record_goto_end (const char *arg, int from_tty)
 {
   if (arg != NULL && *arg != '\0')
     error (_("Junk after argument: %s."), arg);

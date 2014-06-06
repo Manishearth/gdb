@@ -2399,7 +2399,7 @@ add_symbol_file_command (const char *args, int from_tty)
 /* This function removes a symbol file that was added via add-symbol-file.  */
 
 static void
-remove_symbol_file_command (char *args, int from_tty)
+remove_symbol_file_command (const char *args, int from_tty)
 {
   char **argv;
   struct objfile *objf = NULL;
