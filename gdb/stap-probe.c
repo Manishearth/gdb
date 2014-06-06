@@ -18,13 +18,13 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
 #include "defs.h"
-#include "const-command.h"
 #include "stap-probe.h"
 #include "probe.h"
 #include "vec.h"
 #include "ui-out.h"
 #include "objfiles.h"
 #include "arch-utils.h"
+#include "command.h"
 #include "gdbcmd.h"
 #include "filenames.h"
 #include "value.h"
