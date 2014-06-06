@@ -590,7 +590,7 @@ dcache_print_line (DCACHE *dcache, int index)
 /* Parse EXP and show the info about DCACHE.  */
 
 static void
-dcache_info_1 (DCACHE *dcache, char *exp)
+dcache_info_1 (DCACHE *dcache, const char *exp)
 {
   splay_tree_node n;
   int i, refcount;
