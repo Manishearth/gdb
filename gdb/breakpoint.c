@@ -134,8 +134,6 @@ static void catch_command (const char *, int);
 
 static int can_use_hardware_watchpoint (struct value *);
 
-static void break_command_1 (char *, int, int);
-
 static void mention (struct breakpoint *);
 
 static struct breakpoint *set_raw_breakpoint_without_location (struct gdbarch *,
@@ -10485,7 +10483,7 @@ break_range_command (const char *arg, int from_tty)
   make_cleanup (xfree, addr_string_start);
 
   arg++;	/* Skip the comma.  */
-  arg = skip_spaces (arg);
+  arg = skip_spaces_const (arg);
 
   /* Parse the end location.  */
 

@@ -194,14 +194,14 @@ guile_repl_command (const char *arg, int from_tty)
    TODO: Add the result to Guile's history?  */
 
 static void
-guile_command (char *arg, int from_tty)
+guile_command (const char *arg, int from_tty)
 {
   struct cleanup *cleanup;
 
   cleanup = make_cleanup_restore_integer (&interpreter_async);
   interpreter_async = 0;
 
-  arg = skip_spaces (arg);
+  arg = skip_spaces_const (arg);
 
   if (arg && *arg)
     {
