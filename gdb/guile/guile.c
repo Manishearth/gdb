@@ -168,7 +168,7 @@ guile_repl_command (const char *arg, int from_tty)
   cleanup = make_cleanup_restore_integer (&interpreter_async);
   interpreter_async = 0;
 
-  arg = skip_spaces (arg);
+  arg = skip_spaces_const (arg);
 
   /* This explicitly rejects any arguments for now.
      "It is easier to relax a restriction than impose one after the fact."
