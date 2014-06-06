@@ -784,7 +784,7 @@ maintenance_info_symtabs (const char *regexp, int from_tty)
    Use "maint check-psymtabs" for that.  */
 
 static void
-maintenance_check_symtabs (char *ignore, int from_tty)
+maintenance_check_symtabs (const char *ignore, int from_tty)
 {
   struct program_space *pspace;
   struct objfile *objfile;
@@ -865,7 +865,7 @@ maintenance_expand_file_matcher (const char *filename, void *data,
 /* Expand all symbol tables whose name matches an optional regexp.  */
 
 static void
-maintenance_expand_symtabs (char *args, int from_tty)
+maintenance_expand_symtabs (const char *args, int from_tty)
 {
   struct program_space *pspace;
   struct objfile *objfile;

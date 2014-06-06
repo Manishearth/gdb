@@ -7212,35 +7212,6 @@ show_exec_direction_func (struct ui_file *out, int from_tty,
   }
 }
 
-<<<<<<< HEAD
-=======
-/* User interface for non-stop mode.  */
-
-int non_stop = 0;
-
-static void
-set_non_stop (const char *args, int from_tty,
-	      struct cmd_list_element *c)
-{
-  if (target_has_execution)
-    {
-      non_stop_1 = non_stop;
-      error (_("Cannot change this setting while the inferior is running."));
-    }
-
-  non_stop = non_stop_1;
-}
-
-static void
-show_non_stop (struct ui_file *file, int from_tty,
-	       struct cmd_list_element *c, const char *value)
-{
-  fprintf_filtered (file,
-		    _("Controlling the inferior in non-stop mode is %s.\n"),
-		    value);
-}
-
->>>>>>> random stuff
 static void
 show_schedule_multiple (struct ui_file *file, int from_tty,
 			struct cmd_list_element *c, const char *value)
