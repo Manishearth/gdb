@@ -965,6 +965,19 @@ delegate_thread_address_space (struct target_ops *self, ptid_t arg1)
   return self->to_thread_address_space (self, arg1);
 }
 
+static int
+delegate_info_proc (struct target_ops *self, const char *arg1, enum info_proc_what arg2)
+{
+  self = self->beneath;
+  return self->to_info_proc (self, arg1, arg2);
+}
+
+static int
+tdefault_info_proc (struct target_ops *self, const char *arg1, enum info_proc_what arg2)
+{
+  return 0;
+}
+
 static void
 delegate_trace_init (struct target_ops *self)
 {
@@ -1436,6 +1449,18 @@ tdefault_stop_recording (struct target_ops *self)
 }
 
 static void
+delegate_info_record (struct target_ops *self)
+{
+  self = self->beneath;
+  self->to_info_record (self);
+}
+
+static void
+tdefault_info_record (struct target_ops *self)
+{
+}
+
+static void
 delegate_save_record (struct target_ops *self, const char *arg1)
 {
   self = self->beneath;
@@ -1830,6 +1855,8 @@ install_delegators (struct target_ops *ops)
     ops->to_thread_architecture = delegate_thread_architecture;
   if (ops->to_thread_address_space == NULL)
     ops->to_thread_address_space = delegate_thread_address_space;
+  if (ops->to_info_proc == NULL)
+    ops->to_info_proc = delegate_info_proc;
   if (ops->to_trace_init == NULL)
     ops->to_trace_init = delegate_trace_init;
   if (ops->to_download_tracepoint == NULL)
@@ -1904,6 +1931,8 @@ install_delegators (struct target_ops *ops)
     ops->to_read_btrace = delegate_read_btrace;
   if (ops->to_stop_recording == NULL)
     ops->to_stop_recording = delegate_stop_recording;
+  if (ops->to_info_record == NULL)
+    ops->to_info_record = delegate_info_record;
   if (ops->to_save_record == NULL)
     ops->to_save_record = delegate_save_record;
   if (ops->to_delete_record == NULL)
@@ -2028,6 +2057,7 @@ install_dummy_methods (struct target_ops *ops)
   ops->to_can_run_breakpoint_commands = tdefault_can_run_breakpoint_commands;
   ops->to_thread_architecture = default_thread_architecture;
   ops->to_thread_address_space = default_thread_address_space;
+  ops->to_info_proc = tdefault_info_proc;
   ops->to_trace_init = tdefault_trace_init;
   ops->to_download_tracepoint = tdefault_download_tracepoint;
   ops->to_can_download_tracepoint = tdefault_can_download_tracepoint;
@@ -2065,6 +2095,7 @@ install_dummy_methods (struct target_ops *ops)
   ops->to_teardown_btrace = tdefault_teardown_btrace;
   ops->to_read_btrace = tdefault_read_btrace;
   ops->to_stop_recording = tdefault_stop_recording;
+  ops->to_info_record = tdefault_info_record;
   ops->to_save_record = tdefault_save_record;
   ops->to_delete_record = tdefault_delete_record;
   ops->to_record_is_replaying = tdefault_record_is_replaying;

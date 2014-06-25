@@ -148,8 +148,8 @@ static char * procfs_make_note_section (struct target_ops *self,
 static int procfs_can_use_hw_breakpoint (struct target_ops *self,
 					 int, int, int);
 
-static void procfs_info_proc (struct target_ops *, const char *,
-			      enum info_proc_what);
+static int procfs_info_proc (struct target_ops *, const char *,
+			     enum info_proc_what);
 
 #if defined (PR_MODEL_NATIVE) && (PR_MODEL_NATIVE == PR_MODEL_LP64)
 /* When GDB is built as 64-bit application on Solaris, the auxv data
@@ -5140,7 +5140,7 @@ info_proc_mappings (procinfo *pi, int summary)
 
 /* Implement the "info proc" command.  */
 
-static void
+static int
 procfs_info_proc (struct target_ops *ops, const char *args,
 		  enum info_proc_what what)
 {
@@ -5233,6 +5233,7 @@ procfs_info_proc (struct target_ops *ops, const char *args,
     }
 
   do_cleanups (old_chain);
+  return 1;
 }
 
 /* Modify the status of the system call identified by SYSCALLNUM in

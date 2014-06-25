@@ -2554,23 +2554,18 @@ target_info_proc (const char *args, enum info_proc_what what)
   if (current_target.to_stratum >= process_stratum)
     t = current_target.beneath;
   else
-    t = find_default_run_target (NULL);
-
-  for (; t != NULL; t = t->beneath)
     {
-      if (t->to_info_proc != NULL)
-	{
-	  t->to_info_proc (t, args, what);
+      t = find_default_run_target (NULL);
 
-	  if (targetdebug)
-	    fprintf_unfiltered (gdb_stdlog,
-				"target_info_proc (\"%s\", %d)\n", args, what);
-
-	  return 1;
-	}
+      if (t->to_info_proc == delegate_info_proc)
+	return 0;
     }
 
-  return 0;
+  if (targetdebug)
+    fprintf_unfiltered (gdb_stdlog,
+			"target_info_proc (\"%s\", %d)\n", args, what);
+
+  return t->to_info_proc (t, args, what);
 }
 
 static int

@@ -816,8 +816,9 @@ struct target_ops
 
 
     /* Implement the "info proc" command.  */
-    void (*to_info_proc) (struct target_ops *, const char *,
-			  enum info_proc_what);
+    int (*to_info_proc) (struct target_ops *, const char *,
+			 enum info_proc_what)
+      TARGET_DEFAULT_RETURN (0);
 
     /* Tracepoint-related operations.  */
 

@@ -978,7 +978,7 @@ core_has_registers (struct target_ops *ops)
 
 /* Implement the to_info_proc method.  */
 
-static void
+static int
 core_info_proc (struct target_ops *ops, const char *args,
 		enum info_proc_what request)
 {
@@ -988,6 +988,8 @@ core_info_proc (struct target_ops *ops, const char *args,
      method on gdbarch, not 'info_proc'.  */
   if (gdbarch_core_info_proc_p (gdbarch))
     gdbarch_core_info_proc (gdbarch, args, request);
+
+  return 1;
 }
 
 /* Fill in core_ops with its defined operations and properties.  */
