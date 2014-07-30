@@ -472,6 +472,9 @@ const struct ui_out_impl cli_ui_out_impl =
   cli_flush,
   cli_redirect,
   cli_uiout_dtor,
+  cli_progress_start,
+  cli_progress_notify,
+  cli_progress_end,
   0, /* Does not need MI hacks (i.e. needs CLI hacks).  */
 };
 
