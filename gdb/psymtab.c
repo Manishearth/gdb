@@ -99,8 +99,6 @@ require_partial_symbols (struct objfile *objfile, int verbose)
 	    {
 	      if (!objfile_has_symbols (objfile))
 		printf_unfiltered (_(" (no debugging symbols found)\n"));
-	      else
-		printf_unfiltered (_(" done.\n"));
 	    }
 	}
     }

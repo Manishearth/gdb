@@ -901,7 +901,7 @@ read_symbols (struct objfile *objfile, int add_flags)
       do_cleanups (cleanup);
     }
   if ((add_flags & SYMFILE_NO_READ) == 0)
-    require_partial_symbols (objfile, 0);
+    require_partial_symbols (objfile, (add_flags & SYMFILE_VERBOSE));
 }
 
 /* Initialize entry point information for this objfile.  */
@@ -1188,14 +1188,10 @@ symbol_file_add_with_addrs (bfd *abfd, const char *name, int add_flags,
     {
       if (deprecated_pre_add_symbol_hook)
 	deprecated_pre_add_symbol_hook (name);
-
-      progress_text = xstrprintf ("Reading %s", name);
-      make_cleanup (xfree, progress_text);
     }
 
-  make_cleanup_ui_out_progress_begin_end (current_uiout, progress_text,
-					  should_print);
-  syms_from_objfile (objfile, addrs, add_flags);
+  syms_from_objfile (objfile, addrs,
+		     add_flags | (should_print ? SYMFILE_VERBOSE : 0));
 
   /* We now have at least a partial symbol table.  Check to see if the
      user requested that all symbols be read on initial access via either
@@ -1204,25 +1200,17 @@ symbol_file_add_with_addrs (bfd *abfd, const char *name, int add_flags,
 
   if ((flags & OBJF_READNOW))
     {
-      /* FIXME */
-      /* if (should_print) */
-      /* 	{ */
-      /* 	  printf_unfiltered (_("expanding to full symbols...")); */
-      /* 	  wrap_here (""); */
-      /* 	  gdb_flush (gdb_stdout); */
-      /* 	} */
+      if (should_print)
+	{
+	  progress_text = xstrprintf ("Expanding full symbols for %s", name);
+	  make_cleanup (xfree, progress_text);
+	}
+      make_cleanup_ui_out_progress_begin_end (current_uiout, progress_text,
+					      should_print);
 
       if (objfile->sf)
 	objfile->sf->qf->expand_all_symtabs (objfile);
     }
-
-  /* FIXME */
-  /* if (should_print && !objfile_has_symbols (objfile)) */
-  /*   { */
-  /*     wrap_here (""); */
-  /*     printf_unfiltered (_("(no debugging symbols found)...")); */
-  /*     wrap_here (""); */
-  /*   } */
 
   if (should_print)
     {
