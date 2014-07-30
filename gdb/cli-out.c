@@ -354,6 +354,7 @@ cli_progress_start (struct ui_out *uiout, const char *name, int should_print)
   if (!ui_file_isatty (stream))
     {
       fprintf_unfiltered (stream, "%s...", meter->name);
+      gdb_flush (stream);
       meter->printing = WORKING;
     }
   else
@@ -375,6 +376,7 @@ cli_progress_notify (struct ui_out *uiout, double howmuch)
   if (data->meter->printing == START)
     {
       fprintf_unfiltered (stream, "%s\n", data->meter->name);
+      gdb_flush (stream);
       data->meter->printing = WORKING;
     }
 
@@ -411,7 +413,10 @@ cli_progress_end (struct ui_out *uiout)
 	  gdb_flush (stream);
 	}
       else
-	fprintf_unfiltered (stream, "done.\n");
+	{
+	  fprintf_unfiltered (stream, "done.\n");
+	  gdb_flush (stream);
+	}
     }
 
   data->meter = meter->prev;
