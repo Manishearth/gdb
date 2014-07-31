@@ -83,14 +83,19 @@ require_partial_symbols (struct objfile *objfile, int verbose)
 
       if (objfile->sf->sym_read_psymbols)
 	{
-	  struct cleanup *cleanup;
-	  char *text;
+	  struct cleanup *cleanup = make_cleanup (null_cleanup, NULL);
 
-	  text = xstrprintf ("Reading symbols from %s", objfile_name (objfile));
-	  cleanup = make_cleanup (xfree, text);
+	  if (verbose)
+	    {
+	      char *text;
 
-	  make_cleanup_ui_out_progress_begin_end (current_uiout, text,
-						  verbose);
+	      text = xstrprintf ("Reading symbols from %s",
+				 objfile_name (objfile));
+	      cleanup = make_cleanup (xfree, text);
+
+	      make_cleanup_ui_out_progress_begin_end (current_uiout, text,
+						      verbose);
+	    }
 
 	  (*objfile->sf->sym_read_psymbols) (objfile);
 
