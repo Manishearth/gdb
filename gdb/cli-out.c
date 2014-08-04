@@ -44,8 +44,6 @@ struct cli_progress_info
   struct cli_progress_info *prev;
 };
 
-#define PROGRESS_WIDTH 20
-
 /* Prototypes for local functions */
 
 static void cli_text (struct ui_out *uiout, const char *string);
@@ -383,10 +381,11 @@ cli_progress_notify (struct ui_out *uiout, double howmuch)
   if (ui_file_isatty (stream))
     {
       int i, max;
+      int width = get_chars_per_line () - 3;
 
-      max = PROGRESS_WIDTH * howmuch;
+      max = width * howmuch;
       fprintf_unfiltered (stream, "\r[");
-      for (i = 0; i < PROGRESS_WIDTH; ++i)
+      for (i = 0; i < width; ++i)
 	fprintf_unfiltered (stream, i < max ? "#" : " ");
       fprintf_unfiltered (stream, "]");
       gdb_flush (stream);
@@ -405,9 +404,10 @@ cli_progress_end (struct ui_out *uiout)
       if (ui_file_isatty (stream))
 	{
 	  int i;
+	  int width = get_chars_per_line () - 3;
 
 	  fprintf_unfiltered (stream, "\r");
-	  for (i = 0; i < PROGRESS_WIDTH + 2; ++i)
+	  for (i = 0; i < width + 2; ++i)
 	    fprintf_unfiltered (stream, " ");
 	  fprintf_unfiltered (stream, "\r");
 	  gdb_flush (stream);
