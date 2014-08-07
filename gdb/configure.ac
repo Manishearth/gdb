@@ -2008,7 +2008,7 @@ build_warnings="-Wall -Wdeclaration-after-statement -Wpointer-arith \
 -Wpointer-sign \
 -Wno-unused -Wunused-value -Wunused-function \
 -Wunused-label -Wunused-local-typedefs \
--Wunused-but-set-parameter \
+-Wunused-but-set-parameter -Wunused-but-set-variable \
 -Wno-switch -Wno-char-subscripts -Wmissing-prototypes \
 -Wdeclaration-after-statement -Wempty-body -Wmissing-parameter-type \
 -Wold-style-declaration -Wold-style-definition"
