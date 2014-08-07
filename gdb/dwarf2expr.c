@@ -1494,7 +1494,6 @@ execute_stack_op (struct dwarf_expr_context *ctx,
   if (ctx->location == DWARF_VALUE_IMPLICIT_POINTER)
     add_piece (ctx, 8 * ctx->addr_size, 0);
 
-abort_expression:
   ctx->recursion_depth--;
   gdb_assert (ctx->recursion_depth >= 0);
 }

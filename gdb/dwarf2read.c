@@ -20517,7 +20517,6 @@ skip_form_bytes (bfd *abfd, const gdb_byte *bytes, const gdb_byte *buffer_end,
 
     default:
       {
-      complain:
 	complaint (&symfile_complaints,
 		   _("invalid form 0x%x in `%s'"),
 		   form, get_section_name (section));

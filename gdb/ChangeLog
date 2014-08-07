@@ -1,3 +1,10 @@
+2014-08-07  Tom Tromey  <tromey@redhat.com>
+
+	* configure.ac (build_warnings): Add -Wunused-label,
+	-Wunused-local-typedefs, -Wunused-but-set-parameter.
+	* dwarf2expr.c (execute_stack_op): Remove unused label.
+	* dwarf2read.c (skip_form_bytes): Remove unused label.
+
 2014-08-07  Yao Qi  <yao@codesourcery.com>
 
 	* corelow.c (core_xfer_partial): Replace 0 with TARGET_XFER_EOF.
